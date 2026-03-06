@@ -2,7 +2,7 @@
 
 > A local web app for tracking live NBA and MLB scores.
 
-![Sports Scores dashboard showing Yankees and Knicks score cards](./app-screenshot.png)
+![Sports Scores dashboard showing Yankees and Knicks score cards](./docs/images/app-screenshot.png)
 
 ## Features
 
