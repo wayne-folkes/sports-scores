@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import BoxScoreModal from '../BoxScoreModal';
 import ScoreCard from '../ScoreCard';
 import TeamSelector from '../TeamSelector';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -26,6 +27,7 @@ export default function SportWidget({ sport }) {
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [showSelector, setShowSelector] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
 
   const intervalRef = useRef(null);
 
@@ -53,7 +55,9 @@ export default function SportWidget({ sport }) {
   }, [sport]);
 
   useEffect(() => {
-    fetchScores();
+    const frameId = window.requestAnimationFrame(() => {
+      fetchScores();
+    });
 
     intervalRef.current = setInterval(fetchScores, POLL_INTERVAL);
 
@@ -66,6 +70,7 @@ export default function SportWidget({ sport }) {
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
+      window.cancelAnimationFrame(frameId);
       clearInterval(intervalRef.current);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
@@ -149,7 +154,13 @@ export default function SportWidget({ sport }) {
         )}
 
         {!isInitialLoad && !error && filteredGames.length > 0 &&
-          filteredGames.map((game) => <ScoreCard key={game.id} game={game} />)}
+          filteredGames.map((game) => (
+            <ScoreCard
+              key={game.id}
+              game={game}
+              onOpenBoxScore={() => setSelectedGame(game)}
+            />
+          ))}
       </div>
 
       {showSelector && createPortal(
@@ -158,6 +169,15 @@ export default function SportWidget({ sport }) {
           favorites={favorites}
           onFavoritesChange={setFavorites}
           onClose={() => setShowSelector(false)}
+        />,
+        document.body
+      )}
+
+      {selectedGame && createPortal(
+        <BoxScoreModal
+          sport={sport}
+          game={selectedGame}
+          onClose={() => setSelectedGame(null)}
         />,
         document.body
       )}

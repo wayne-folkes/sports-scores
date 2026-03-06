@@ -154,6 +154,29 @@
   font-weight: 900;
 }
 
+.scorecard__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 2px;
+}
+
+.scorecard__action {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg-card-hover) 94%, transparent);
+  color: var(--text-primary);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.scorecard__action:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+}
+
 @media (max-width: 480px) {
   .scorecard {
     padding: 12px;

@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const scoresRouter = require('./routes/scores');
 const teamsRouter = require('./routes/teams');
+const boxscoreRouter = require('./routes/boxscore');
 
 const app = express();
 const PORT = 3001;
@@ -18,6 +19,7 @@ app.get('/health', (req, res) => {
 
 app.use('/api/scores', scoresRouter);
 app.use('/api/teams', teamsRouter);
+app.use('/api/boxscore', boxscoreRouter);
 
 app.listen(PORT, () => {
   console.log(`Sports scores server running on port ${PORT}`);

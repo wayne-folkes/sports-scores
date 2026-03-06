@@ -46,7 +46,7 @@ function TeamLogo({ logo, abbreviation, name }) {
   return <span className="scorecard__logo scorecard__logo--fallback">{abbreviation}</span>;
 }
 
-export default function ScoreCard({ game }) {
+export default function ScoreCard({ game, onOpenBoxScore }) {
   const {
     status,
     statusDetail,
@@ -60,6 +60,7 @@ export default function ScoreCard({ game }) {
   const isLive = status === 'live';
   const isFinal = status === 'final';
   const showScores = isLive || isFinal;
+  const canViewBoxScore = Boolean(onOpenBoxScore) && (isLive || isFinal);
 
   const homeWins = showScores && homeScore != null && awayScore != null && homeScore > awayScore;
   const awayWins = showScores && homeScore != null && awayScore != null && awayScore > homeScore;
@@ -97,6 +98,14 @@ export default function ScoreCard({ game }) {
           {showScores ? (homeScore ?? 0) : '--'}
         </span>
       </div>
+
+      {canViewBoxScore && (
+        <div className="scorecard__footer">
+          <button className="scorecard__action" onClick={() => onOpenBoxScore(game)}>
+            View box score
+          </button>
+        </div>
+      )}
     </article>
   );
 }

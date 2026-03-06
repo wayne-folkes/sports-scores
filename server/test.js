@@ -3,7 +3,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { createCache } = require('./middleware/cache');
-const { normalizeStatus, normalizeScoreboard } = require('./routes/normalize');
+const { normalizeStatus, normalizeScoreboard, normalizeBoxscore } = require('./routes/normalize');
 
 // ---------------------------------------------------------------------------
 // Cache middleware tests
@@ -213,4 +213,89 @@ test('normalizeScoreboard: null score returns null not NaN', () => {
   assert.equal(game.homeScore, null);
   assert.equal(game.awayScore, null);
   assert.equal(game.status, 'scheduled');
+});
+
+test('normalizeBoxscore: returns aligned team stats', () => {
+  const espnData = {
+    header: {
+      competitions: [
+        {
+          id: '401810754',
+          date: '2026-03-06T00:00:00Z',
+          status: {
+            type: {
+              name: 'STATUS_FINAL',
+              shortDetail: 'Final/OT',
+            },
+          },
+          competitors: [
+            {
+              homeAway: 'home',
+              score: '111',
+              team: {
+                id: '19',
+                displayName: 'Orlando Magic',
+                abbreviation: 'ORL',
+                logos: [{ href: 'https://example.com/orl.png' }],
+              },
+            },
+            {
+              homeAway: 'away',
+              score: '108',
+              team: {
+                id: '6',
+                displayName: 'Dallas Mavericks',
+                abbreviation: 'DAL',
+                logos: [{ href: 'https://example.com/dal.png' }],
+              },
+            },
+          ],
+        },
+      ],
+    },
+    boxscore: {
+      teams: [
+        {
+          homeAway: 'away',
+          team: {
+            id: '6',
+            displayName: 'Dallas Mavericks',
+            abbreviation: 'DAL',
+            logos: [{ href: 'https://example.com/dal.png' }],
+          },
+          statistics: [
+            { abbreviation: 'FG%', label: 'Field Goal %', displayValue: '45' },
+            { abbreviation: 'REB', label: 'Rebounds', displayValue: '44' },
+          ],
+        },
+        {
+          homeAway: 'home',
+          team: {
+            id: '19',
+            displayName: 'Orlando Magic',
+            abbreviation: 'ORL',
+            logos: [{ href: 'https://example.com/orl.png' }],
+          },
+          statistics: [
+            { abbreviation: 'FG%', label: 'Field Goal %', displayValue: '47' },
+            { abbreviation: 'REB', label: 'Rebounds', displayValue: '48' },
+          ],
+        },
+      ],
+    },
+  };
+
+  const result = normalizeBoxscore(espnData, 'nba', '401810754');
+
+  assert.equal(result.eventId, '401810754');
+  assert.equal(result.status, 'final');
+  assert.equal(result.statusDetail, 'Final/OT');
+  assert.equal(result.teams.away.team.name, 'Dallas Mavericks');
+  assert.equal(result.teams.home.score, 111);
+  assert.deepEqual(result.statistics[0], {
+    key: 'FG%',
+    label: 'Field Goal %',
+    awayValue: '45',
+    homeValue: '47',
+  });
 });

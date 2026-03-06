@@ -46,7 +46,13 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
   }, [sport]);
 
   useEffect(() => {
-    fetchTeams();
+    const frameId = window.requestAnimationFrame(() => {
+      fetchTeams();
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
   }, [fetchTeams]);
 
   useEffect(() => {

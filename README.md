@@ -10,6 +10,7 @@
 - **Auto-refresh** — scores update every 30 seconds; pauses automatically when the browser tab is hidden (Page Visibility API)
 - **Light / dark theme** — adapts to your system color scheme via CSS `prefers-color-scheme`
 - **Persistent layout** — widget positions are saved to localStorage and restored on reload
+- **Box scores** — open live/final games to view a team-vs-team stat breakdown from ESPN's summary endpoint
 
 ---
 
@@ -34,6 +35,7 @@ sports-scores/
 │   ├── routes/
 │   │   ├── scores.js        # /api/scores/:sport
 │   │   ├── teams.js         # /api/teams/:sport
+│   │   ├── boxscore.js      # /api/boxscore/:sport/:eventId
 │   │   └── normalize.js     # ESPN response → app shape
 │   └── test.js              # Node built-in test runner
 ├── client/                  # React / Vite SPA (port 3000)
@@ -45,7 +47,8 @@ sports-scores/
 │   │   │   ├── Dashboard/   # react-grid-layout grid, layout persistence
 │   │   │   ├── SportWidget/ # Per-sport widget, fetch + auto-refresh logic
 │   │   │   ├── ScoreCard/   # Individual game card (live / final / scheduled)
-│   │   │   └── TeamSelector/ # Favorite-team modal with search
+│   │   │   ├── TeamSelector/ # Favorite-team modal with search
+│   │   │   └── BoxScoreModal/ # On-demand game box score modal
 │   │   └── hooks/
 │   │       └── useLocalStorage.js
 │   └── package.json
@@ -129,3 +132,4 @@ All endpoints are served from `http://localhost:3001`.
 | GET | `/api/scores/mlb` | Today's MLB scoreboard (cached 60 s) |
 | GET | `/api/teams/nba` | Full list of NBA teams (cached 1 hr) |
 | GET | `/api/teams/mlb` | Full list of MLB teams (cached 1 hr) |
+| GET | `/api/boxscore/:sport/:eventId` | ESPN summary/box score for a live or final game (cached 30 s) |
