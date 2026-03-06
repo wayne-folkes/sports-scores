@@ -1,10 +1,12 @@
 'use strict';
 
 const { normalizeBoxscore } = require('../../_lib/normalize');
+const { fetchWithTimeout } = require('../../_lib/fetchWithTimeout');
+const { ESPN_API_BASE } = require('../../_lib/config');
 
 const SUMMARY_BASE_URLS = {
-  nba: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=',
-  mlb: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=',
+  nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/summary?event=`,
+  mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/summary?event=`,
 };
 
 module.exports = async function handler(req, res) {
@@ -16,7 +18,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(`${baseUrl}${encodeURIComponent(eventId)}`);
+    const response = await fetchWithTimeout(`${baseUrl}${encodeURIComponent(eventId)}`);
     if (!response.ok) {
       return res.status(502).json({ error: `ESPN API returned ${response.status}` });
     }
@@ -24,6 +26,7 @@ module.exports = async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=10');
     return res.status(200).json(normalizeBoxscore(data, sport, eventId));
   } catch (err) {
-    return res.status(502).json({ error: `Failed to fetch ${sport} box score: ${err.message}` });
+    const isTimeout = err.name === 'AbortError';
+    return res.status(502).json({ error: isTimeout ? `ESPN API timed out for ${sport} box score` : `Failed to fetch ${sport} box score: ${err.message}` });
   }
 };

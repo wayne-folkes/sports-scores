@@ -1,10 +1,12 @@
 'use strict';
 
 const { normalizeScoreboard } = require('../_lib/normalize');
+const { fetchWithTimeout } = require('../_lib/fetchWithTimeout');
+const { ESPN_API_BASE } = require('../_lib/config');
 
 const ESPN_URLS = {
-  nba: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
-  mlb: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',
+  nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/scoreboard`,
+  mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/scoreboard`,
 };
 
 module.exports = async function handler(req, res) {
@@ -15,7 +17,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(ESPN_URLS[sport]);
+    const response = await fetchWithTimeout(ESPN_URLS[sport]);
     if (!response.ok) {
       return res.status(502).json({ error: `ESPN API returned ${response.status}` });
     }
@@ -23,6 +25,7 @@ module.exports = async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
     return res.status(200).json(normalizeScoreboard(data, sport));
   } catch (err) {
-    return res.status(502).json({ error: `Failed to fetch ${sport} scores: ${err.message}` });
+    const isTimeout = err.name === 'AbortError';
+    return res.status(502).json({ error: isTimeout ? `ESPN API timed out for ${sport} scores` : `Failed to fetch ${sport} scores: ${err.message}` });
   }
 };

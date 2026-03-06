@@ -8,10 +8,23 @@ const { normalizeBoxscore } = require('./normalize');
 const router = express.Router();
 const cache = createCache(30);
 
+const ESPN_API_BASE = process.env.ESPN_API_BASE || 'https://site.api.espn.com';
+const FETCH_TIMEOUT_MS = 10_000;
+
 const SUMMARY_BASE_URLS = {
-  nba: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=',
-  mlb: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=',
+  nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/summary?event=`,
+  mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/summary?event=`,
 };
+
+async function fetchWithTimeout(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 router.get('/:sport/:eventId', cache, async (req, res) => {
   const { sport, eventId } = req.params;
@@ -22,7 +35,7 @@ router.get('/:sport/:eventId', cache, async (req, res) => {
   }
 
   try {
-    const response = await fetch(`${baseUrl}${encodeURIComponent(eventId)}`);
+    const response = await fetchWithTimeout(`${baseUrl}${encodeURIComponent(eventId)}`);
     if (!response.ok) {
       return res.status(502).json({ error: `ESPN API returned ${response.status}` });
     }
@@ -30,7 +43,8 @@ router.get('/:sport/:eventId', cache, async (req, res) => {
     const data = await response.json();
     return res.json(normalizeBoxscore(data, sport, eventId));
   } catch (error) {
-    return res.status(502).json({ error: `Failed to fetch ${sport} box score: ${error.message}` });
+    const isTimeout = error.name === 'AbortError';
+    return res.status(502).json({ error: isTimeout ? `ESPN API timed out for ${sport} box score` : `Failed to fetch ${sport} box score: ${error.message}` });
   }
 });
 

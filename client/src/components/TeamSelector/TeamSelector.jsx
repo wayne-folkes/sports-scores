@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import './TeamSelector.css';
 
 function TeamLogo({ logo, abbreviation, name }) {
@@ -71,7 +71,10 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
     onFavoritesChange(next);
   };
 
-  const filteredTeams = teams.filter((team) => team.name.toLowerCase().includes(search.toLowerCase()));
+  const filteredTeams = useMemo(
+    () => teams.filter((team) => team.name.toLowerCase().includes(search.toLowerCase())),
+    [teams, search]
+  );
   const accentClass = `team-selector--${sport}`;
 
   return (

@@ -96,6 +96,20 @@
   object-fit: contain;
 }
 
+.box-score-modal__team-logo--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--border);
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
 .box-score-modal__team-name {
   font-size: 0.85rem;
   font-weight: 800;
@@ -125,20 +139,40 @@
 }
 
 .box-score-modal__stats {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
 }
 
 .box-score-modal__stats-header,
 .box-score-modal__stat-row {
-  display: grid;
-  grid-template-columns: minmax(70px, 1fr) minmax(120px, 1.2fr) minmax(70px, 1fr);
-  gap: 12px;
-  align-items: center;
+  display: table-row;
 }
 
-.box-score-modal__stats-header {
+.box-score-modal__stats-header th,
+.box-score-modal__stat-row td,
+.box-score-modal__stat-row th {
+  display: table-cell;
+  width: calc(100% / 3);
+}
+
+.box-score-modal__stats-header th:nth-child(1),
+.box-score-modal__stat-row td:nth-child(1) {
+  text-align: left;
+  width: minmax(70px, 1fr);
+}
+
+.box-score-modal__stats-header th:nth-child(2) {
+  text-align: center;
+}
+
+.box-score-modal__stats-header th:nth-child(3),
+.box-score-modal__stat-value--home {
+  text-align: right;
+}
+
+.box-score-modal__stats-header th {
   position: sticky;
   top: 0;
   padding: 16px 0 8px;
@@ -160,11 +194,27 @@
   text-align: right;
 }
 
-.box-score-modal__stat-row {
+.box-score-modal__stat-row td,
+.box-score-modal__stat-row th {
   padding: 14px 12px;
-  border-radius: 18px;
   background: color-mix(in srgb, var(--bg-card) 92%, transparent);
+}
+
+.box-score-modal__stat-row td:first-child {
+  border-radius: 18px 0 0 18px;
   border: 1px solid var(--border);
+  border-right: none;
+}
+
+.box-score-modal__stat-row th {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.box-score-modal__stat-row td:last-child {
+  border-radius: 0 18px 18px 0;
+  border: 1px solid var(--border);
+  border-left: none;
 }
 
 .box-score-modal__stat-label {
@@ -207,10 +257,10 @@
     display: none;
   }
 
-  .box-score-modal__stats-header,
-  .box-score-modal__stat-row {
-    grid-template-columns: 72px 1fr 72px;
-    gap: 8px;
+  .box-score-modal__stats-header th,
+  .box-score-modal__stat-row td,
+  .box-score-modal__stat-row th {
+    min-width: 72px;
   }
 
   .box-score-modal__body,

@@ -11,5 +11,15 @@ export default defineConfig({
         changeOrigin: true,
       }
     }
-  }
+  },
+  test: {
+    environment: 'jsdom',
+    environmentOptions: {
+      jsdom: {
+        url: 'http://localhost/',
+      },
+    },
+    globals: true,
+    setupFiles: './src/test/setup.js',
+  },
 })

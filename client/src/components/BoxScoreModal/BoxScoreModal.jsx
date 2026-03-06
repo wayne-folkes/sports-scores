@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { BOXSCORE_POLL_INTERVAL } from '../../constants';
 import './BoxScoreModal.css';
 
 function getStatusLabel(boxscore) {
@@ -13,13 +14,26 @@ function getStatusLabel(boxscore) {
   return boxscore.statusDetail || 'Final';
 }
 
-function StatRow({ label, awayValue, homeValue }) {
+function TeamLogo({ src, alt }) {
+  const [failed, setFailed] = useState(false);
+
+  if (src && !failed) {
+    return (
+      <img
+        className="box-score-modal__team-logo"
+        src={src}
+        alt={alt}
+        width={48}
+        height={48}
+        onError={() => setFailed(true)}
+      />
+    );
+  }
+
   return (
-    <div className="box-score-modal__stat-row">
-      <span className="box-score-modal__stat-value">{awayValue}</span>
-      <span className="box-score-modal__stat-label">{label}</span>
-      <span className="box-score-modal__stat-value box-score-modal__stat-value--home">{homeValue}</span>
-    </div>
+    <span className="box-score-modal__team-logo box-score-modal__team-logo--fallback" aria-label={alt}>
+      {alt?.slice(0, 3).toUpperCase()}
+    </span>
   );
 }
 
@@ -27,6 +41,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
   const [boxscore, setBoxscore] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const intervalRef = useRef(null);
 
   const fetchBoxscore = useCallback(() => {
     setIsLoading(true);
@@ -70,6 +85,17 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     };
   }, [fetchBoxscore]);
 
+  // Auto-refresh every 30s while the game is live
+  useEffect(() => {
+    if (game.status !== 'live') return;
+
+    intervalRef.current = setInterval(fetchBoxscore, BOXSCORE_POLL_INTERVAL);
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [game.status, fetchBoxscore]);
+
   const statRows = useMemo(() => boxscore?.statistics || [], [boxscore]);
 
   const away = boxscore?.teams?.away || {
@@ -95,13 +121,13 @@ export default function BoxScoreModal({ sport, game, onClose }) {
 
         <div className="box-score-modal__scoreboard">
           <div className="box-score-modal__team-card">
-            <img className="box-score-modal__team-logo" src={away.team.logo} alt={away.team.name} />
+            <TeamLogo src={away.team.logo} alt={away.team.name} />
             <span className="box-score-modal__team-name">{away.team.abbreviation || away.team.name}</span>
             <span className="box-score-modal__team-score">{away.score ?? '—'}</span>
           </div>
           <div className="box-score-modal__divider">vs</div>
           <div className="box-score-modal__team-card box-score-modal__team-card--home">
-            <img className="box-score-modal__team-logo" src={home.team.logo} alt={home.team.name} />
+            <TeamLogo src={home.team.logo} alt={home.team.name} />
             <span className="box-score-modal__team-name">{home.team.abbreviation || home.team.name}</span>
             <span className="box-score-modal__team-score">{home.score ?? '—'}</span>
           </div>
@@ -118,21 +144,24 @@ export default function BoxScoreModal({ sport, game, onClose }) {
           )}
 
           {!isLoading && !error && statRows.length > 0 && (
-            <div className="box-score-modal__stats">
-              <div className="box-score-modal__stats-header">
-                <span>{away.team.abbreviation || 'Away'}</span>
-                <span>Team Stats</span>
-                <span>{home.team.abbreviation || 'Home'}</span>
-              </div>
-              {statRows.map((stat) => (
-                <StatRow
-                  key={stat.key}
-                  label={stat.label}
-                  awayValue={stat.awayValue}
-                  homeValue={stat.homeValue}
-                />
-              ))}
-            </div>
+            <table className="box-score-modal__stats">
+              <thead>
+                <tr className="box-score-modal__stats-header">
+                  <th scope="col">{away.team.abbreviation || 'Away'}</th>
+                  <th scope="col">Team Stats</th>
+                  <th scope="col">{home.team.abbreviation || 'Home'}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {statRows.map((stat) => (
+                  <tr key={stat.key} className="box-score-modal__stat-row">
+                    <td className="box-score-modal__stat-value">{stat.awayValue}</td>
+                    <th scope="row" className="box-score-modal__stat-label">{stat.label}</th>
+                    <td className="box-score-modal__stat-value box-score-modal__stat-value--home">{stat.homeValue}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
 
           {!isLoading && !error && statRows.length === 0 && (
@@ -143,3 +172,4 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     </div>
   );
 }
+

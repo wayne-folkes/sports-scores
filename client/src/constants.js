@@ -1,0 +1,3 @@
+export const SCORES_POLL_INTERVAL = 30_000;
+export const BOXSCORE_POLL_INTERVAL = 30_000;
+export const FETCH_TIMEOUT = 10_000;
