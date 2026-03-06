@@ -40,7 +40,7 @@ export default function SportWidget({ sport }) {
         return res.json();
       })
       .then((data) => {
-        setGames(data);
+        setGames(data.games || []);
         setLastUpdated(new Date());
         setIsLoading(false);
         setIsInitialLoad(false);

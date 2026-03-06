@@ -34,7 +34,7 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
         return res.json();
       })
       .then((data) => {
-        setTeams(data);
+        setTeams(data.teams || []);
         setLoading(false);
       })
       .catch((err) => {
