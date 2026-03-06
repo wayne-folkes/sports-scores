@@ -189,7 +189,7 @@ export default function SportWidget({ sport }) {
           </span>
           <div className="sport-widget__title-group">
             <span className="sport-widget__label">{meta.label}</span>
-            <span className="sport-widget__subtitle">{summaryLabel}</span>
+            <span className="sport-widget__subtitle" aria-live="polite" aria-atomic="true">{summaryLabel}</span>
           </div>
         </div>
         <div className="sport-widget__header-right">
@@ -199,6 +199,7 @@ export default function SportWidget({ sport }) {
             onClick={fetchScores}
             title={`Refresh ${meta.label} scores`}
             aria-label={`Refresh ${meta.label} scores`}
+            aria-busy={isLoading}
           >
             <span className="sport-widget__control-icon" aria-hidden="true">⟳</span>
             <span className="sport-widget__control-label">Refresh</span>
@@ -215,17 +216,17 @@ export default function SportWidget({ sport }) {
         </div>
       </header>
 
-      <div className="sport-widget__body">
+      <div className="sport-widget__body" aria-live="polite" aria-atomic="false">
         {isInitialLoad && (
-          <>
+          <div aria-label="Loading scores" role="status">
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
-          </>
+          </div>
         )}
 
         {!isInitialLoad && error && (
-          <div className="sport-widget__state">
+          <div className="sport-widget__state" role="alert">
             <p className="sport-widget__state-kicker">Connection issue</p>
             <p className="sport-widget__error">{error}</p>
             <button className="sport-widget__retry" onClick={fetchScores}>Retry</button>
@@ -233,14 +234,14 @@ export default function SportWidget({ sport }) {
         )}
 
         {!isInitialLoad && !error && favorites.length === 0 && (
-          <div className="sport-widget__state">
+          <div className="sport-widget__state" role="status">
             <p className="sport-widget__state-kicker">No favorites yet</p>
             <p className="sport-widget__prompt">Pick your teams to turn this widget into a personal scoreboard.</p>
           </div>
         )}
 
         {!isInitialLoad && !error && favorites.length > 0 && filteredGames.length === 0 && (
-          <div className="sport-widget__state">
+          <div className="sport-widget__state" role="status">
             <p className="sport-widget__state-kicker">Quiet day</p>
             <p className="sport-widget__prompt">No games are scheduled today for your selected teams.</p>
           </div>

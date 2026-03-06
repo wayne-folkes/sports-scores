@@ -75,12 +75,12 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
   const accentClass = `team-selector--${sport}`;
 
   return (
-    <div className="team-selector__backdrop" onClick={onClose} aria-modal="true" role="dialog">
+    <div className="team-selector__backdrop" onClick={onClose} aria-modal="true" role="dialog" aria-labelledby="team-selector-title">
       <div className={`team-selector__panel ${accentClass}`} onClick={(event) => event.stopPropagation()}>
         <div className="team-selector__header">
           <div>
             <p className="team-selector__eyebrow">Customize widget</p>
-            <h2 className="team-selector__title">Select {sport.toUpperCase()} Teams</h2>
+            <h2 id="team-selector-title" className="team-selector__title">Select {sport.toUpperCase()} Teams</h2>
             <p className="team-selector__subtitle">Choose favorites to pin inside this widget.</p>
           </div>
           <button className="team-selector__close" onClick={onClose} aria-label="Close">
@@ -99,7 +99,7 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
           />
         </div>
 
-        <div className="team-selector__meta">
+        <div className="team-selector__meta" aria-live="polite" aria-atomic="true">
           <span className="team-selector__results">{filteredTeams.length} teams shown</span>
           <span className="team-selector__hint">{favorites.length} selected</span>
         </div>
@@ -144,7 +144,7 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
         </div>
 
         <div className="team-selector__footer">
-          <span className="team-selector__count">
+          <span className="team-selector__count" aria-live="polite" aria-atomic="true">
             {favorites.length} {favorites.length === 1 ? 'team' : 'teams'} selected
           </span>
           <button className="team-selector__done" onClick={onClose}>Done</button>
