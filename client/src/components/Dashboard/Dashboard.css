@@ -1,0 +1,41 @@
+.dashboard-container {
+  width: 100%;
+}
+
+.dashboard-grid {
+  /* App already provides padding; no extra padding needed */
+}
+
+.dashboard-widget-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure react-grid-layout item fills its cell */
+.react-grid-item {
+  overflow: hidden;
+}
+
+/* ── react-grid-layout: resize handle ── */
+.react-resizable-handle {
+  opacity: 0.4;
+  transition: opacity var(--transition);
+}
+
+.react-resizable-handle:hover {
+  opacity: 1;
+}
+
+.react-resizable-handle::after {
+  border-color: var(--text-muted) !important;
+}
+
+/* ── react-grid-layout: drop placeholder ── */
+.react-grid-item.react-grid-placeholder {
+  background: var(--accent-nba-light) !important;
+  border: 2px dashed var(--accent-nba) !important;
+  border-radius: var(--radius-md) !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+}
