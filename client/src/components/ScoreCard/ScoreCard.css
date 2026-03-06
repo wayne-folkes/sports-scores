@@ -1,151 +1,188 @@
 .scorecard {
-  background: var(--bg-widget);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  display: grid;
-  grid-template-rows: auto 1fr 1fr;
-  gap: 0;
-  transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
-  cursor: default;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-widget-strong) 88%, transparent) 0%, color-mix(in srgb, var(--bg-card) 94%, transparent) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 
 .scorecard:hover {
-  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border-strong);
 }
 
-/* Live left bar */
-.scorecard--live {
-  border-left: 3px solid var(--status-live);
-}
-
-@keyframes live-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--status-live-glow); }
-  50% { opacity: 0.7; box-shadow: 0 0 0 4px transparent; }
+.scorecard::after {
+  content: '';
+  position: absolute;
+  inset: auto -15% -55% auto;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
+  pointer-events: none;
 }
 
 .scorecard--live::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; bottom: 0; width: 3px;
+  inset: 0 auto 0 0;
+  width: 4px;
   background: var(--status-live);
-  animation: live-pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 24px var(--status-live-glow);
 }
 
-/* Status row */
-.scorecard__status { margin-bottom: 10px; }
+.scorecard__status {
+  display: flex;
+  align-items: center;
+}
 
 .scorecard__badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.65rem;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 999px;
 }
 
 .scorecard__badge--live {
-  color: var(--status-live);
   background: var(--status-live-bg);
-  box-shadow: 0 0 8px var(--status-live-glow);
+  color: var(--status-live);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--status-live) 18%, transparent), 0 8px 18px color-mix(in srgb, var(--status-live) 12%, transparent);
 }
 
 .scorecard__badge--final {
-  color: var(--status-final);
   background: var(--status-final-bg);
-  text-transform: uppercase;
+  color: var(--status-final);
 }
 
 .scorecard__badge--scheduled {
-  color: var(--status-scheduled);
   background: var(--status-scheduled-bg);
-  text-transform: none;
+  color: var(--status-scheduled);
   letter-spacing: 0;
-  font-weight: 600;
-  font-size: 0.7rem;
+  text-transform: none;
+  font-weight: 700;
 }
 
-/* Team rows */
 .scorecard__team {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 10px;
-  padding: 5px 0;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--bg-card) 86%, transparent);
+  border: 1px solid transparent;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
 }
 
 .scorecard__team + .scorecard__team {
-  border-top: 1px solid var(--border);
+  margin-top: -4px;
 }
 
-/* Logo */
+.scorecard__team--winner {
+  background: color-mix(in srgb, var(--bg-card-hover) 92%, transparent);
+  border-color: color-mix(in srgb, var(--text-primary) 8%, transparent);
+}
+
+.scorecard__logo,
+.scorecard__logo--fallback {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+}
+
 .scorecard__logo {
-  width: 34px;
-  height: 34px;
   object-fit: contain;
-  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 5px;
 }
 
 .scorecard__logo--fallback {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.6rem;
-  font-weight: 800;
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--bg-soft) 100%, transparent);
   border: 1px solid var(--border);
-  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
-/* Name */
 .scorecard__name {
-  flex: 1;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  white-space: nowrap;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color var(--transition);
+  white-space: nowrap;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-secondary);
 }
 
-.scorecard__name--abbr { display: none; }
-
-/* Score — the hero */
-.scorecard__score {
-  font-size: 1.4rem;
-  font-weight: 300;
-  color: var(--text-muted);
-  min-width: 42px;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  transition: color var(--transition), font-weight var(--transition);
+.scorecard__name--abbr {
+  display: none;
 }
 
-.scorecard__score--winner {
-  font-weight: 800;
-  color: var(--text-primary);
-}
-
-/* Winner gets name highlighted too */
 .scorecard__team--winner .scorecard__name {
   color: var(--text-primary);
 }
 
+.scorecard__score {
+  min-width: 46px;
+  text-align: right;
+  font-size: 1.72rem;
+  line-height: 1;
+  font-weight: 300;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.05em;
+}
+
+.scorecard__score--winner {
+  color: var(--text-primary);
+  font-weight: 900;
+}
+
 @media (max-width: 480px) {
-  .scorecard { padding: 10px 12px; }
-  .scorecard__name--full { display: none; }
-  .scorecard__name--abbr { display: block; }
-  .scorecard__score { font-size: 1.2rem; min-width: 36px; }
+  .scorecard {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .scorecard__team {
+    padding: 10px;
+    gap: 10px;
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .scorecard__logo,
+  .scorecard__logo--fallback {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+
+  .scorecard__name--full {
+    display: none;
+  }
+
+  .scorecard__name--abbr {
+    display: block;
+  }
+
+  .scorecard__score {
+    min-width: 38px;
+    font-size: 1.42rem;
+  }
 }

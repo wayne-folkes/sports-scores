@@ -6,8 +6,8 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import './SportWidget.css';
 
 const SPORT_META = {
-  nba: { icon: '🏀', label: 'NBA', accentVar: '--accent-nba', accentLightVar: '--accent-nba-light' },
-  mlb: { icon: '⚾', label: 'MLB', accentVar: '--accent-mlb', accentLightVar: '--accent-mlb-light' },
+  nba: { icon: '🏀', label: 'NBA' },
+  mlb: { icon: '⚾', label: 'MLB' },
 };
 
 const POLL_INTERVAL = 30_000;
@@ -52,7 +52,6 @@ export default function SportWidget({ sport }) {
       });
   }, [sport]);
 
-  // Initial fetch + polling
   useEffect(() => {
     fetchScores();
 
@@ -63,6 +62,7 @@ export default function SportWidget({ sport }) {
         fetchScores();
       }
     };
+
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
@@ -71,35 +71,38 @@ export default function SportWidget({ sport }) {
     };
   }, [fetchScores]);
 
-  const filteredGames =
-    favorites.length > 0
-      ? games.filter(
-          (g) => favorites.includes(g.homeTeam?.id) || favorites.includes(g.awayTeam?.id)
-        )
-      : [];
+  const filteredGames = favorites.length > 0
+    ? games.filter(
+        (game) => favorites.includes(game.homeTeam?.id) || favorites.includes(game.awayTeam?.id)
+      )
+    : [];
 
   const lastUpdatedLabel = lastUpdated
     ? `Updated ${lastUpdated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
-    : null;
+    : 'Not yet updated';
+
+  const summaryLabel = favorites.length > 0
+    ? `${favorites.length} favorite${favorites.length === 1 ? '' : 's'} · ${filteredGames.length} game${filteredGames.length === 1 ? '' : 's'} today`
+    : 'Choose teams to personalize this widget';
 
   return (
     <div className={`sport-widget sport-widget--${sport}`}>
-      {/* Header — drag handle */}
       <header className="sport-widget__header drag-handle">
         <div className="sport-widget__header-left">
-          <span className="sport-widget__icon" aria-hidden="true">{meta.icon}</span>
-          <span className="sport-widget__label">{meta.label}</span>
+          <span className="sport-widget__icon-shell" aria-hidden="true">
+            <span className="sport-widget__icon">{meta.icon}</span>
+          </span>
+          <div className="sport-widget__title-group">
+            <span className="sport-widget__label">{meta.label}</span>
+            <span className="sport-widget__subtitle">{summaryLabel}</span>
+          </div>
         </div>
         <div className="sport-widget__header-right">
-          {lastUpdated && (
-            <span className="sport-widget__updated" aria-live="polite">
-              {lastUpdatedLabel}
-            </span>
-          )}
+          <span className="sport-widget__updated" aria-live="polite">{lastUpdatedLabel}</span>
           <button
             className={`sport-widget__refresh${isLoading ? ' sport-widget__refresh--spinning' : ''}`}
             onClick={fetchScores}
-            title={lastUpdatedLabel ?? 'Not yet updated'}
+            title={lastUpdatedLabel}
             aria-label={`Refresh ${meta.label} scores`}
           >
             ⟳
@@ -109,12 +112,11 @@ export default function SportWidget({ sport }) {
             onClick={() => setShowSelector(true)}
             aria-label={`Edit ${meta.label} teams`}
           >
-            ✏️
+            ✦
           </button>
         </div>
       </header>
 
-      {/* Body */}
       <div className="sport-widget__body">
         {isInitialLoad && (
           <>
@@ -126,33 +128,30 @@ export default function SportWidget({ sport }) {
 
         {!isInitialLoad && error && (
           <div className="sport-widget__state">
+            <p className="sport-widget__state-kicker">Connection issue</p>
             <p className="sport-widget__error">{error}</p>
-            <button className="sport-widget__retry" onClick={fetchScores}>
-              Retry
-            </button>
+            <button className="sport-widget__retry" onClick={fetchScores}>Retry</button>
           </div>
         )}
 
         {!isInitialLoad && !error && favorites.length === 0 && (
           <div className="sport-widget__state">
-            <p className="sport-widget__prompt">
-              No teams selected — click ✏️ to pick your teams
-            </p>
+            <p className="sport-widget__state-kicker">No favorites yet</p>
+            <p className="sport-widget__prompt">Pick your teams to turn this widget into a personal scoreboard.</p>
           </div>
         )}
 
         {!isInitialLoad && !error && favorites.length > 0 && filteredGames.length === 0 && (
           <div className="sport-widget__state">
-            <p className="sport-widget__prompt">No games today for your teams</p>
+            <p className="sport-widget__state-kicker">Quiet day</p>
+            <p className="sport-widget__prompt">No games are scheduled today for your selected teams.</p>
           </div>
         )}
 
         {!isInitialLoad && !error && filteredGames.length > 0 &&
-          filteredGames.map((game) => <ScoreCard key={game.id} game={game} />)
-        }
+          filteredGames.map((game) => <ScoreCard key={game.id} game={game} />)}
       </div>
 
-      {/* TeamSelector modal — rendered via portal so position:fixed works outside the grid transform */}
       {showSelector && createPortal(
         <TeamSelector
           sport={sport}

@@ -37,25 +37,42 @@ export default function Dashboard() {
   };
 
   return (
-    <div ref={containerRef} className="dashboard-container">
-      <ResponsiveGridLayout
-        className="dashboard-grid"
-        layouts={layouts}
-        onLayoutChange={handleLayoutChange}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-        rowHeight={60}
-        draggableHandle=".drag-handle"
-        margin={[16, 16]}
-        width={width}
-      >
-        <div key="nba" className="dashboard-widget-wrapper">
-          <SportWidget sport="nba" />
+    <section className="dashboard">
+      <div className="dashboard__hero">
+        <div className="dashboard__hero-copy">
+          <span className="dashboard__eyebrow">Built for your favorites</span>
+          <h2 className="dashboard__title">Track the matchups that matter.</h2>
+          <p className="dashboard__description">
+            Drag your sports around, save your teams locally, and keep scores refreshed automatically.
+          </p>
         </div>
-        <div key="mlb" className="dashboard-widget-wrapper">
-          <SportWidget sport="mlb" />
+        <div className="dashboard__hero-pills" aria-label="Dashboard features">
+          <span className="dashboard__hero-pill">30s refresh</span>
+          <span className="dashboard__hero-pill">Drag & resize</span>
+          <span className="dashboard__hero-pill">Local favorites</span>
         </div>
-      </ResponsiveGridLayout>
-    </div>
+      </div>
+
+      <div ref={containerRef} className="dashboard-container">
+        <ResponsiveGridLayout
+          className="dashboard-grid"
+          layouts={layouts}
+          onLayoutChange={handleLayoutChange}
+          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          rowHeight={60}
+          draggableHandle=".drag-handle"
+          margin={[18, 18]}
+          width={width}
+        >
+          <div key="nba" className="dashboard-widget-wrapper">
+            <SportWidget sport="nba" />
+          </div>
+          <div key="mlb" className="dashboard-widget-wrapper">
+            <SportWidget sport="mlb" />
+          </div>
+        </ResponsiveGridLayout>
+      </div>
+    </section>
   );
 }
