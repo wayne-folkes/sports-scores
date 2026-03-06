@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import ScoreCard from '../ScoreCard';
 import TeamSelector from '../TeamSelector';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -151,14 +152,15 @@ export default function SportWidget({ sport }) {
         }
       </div>
 
-      {/* TeamSelector modal */}
-      {showSelector && (
+      {/* TeamSelector modal — rendered via portal so position:fixed works outside the grid transform */}
+      {showSelector && createPortal(
         <TeamSelector
           sport={sport}
           favorites={favorites}
           onFavoritesChange={setFavorites}
           onClose={() => setShowSelector(false)}
-        />
+        />,
+        document.body
       )}
     </div>
   );
