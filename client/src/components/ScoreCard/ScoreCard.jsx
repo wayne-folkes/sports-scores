@@ -59,7 +59,7 @@ export default function ScoreCard({ game }) {
         )}
       </div>
 
-      <div className="scorecard__team">
+      <div className={`scorecard__team${awayWins ? ' scorecard__team--winner' : ''}`}>
         <TeamLogo logo={awayTeam.logo} abbreviation={awayTeam.abbreviation} name={awayTeam.name} />
         <span className="scorecard__name scorecard__name--full">{awayTeam.name}</span>
         <span className="scorecard__name scorecard__name--abbr">{awayTeam.abbreviation}</span>
@@ -68,7 +68,7 @@ export default function ScoreCard({ game }) {
         </span>
       </div>
 
-      <div className="scorecard__team">
+      <div className={`scorecard__team${homeWins ? ' scorecard__team--winner' : ''}`}>
         <TeamLogo logo={homeTeam.logo} abbreviation={homeTeam.abbreviation} name={homeTeam.name} />
         <span className="scorecard__name scorecard__name--full">{homeTeam.name}</span>
         <span className="scorecard__name scorecard__name--abbr">{homeTeam.abbreviation}</span>

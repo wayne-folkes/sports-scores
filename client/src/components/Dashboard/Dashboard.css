@@ -33,9 +33,9 @@
 
 /* ── react-grid-layout: drop placeholder ── */
 .react-grid-item.react-grid-placeholder {
-  background: var(--accent-nba-light) !important;
-  border: 2px dashed var(--accent-nba) !important;
-  border-radius: var(--radius-md) !important;
+  background: rgba(92, 110, 248, 0.10) !important;
+  border: 2px dashed var(--border-focus) !important;
+  border-radius: var(--radius-lg) !important;
   opacity: 1 !important;
-  box-shadow: none !important;
+  box-shadow: inset 0 0 20px rgba(92,110,248,0.05) !important;
 }
