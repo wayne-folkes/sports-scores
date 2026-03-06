@@ -12,6 +12,22 @@ function formatTime(isoString) {
   return `${hours}:${mm} ${ampm} ET`;
 }
 
+function getFinalStatusLabel(statusDetail) {
+  if (!statusDetail) return 'FINAL';
+
+  const overtimeMatch = statusDetail.match(/(?:final\/)?(\d*ot)/i);
+  if (overtimeMatch) {
+    return `FINAL / ${overtimeMatch[1].toUpperCase()}`;
+  }
+
+  const extraInningsMatch = statusDetail.match(/(?:final\/|f\/)(\d{2}|\d{1})/i);
+  if (extraInningsMatch) {
+    return `FINAL / ${extraInningsMatch[1]} INN`;
+  }
+
+  return 'FINAL';
+}
+
 function TeamLogo({ logo, abbreviation, name }) {
   const [imgFailed, setImgFailed] = useState(false);
 
@@ -33,6 +49,7 @@ function TeamLogo({ logo, abbreviation, name }) {
 export default function ScoreCard({ game }) {
   const {
     status,
+    statusDetail,
     startTime,
     homeTeam,
     awayTeam,
@@ -51,7 +68,11 @@ export default function ScoreCard({ game }) {
     <article className={`scorecard${isLive ? ' scorecard--live' : ''}`}>
       <div className="scorecard__status">
         {isLive && <span className="scorecard__badge scorecard__badge--live">● LIVE</span>}
-        {isFinal && <span className="scorecard__badge scorecard__badge--final">FINAL</span>}
+        {isFinal && (
+          <span className="scorecard__badge scorecard__badge--final">
+            {getFinalStatusLabel(statusDetail)}
+          </span>
+        )}
         {status === 'scheduled' && (
           <span className="scorecard__badge scorecard__badge--scheduled">
             {formatTime(startTime)}
