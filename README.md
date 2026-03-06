@@ -47,3 +47,4 @@ Open **http://localhost:3000** in your browser.
 - [Getting Started](./docs/getting-started.md) — prerequisites, install steps, scripts, and local development workflow
 - [Architecture](./docs/architecture.md) — stack overview, project structure, data flow, and persistence details
 - [API Reference](./docs/api.md) — backend endpoints and normalized response shapes
+- [Deployment](./docs/deployment.md) — deploying to Vercel (zero config required)

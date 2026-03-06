@@ -7,14 +7,24 @@
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 19, Vite, react-grid-layout |
-| Backend | Node.js, Express, node-fetch |
+| Backend (local) | Node.js, Express |
+| Backend (Vercel) | Node.js serverless functions in `api/` |
 | Data | ESPN public scoreboard, teams, and summary endpoints |
 
 ## Project Structure
 
 ```text
 sports-scores/
-├── server/                  # Express API on port 3001
+├── api/                     # Vercel serverless functions (production)
+│   ├── _lib/
+│   │   ├── normalize.js     # Shared scoreboard/boxscore normalization
+│   │   └── teams.js         # Shared team normalization
+│   ├── health.js            # GET /api/health
+│   ├── scores/[sport].js    # GET /api/scores/:sport
+│   ├── teams/[sport].js     # GET /api/teams/:sport
+│   └── boxscore/[sport]/
+│       └── [eventId].js     # GET /api/boxscore/:sport/:eventId
+├── server/                  # Express API on port 3001 (local dev + CI)
 │   ├── index.js             # App entry point
 │   ├── middleware/
 │   │   └── cache.js         # In-memory TTL cache

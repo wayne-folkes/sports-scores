@@ -1,5 +1,5 @@
 # CI for the sports-scores monorepo.
-# Runs server tests and client lint+build in their respective subdirectories.
+# Runs server tests, client lint+build, and api/ syntax checks.
 
 name: Node.js CI
 
@@ -65,3 +65,28 @@ jobs:
       - name: Build
         working-directory: client
         run: npm run build
+
+  api:
+    name: Serverless function syntax (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Check api/ syntax
+        run: |
+          node --check api/_lib/normalize.js
+          node --check api/_lib/teams.js
+          node --check api/health.js
+          node --check "api/scores/[sport].js"
+          node --check "api/teams/[sport].js"
+          node --check "api/boxscore/[sport]/[eventId].js"
