@@ -2,6 +2,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: color-mix(in srgb, var(--bg-widget-strong) 72%, transparent);
@@ -168,6 +169,7 @@
 
 .sport-widget__body {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -177,6 +179,26 @@
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+}
+
+.sport-widget__body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.sport-widget__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sport-widget__body::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-muted) 35%, transparent);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.sport-widget__body::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-secondary) 55%, transparent);
+  background-clip: padding-box;
 }
 
 .sport-widget__state {
