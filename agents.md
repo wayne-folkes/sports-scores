@@ -2,9 +2,10 @@
 
 ## After Each Milestone
 1. Run all available tests
-2. Commit the changes with a descriptive commit message
-3. Mark the completed todo(s) as done in the plan
-4. Update all relevant documentation to reflect the current state of the project
+2. Commit the changes with a descriptive commit message after the tests pass
+3. Push the commit after the tests pass
+4. Mark the completed todo(s) as done in the plan
+5. Update all relevant documentation to reflect the current state of the project
 
 ## Documentation Standards
 - The project must be documented at all times, including the plan, architecture, and any decisions made
