@@ -2,6 +2,8 @@
 
 > A local web app for tracking live NBA and MLB scores.
 
+![Sports Scores dashboard showing Yankees and Knicks score cards](./app-screenshot.png)
+
 ## Features
 
 - **Live & scheduled scores** — NBA and MLB games via ESPN's public API (no key required)
