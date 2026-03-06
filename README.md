@@ -1,6 +1,6 @@
 # Sports Scores
 
-> A local web app for tracking live NBA and MLB scores.
+> A web app for tracking live NBA and MLB scores — [live at sports-scores-silk.vercel.app](https://sports-scores-silk.vercel.app)
 
 ![Sports Scores dashboard showing Yankees and Knicks score cards](./docs/images/app-screenshot.png)
 
