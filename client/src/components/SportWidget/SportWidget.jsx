@@ -126,19 +126,19 @@ export default function SportWidget({ sport }) {
     };
   }, [sport]);
 
-  const filteredGames = favorites.length > 0
-    ? games.filter(
-        (game) => favorites.includes(game.homeTeam?.id) || favorites.includes(game.awayTeam?.id)
-      )
-    : [];
+  const isFavoriteGame = (game) =>
+    favorites.includes(game.homeTeam?.id) || favorites.includes(game.awayTeam?.id);
+
+  const favoriteGames = games.filter(isFavoriteGame);
+  const otherGames = games.filter((game) => !isFavoriteGame(game));
 
   const lastUpdatedLabel = lastUpdated
     ? `Updated ${lastUpdated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
     : 'Not yet updated';
 
   const summaryLabel = favorites.length > 0
-    ? `${favorites.length} favorite${favorites.length === 1 ? '' : 's'} · ${filteredGames.length} game${filteredGames.length === 1 ? '' : 's'} today`
-    : 'Choose teams to personalize this widget';
+    ? `${favoriteGames.length} favorite game${favoriteGames.length === 1 ? '' : 's'} · ${games.length} total today`
+    : `${games.length} game${games.length === 1 ? '' : 's'} today`;
 
   const dynamicPrimary = normalizeHexColor(
     favorites.map((teamId) => teamColors[teamId]).find(Boolean),
@@ -205,28 +205,46 @@ export default function SportWidget({ sport }) {
           </div>
         )}
 
-        {!isInitialLoad && !error && favorites.length === 0 && (
+        {!isInitialLoad && !error && games.length === 0 && (
           <div className="sport-widget__state" role="status">
-            <p className="sport-widget__state-kicker">No favorites yet</p>
-            <p className="sport-widget__prompt">Pick your teams to turn this widget into a personal scoreboard.</p>
+            <p className="sport-widget__state-kicker">No games today</p>
+            <p className="sport-widget__prompt">Check back later for today's schedule.</p>
           </div>
         )}
 
-        {!isInitialLoad && !error && favorites.length > 0 && filteredGames.length === 0 && (
-          <div className="sport-widget__state" role="status">
-            <p className="sport-widget__state-kicker">Quiet day</p>
-            <p className="sport-widget__prompt">No games are scheduled today for your selected teams.</p>
-          </div>
-        )}
+        {!isInitialLoad && !error && games.length > 0 && (
+          <>
+            {favoriteGames.length > 0 && (
+              <section aria-label="Favorite teams' games">
+                {favorites.length > 0 && (
+                  <p className="sport-widget__section-label">⭐ Favorites</p>
+                )}
+                {favoriteGames.map((game) => (
+                  <ScoreCard
+                    key={game.id}
+                    game={game}
+                    onOpenBoxScore={() => setSelectedGame(game)}
+                  />
+                ))}
+              </section>
+            )}
 
-        {!isInitialLoad && !error && filteredGames.length > 0 &&
-          filteredGames.map((game) => (
-            <ScoreCard
-              key={game.id}
-              game={game}
-              onOpenBoxScore={() => setSelectedGame(game)}
-            />
-          ))}
+            {otherGames.length > 0 && (
+              <section aria-label="All other games">
+                {favoriteGames.length > 0 && (
+                  <p className="sport-widget__section-label">All games</p>
+                )}
+                {otherGames.map((game) => (
+                  <ScoreCard
+                    key={game.id}
+                    game={game}
+                    onOpenBoxScore={() => setSelectedGame(game)}
+                  />
+                ))}
+              </section>
+            )}
+          </>
+        )}
       </div>
 
       {showSelector && createPortal(

@@ -13,6 +13,16 @@ const mockGames = [
     homeScore: 120,
     awayScore: 113,
   },
+  {
+    id: '401810762',
+    status: 'final',
+    statusDetail: 'Final',
+    startTime: '2026-03-06T01:00Z',
+    homeTeam: { id: '2', name: 'Boston Celtics', abbreviation: 'BOS', logo: 'https://example.com/bos.png', record: '50-12' },
+    awayTeam: { id: '5', name: 'Miami Heat', abbreviation: 'MIA', logo: 'https://example.com/mia.png', record: '30-32' },
+    homeScore: 105,
+    awayScore: 98,
+  },
 ];
 
 const mockTeams = [
@@ -35,6 +45,7 @@ describe('SportWidget', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   it('renders the sport label', () => {
@@ -51,7 +62,8 @@ describe('SportWidget', () => {
     render(<SportWidget sport="nba" />);
 
     await waitFor(() => {
-      expect(screen.getByText(/No favorites yet/i)).toBeInTheDocument();
+      expect(screen.getByText('Los Angeles Lakers')).toBeInTheDocument();
+      expect(screen.getByText('Denver Nuggets')).toBeInTheDocument();
     });
   });
 
@@ -62,16 +74,27 @@ describe('SportWidget', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Los Angeles Lakers')).toBeInTheDocument();
+      expect(screen.getByText('⭐ Favorites')).toBeInTheDocument();
     });
   });
 
-  it('shows "quiet day" when favorites are set but no games match', async () => {
-    localStorage.setItem('favoriteTeams.nba', JSON.stringify(['99']));
+  it('shows favorite games first then other games', async () => {
+    localStorage.setItem('favoriteTeams.nba', JSON.stringify(['13']));
 
     render(<SportWidget sport="nba" />);
 
     await waitFor(() => {
-      expect(screen.getByText(/Quiet day/i)).toBeInTheDocument();
+      expect(screen.getByLabelText("Favorite teams' games")).toBeInTheDocument();
+      expect(screen.getByLabelText('All other games')).toBeInTheDocument();
+    });
+  });
+
+  it('shows all games with no section labels when no favorites set', async () => {
+    render(<SportWidget sport="nba" />);
+
+    await waitFor(() => {
+      expect(screen.queryByText('⭐ Favorites')).not.toBeInTheDocument();
+      expect(screen.getByText('Los Angeles Lakers')).toBeInTheDocument();
     });
   });
 
