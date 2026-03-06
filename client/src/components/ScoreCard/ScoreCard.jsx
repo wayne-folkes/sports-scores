@@ -61,6 +61,12 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
   const isFinal = status === 'final';
   const showScores = isLive || isFinal;
   const canViewBoxScore = Boolean(onOpenBoxScore) && (isLive || isFinal);
+  const awayRecordLabel = awayTeam.record
+    ? `${awayTeam.shortName || awayTeam.name} · ${awayTeam.record}`
+    : awayTeam.shortName || awayTeam.name;
+  const homeRecordLabel = homeTeam.record
+    ? `${homeTeam.shortName || homeTeam.name} · ${homeTeam.record}`
+    : homeTeam.shortName || homeTeam.name;
 
   const homeWins = showScores && homeScore != null && awayScore != null && homeScore > awayScore;
   const awayWins = showScores && homeScore != null && awayScore != null && awayScore > homeScore;
@@ -83,8 +89,11 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
 
       <div className={`scorecard__team${awayWins ? ' scorecard__team--winner' : ''}`}>
         <TeamLogo logo={awayTeam.logo} abbreviation={awayTeam.abbreviation} name={awayTeam.name} />
-        <span className="scorecard__name scorecard__name--full">{awayTeam.name}</span>
-        <span className="scorecard__name scorecard__name--abbr">{awayTeam.abbreviation}</span>
+        <div className="scorecard__team-copy">
+          <span className="scorecard__name scorecard__name--full">{awayTeam.name}</span>
+          <span className="scorecard__name scorecard__name--abbr">{awayTeam.abbreviation}</span>
+          <span className="scorecard__meta">{awayRecordLabel}</span>
+        </div>
         <span className={`scorecard__score${awayWins ? ' scorecard__score--winner' : ''}`}>
           {showScores ? (awayScore ?? 0) : '--'}
         </span>
@@ -92,8 +101,11 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
 
       <div className={`scorecard__team${homeWins ? ' scorecard__team--winner' : ''}`}>
         <TeamLogo logo={homeTeam.logo} abbreviation={homeTeam.abbreviation} name={homeTeam.name} />
-        <span className="scorecard__name scorecard__name--full">{homeTeam.name}</span>
-        <span className="scorecard__name scorecard__name--abbr">{homeTeam.abbreviation}</span>
+        <div className="scorecard__team-copy">
+          <span className="scorecard__name scorecard__name--full">{homeTeam.name}</span>
+          <span className="scorecard__name scorecard__name--abbr">{homeTeam.abbreviation}</span>
+          <span className="scorecard__meta">{homeRecordLabel}</span>
+        </div>
         <span className={`scorecard__score${homeWins ? ' scorecard__score--winner' : ''}`}>
           {showScores ? (homeScore ?? 0) : '--'}
         </span>

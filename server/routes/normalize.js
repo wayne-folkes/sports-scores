@@ -18,13 +18,18 @@ function getCompetition(data) {
   return data?.header?.competitions?.[0] || data?.competitions?.[0] || {};
 }
 
-function normalizeTeamInfo(team) {
+function normalizeTeamInfo(team, competitor = {}) {
   const logo = (team.logos || [])[0]?.href || team.logo || '';
+  const record = (competitor.records || []).find((item) => item.type === 'total')?.summary
+    || (competitor.records || [])[0]?.summary
+    || '';
   return {
     id: String(team.id || ''),
     name: team.displayName || team.name || '',
+    shortName: team.name || team.displayName || '',
     abbreviation: team.abbreviation || '',
     logo,
+    record,
   };
 }
 
@@ -57,8 +62,8 @@ function normalizeScoreboard(data, sport) {
       status: normalizeStatus(statusType.name),
       statusDetail: statusType.shortDetail || statusType.description || '',
       startTime: event.date || null,
-      homeTeam: normalizeTeamInfo(home.team || {}),
-      awayTeam: normalizeTeamInfo(away.team || {}),
+      homeTeam: normalizeTeamInfo(home.team || {}, home),
+      awayTeam: normalizeTeamInfo(away.team || {}, away),
       homeScore: parseScore(home),
       awayScore: parseScore(away),
     };
@@ -93,13 +98,13 @@ function normalizeBoxscore(data, sport, eventId) {
   }, {});
 
   const away = {
-    team: normalizeTeamInfo(awayCompetitor.team || teamStats.away?.team || {}),
+    team: normalizeTeamInfo(awayCompetitor.team || teamStats.away?.team || {}, awayCompetitor),
     score: parseScore(awayCompetitor),
     statistics: teamStats.away?.statistics || [],
   };
 
   const home = {
-    team: normalizeTeamInfo(homeCompetitor.team || teamStats.home?.team || {}),
+    team: normalizeTeamInfo(homeCompetitor.team || teamStats.home?.team || {}, homeCompetitor),
     score: parseScore(homeCompetitor),
     statistics: teamStats.home?.statistics || [],
   };

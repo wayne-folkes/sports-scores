@@ -11,17 +11,60 @@ const SPORT_META = {
   mlb: { icon: '⚾', label: 'MLB' },
 };
 
+const DEFAULT_THEME = {
+  nba: {
+    primary: '#2563eb',
+    secondary: '#ef4444',
+  },
+  mlb: {
+    primary: '#0f766e',
+    secondary: '#f97316',
+  },
+};
+
 const POLL_INTERVAL = 30_000;
 
 function SkeletonCard() {
   return <div className="sport-widget__skeleton" aria-hidden="true" />;
 }
 
+function normalizeHexColor(color, fallback) {
+  const cleaned = color?.replace('#', '').trim();
+  if (!cleaned || !/^[\da-f]{6}$/i.test(cleaned)) {
+    return fallback;
+  }
+
+  return `#${cleaned}`;
+}
+
+function hexToRgb(hexColor) {
+  const value = hexColor.replace('#', '');
+  return {
+    r: Number.parseInt(value.slice(0, 2), 16),
+    g: Number.parseInt(value.slice(2, 4), 16),
+    b: Number.parseInt(value.slice(4, 6), 16),
+  };
+}
+
+function rgba(hexColor, alpha) {
+  const { r, g, b } = hexToRgb(hexColor);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function mixColors(primaryHex, secondaryHex, weight = 0.5) {
+  const primary = hexToRgb(primaryHex);
+  const secondary = hexToRgb(secondaryHex);
+  const mix = (first, second) => Math.round(first * weight + second * (1 - weight));
+  return `rgb(${mix(primary.r, secondary.r)}, ${mix(primary.g, secondary.g)}, ${mix(primary.b, secondary.b)})`;
+}
+
 export default function SportWidget({ sport }) {
   const meta = SPORT_META[sport] ?? SPORT_META.nba;
+  const defaultTheme = DEFAULT_THEME[sport] ?? DEFAULT_THEME.nba;
 
   const [favorites, setFavorites] = useLocalStorage(`favoriteTeams.${sport}`, []);
   const [games, setGames] = useState([]);
+  const [teamColors, setTeamColors] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [error, setError] = useState(null);
@@ -76,6 +119,41 @@ export default function SportWidget({ sport }) {
     };
   }, [fetchScores]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch(`/api/teams/${sport}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load team colors (${response.status})`);
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        if (!isMounted) {
+          return;
+        }
+
+        const colors = Object.fromEntries(
+          (data.teams || [])
+            .filter((team) => team.id)
+            .map((team) => [team.id, team.color || ''])
+        );
+
+        setTeamColors(colors);
+      })
+      .catch(() => {
+        if (isMounted) {
+          setTeamColors({});
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [sport]);
+
   const filteredGames = favorites.length > 0
     ? games.filter(
         (game) => favorites.includes(game.homeTeam?.id) || favorites.includes(game.awayTeam?.id)
@@ -90,8 +168,20 @@ export default function SportWidget({ sport }) {
     ? `${favorites.length} favorite${favorites.length === 1 ? '' : 's'} · ${filteredGames.length} game${filteredGames.length === 1 ? '' : 's'} today`
     : 'Choose teams to personalize this widget';
 
+  const dynamicPrimary = normalizeHexColor(
+    favorites.map((teamId) => teamColors[teamId]).find(Boolean),
+    defaultTheme.primary
+  );
+
+  const widgetStyle = {
+    '--widget-accent-primary': dynamicPrimary,
+    '--widget-accent-secondary': mixColors(dynamicPrimary, defaultTheme.secondary, 0.55),
+    '--widget-accent-soft': rgba(dynamicPrimary, 0.18),
+    '--widget-accent-ring': rgba(dynamicPrimary, 0.3),
+  };
+
   return (
-    <div className={`sport-widget sport-widget--${sport}`}>
+    <div className={`sport-widget sport-widget--${sport}`} style={widgetStyle}>
       <header className="sport-widget__header drag-handle">
         <div className="sport-widget__header-left">
           <span className="sport-widget__icon-shell" aria-hidden="true">
@@ -107,17 +197,20 @@ export default function SportWidget({ sport }) {
           <button
             className={`sport-widget__refresh${isLoading ? ' sport-widget__refresh--spinning' : ''}`}
             onClick={fetchScores}
-            title={lastUpdatedLabel}
+            title={`Refresh ${meta.label} scores`}
             aria-label={`Refresh ${meta.label} scores`}
           >
-            ⟳
+            <span className="sport-widget__control-icon" aria-hidden="true">⟳</span>
+            <span className="sport-widget__control-label">Refresh</span>
           </button>
           <button
             className="sport-widget__edit"
             onClick={() => setShowSelector(true)}
+            title={`Choose ${meta.label} teams`}
             aria-label={`Edit ${meta.label} teams`}
           >
-            ✦
+            <span className="sport-widget__control-icon" aria-hidden="true">✦</span>
+            <span className="sport-widget__control-label">Teams</span>
           </button>
         </div>
       </header>

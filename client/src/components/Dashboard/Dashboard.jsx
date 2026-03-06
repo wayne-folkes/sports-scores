@@ -38,21 +38,6 @@ export default function Dashboard() {
 
   return (
     <section className="dashboard">
-      <div className="dashboard__hero">
-        <div className="dashboard__hero-copy">
-          <span className="dashboard__eyebrow">Built for your favorites</span>
-          <h2 className="dashboard__title">Track the matchups that matter.</h2>
-          <p className="dashboard__description">
-            Drag your sports around, save your teams locally, and keep scores refreshed automatically.
-          </p>
-        </div>
-        <div className="dashboard__hero-pills" aria-label="Dashboard features">
-          <span className="dashboard__hero-pill">30s refresh</span>
-          <span className="dashboard__hero-pill">Drag & resize</span>
-          <span className="dashboard__hero-pill">Local favorites</span>
-        </div>
-      </div>
-
       <div ref={containerRef} className="dashboard-container">
         <ResponsiveGridLayout
           className="dashboard-grid"

@@ -130,8 +130,26 @@
   color: var(--text-secondary);
 }
 
+.scorecard__team-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
 .scorecard__name--abbr {
   display: none;
+}
+
+.scorecard__meta {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-muted);
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .scorecard__team--winner .scorecard__name {
@@ -202,6 +220,10 @@
 
   .scorecard__name--abbr {
     display: block;
+  }
+
+  .scorecard__meta {
+    display: none;
   }
 
   .scorecard__score {
