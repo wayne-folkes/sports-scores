@@ -166,6 +166,8 @@
   border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: transform var(--transition), background var(--transition), border-color var(--transition);
+  /* Override parent pan-y so taps on buttons fire click events immediately */
+  touch-action: manipulation;
 }
 
 .sport-widget__refresh:hover,
@@ -292,6 +294,7 @@
   font-size: 0.82rem;
   font-weight: 700;
   box-shadow: var(--shadow-sm);
+  touch-action: manipulation;
 }
 
 @keyframes sport-widget-shimmer {
