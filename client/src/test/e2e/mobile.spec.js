@@ -16,47 +16,38 @@ test.describe('Mobile UX', () => {
   test('touch scroll moves the page, not the widget', async ({ page, isMobile }) => {
     if (!isMobile) test.skip();
 
-    // Record the widget's document-relative top before scrolling
-    const widgetOffsetBefore = await page.locator('.sport-widget').first()
-      .evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
-
-    // Simulate a vertical swipe upward on the widget header (scroll gesture)
-    const header = page.locator('.sport-widget__header').first();
-    const headerBox = await header.boundingBox();
-    const startX = headerBox.x + headerBox.width / 2;
-    const startY = headerBox.y + headerBox.height / 2;
-
-    await page.touchscreen.tap(startX, startY);
-    await page.touchscreen.tap(startX, startY - 200);
-
-    await page.waitForTimeout(300);
-
-    // Widget must not have changed its document-relative position (no drag occurred)
-    const widgetOffsetAfter = await page.locator('.sport-widget').first()
-      .evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
-    expect(Math.abs(widgetOffsetAfter - widgetOffsetBefore)).toBeLessThan(5);
+    await expect(page.locator('.dashboard-mobile-stack')).toBeVisible();
+    await expect(page.locator('.react-grid-item')).toHaveCount(0);
+    await expect(page.locator('.sport-widget__header.drag-handle')).toHaveCount(0);
   });
 
-  test('drag is disabled on mobile — widget does not change grid position', async ({ page, isMobile }) => {
+  test('refresh button can be tapped on mobile', async ({ page, isMobile }) => {
     if (!isMobile) test.skip();
 
-    const gridItem = page.locator('.react-grid-item').first();
+    let scoresRequests = 0;
 
-    // Record initial grid transform
-    const initialTransform = await gridItem.evaluate((el) => el.style.transform);
+    await page.route('**/api/scores/**', async (route) => {
+      scoresRequests += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ games: [] }),
+      });
+    });
+    await page.route('**/api/teams/**', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ teams: [] }),
+      });
+    });
 
-    // Attempt a press-and-hold drag via mouse (mimics touch drag)
-    const box = await gridItem.boundingBox();
-    await page.mouse.move(box.x + 20, box.y + 20);
-    await page.mouse.down();
-    await page.mouse.move(box.x + 20, box.y + 300, { steps: 10 });
-    await page.waitForTimeout(300);
-    await page.mouse.up();
-    await page.waitForTimeout(200);
+    await page.reload();
+    await page.waitForSelector('.sport-widget', { timeout: 10_000 });
 
-    // Widget position must not have changed (no grid re-layout)
-    const finalTransform = await gridItem.evaluate((el) => el.style.transform);
-    expect(finalTransform).toBe(initialTransform);
+    const requestCountBefore = scoresRequests;
+    await page.locator('.sport-widget__refresh').first().click();
+    await expect.poll(() => scoresRequests).toBeGreaterThan(requestCountBefore);
   });
 
   test('team selector dialog opens and closes on mobile', async ({ page }) => {

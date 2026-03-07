@@ -30,7 +30,7 @@ function SkeletonCard() {
   return <div className="sport-widget__skeleton" aria-hidden="true" />;
 }
 
-export default function SportWidget({ sport }) {
+export default function SportWidget({ sport, isReorderable = true }) {
   const meta = SPORT_META[sport] ?? SPORT_META.nba;
   const defaultTheme = DEFAULT_THEME[sport] ?? DEFAULT_THEME.nba;
 
@@ -154,7 +154,7 @@ export default function SportWidget({ sport }) {
 
   return (
     <div className={`sport-widget sport-widget--${sport}`} style={widgetStyle}>
-      <header className="sport-widget__header drag-handle">
+      <header className={`sport-widget__header${isReorderable ? ' drag-handle' : ''}`}>
         <div className="sport-widget__header-left">
           <span className="sport-widget__icon-shell" aria-hidden="true">
             <span className="sport-widget__icon">{meta.icon}</span>

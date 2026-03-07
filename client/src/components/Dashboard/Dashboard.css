@@ -7,6 +7,16 @@
   min-height: 0;
 }
 
+.dashboard-mobile-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dashboard-mobile-stack__item {
+  min-height: 0;
+}
+
 .dashboard-widget-wrapper {
   height: 100%;
   display: flex;

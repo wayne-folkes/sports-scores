@@ -29,6 +29,8 @@ const DEFAULT_LAYOUTS = {
   ],
 };
 
+const DEFAULT_WIDGET_ORDER = ['nba', 'mlb'];
+
 // Read matchMedia on first render so isMobile is correct before any touch fires.
 function useIsMobile(breakpoint = 768) {
   const query = `(max-width: ${breakpoint - 1}px)`;
@@ -46,14 +48,44 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 
+function getMobileWidgetOrder(layouts) {
+  const mobileLayout = Array.isArray(layouts?.xs) && layouts.xs.length > 0
+    ? layouts.xs
+    : DEFAULT_LAYOUTS.xs;
+
+  const orderedKeys = [...mobileLayout]
+    .sort((a, b) => a.y - b.y || a.x - b.x)
+    .map((item) => item.i);
+
+  return [
+    ...DEFAULT_WIDGET_ORDER.filter((key) => orderedKeys.includes(key)),
+    ...DEFAULT_WIDGET_ORDER.filter((key) => !orderedKeys.includes(key)),
+  ];
+}
+
 export default function Dashboard() {
   const [layouts, setLayouts] = useLocalStorage('widgetLayout', DEFAULT_LAYOUTS);
   const { width, containerRef } = useContainerWidth();
   const isMobile = useIsMobile(768);
+  const mobileWidgetOrder = getMobileWidgetOrder(layouts);
 
   const handleLayoutChange = (_currentLayout, allLayouts) => {
     setLayouts(allLayouts);
   };
+
+  if (isMobile) {
+    return (
+      <section className="dashboard">
+        <div className="dashboard-mobile-stack">
+          {mobileWidgetOrder.map((sport) => (
+            <div key={sport} className="dashboard-mobile-stack__item">
+              <SportWidget sport={sport} isReorderable={false} />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="dashboard">
@@ -71,12 +103,11 @@ export default function Dashboard() {
           margin={[18, 18]}
           width={width}
         >
-          <div key="nba" className="dashboard-widget-wrapper">
-            <SportWidget sport="nba" />
-          </div>
-          <div key="mlb" className="dashboard-widget-wrapper">
-            <SportWidget sport="mlb" />
-          </div>
+          {DEFAULT_WIDGET_ORDER.map((sport) => (
+            <div key={sport} className="dashboard-widget-wrapper">
+              <SportWidget sport={sport} />
+            </div>
+          ))}
         </ResponsiveGridLayout>
       </div>
     </section>
