@@ -20,6 +20,16 @@
   min-height: 0;
 }
 
+/* On mobile, allow the browser to handle vertical scroll natively.
+   react-draggable sets touch-action:none as an inline style; !important
+   overrides it so iOS Safari and Android Chrome scroll instead of drag. */
+@media (max-width: 767px) {
+  .react-grid-item,
+  .react-grid-item .drag-handle {
+    touch-action: pan-y !important;
+  }
+}
+
 .react-grid-item > .react-resizable-hide,
 .react-grid-item > .react-resizable-handle {
   z-index: 5;

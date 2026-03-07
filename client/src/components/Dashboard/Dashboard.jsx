@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { ResponsiveGridLayout, useContainerWidth } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -28,12 +29,27 @@ const DEFAULT_LAYOUTS = {
   ],
 };
 
+// Read matchMedia on first render so isMobile is correct before any touch fires.
+function useIsMobile(breakpoint = 768) {
+  const query = `(max-width: ${breakpoint - 1}px)`;
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [query]);
+
+  return isMobile;
+}
+
 export default function Dashboard() {
   const [layouts, setLayouts] = useLocalStorage('widgetLayout', DEFAULT_LAYOUTS);
   const { width, containerRef } = useContainerWidth();
-
-  // Disable drag/resize on mobile — touch scroll must take priority over widget dragging
-  const isMobile = width > 0 && width < 768;
+  const isMobile = useIsMobile(768);
 
   const handleLayoutChange = (_currentLayout, allLayouts) => {
     setLayouts(allLayouts);
