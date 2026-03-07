@@ -13,12 +13,7 @@ export default defineConfig({
     }
   },
   test: {
-    environment: 'jsdom',
-    environmentOptions: {
-      jsdom: {
-        url: 'http://localhost/',
-      },
-    },
+    environment: 'happy-dom',
     globals: true,
     setupFiles: './src/test/setup.js',
     exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**'],
