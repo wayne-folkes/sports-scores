@@ -314,6 +314,11 @@
   .sport-widget__header {
     align-items: flex-start;
     flex-direction: column;
+    cursor: default;
+  }
+
+  .sport-widget__header:active {
+    cursor: default;
   }
 
   .sport-widget__header-right {

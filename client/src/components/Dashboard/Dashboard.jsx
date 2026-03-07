@@ -32,6 +32,9 @@ export default function Dashboard() {
   const [layouts, setLayouts] = useLocalStorage('widgetLayout', DEFAULT_LAYOUTS);
   const { width, containerRef } = useContainerWidth();
 
+  // Disable drag/resize on mobile — touch scroll must take priority over widget dragging
+  const isMobile = width > 0 && width < 768;
+
   const handleLayoutChange = (_currentLayout, allLayouts) => {
     setLayouts(allLayouts);
   };
@@ -47,6 +50,8 @@ export default function Dashboard() {
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
           rowHeight={60}
           draggableHandle=".drag-handle"
+          isDraggable={!isMobile}
+          isResizable={!isMobile}
           margin={[18, 18]}
           width={width}
         >
