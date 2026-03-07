@@ -55,6 +55,7 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
     awayTeam,
     homeScore,
     awayScore,
+    prediction,
   } = game;
 
   const isLive = status === 'live';
@@ -70,6 +71,9 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
 
   const homeWins = showScores && homeScore != null && awayScore != null && homeScore > awayScore;
   const awayWins = showScores && homeScore != null && awayScore != null && awayScore > homeScore;
+  const showPrediction = status === 'scheduled'
+    && prediction?.homeWinProbability != null
+    && prediction?.awayWinProbability != null;
 
   return (
     <article className={`scorecard${isLive ? ' scorecard--live' : ''}`}>
@@ -87,6 +91,12 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
         )}
       </div>
 
+      {showPrediction && (
+        <div className="scorecard__prediction" aria-label={prediction.label || 'Matchup predictor'}>
+          {prediction.label || 'Matchup Predictor'}
+        </div>
+      )}
+
       <div className={`scorecard__team${awayWins ? ' scorecard__team--winner' : ''}`}>
         <TeamLogo logo={awayTeam.logo} abbreviation={awayTeam.abbreviation} name={awayTeam.name} />
         <div className="scorecard__team-copy">
@@ -94,8 +104,8 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
           <span className="scorecard__name scorecard__name--abbr">{awayTeam.abbreviation}</span>
           <span className="scorecard__meta">{awayRecordLabel}</span>
         </div>
-        <span className={`scorecard__score${awayWins ? ' scorecard__score--winner' : ''}`}>
-          {showScores ? (awayScore ?? 0) : '--'}
+        <span className={`scorecard__score${awayWins ? ' scorecard__score--winner' : ''}${showPrediction ? ' scorecard__score--prediction' : ''}`}>
+          {showScores ? (awayScore ?? 0) : showPrediction ? `${prediction.awayWinProbability}%` : '--'}
         </span>
       </div>
 
@@ -106,8 +116,8 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
           <span className="scorecard__name scorecard__name--abbr">{homeTeam.abbreviation}</span>
           <span className="scorecard__meta">{homeRecordLabel}</span>
         </div>
-        <span className={`scorecard__score${homeWins ? ' scorecard__score--winner' : ''}`}>
-          {showScores ? (homeScore ?? 0) : '--'}
+        <span className={`scorecard__score${homeWins ? ' scorecard__score--winner' : ''}${showPrediction ? ' scorecard__score--prediction' : ''}`}>
+          {showScores ? (homeScore ?? 0) : showPrediction ? `${prediction.homeWinProbability}%` : '--'}
         </span>
       </div>
 

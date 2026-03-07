@@ -215,6 +215,40 @@ test('normalizeScoreboard: null score returns null not NaN', () => {
   assert.equal(game.status, 'scheduled');
 });
 
+test('normalizeScoreboard: includes matchup predictions when ESPN provides them', () => {
+  const espnData = {
+    events: [
+      {
+        id: '401810776',
+        date: '2026-03-08T00:30:00Z',
+        competitions: [
+          {
+            status: { type: { name: 'STATUS_SCHEDULED', shortDetail: '7:30 PM ET' } },
+            competitors: [
+              { homeAway: 'home', team: { id: '5', displayName: 'Cleveland Cavaliers', abbreviation: 'CLE', logos: [] } },
+              { homeAway: 'away', team: { id: '2', displayName: 'Boston Celtics', abbreviation: 'BOS', logos: [] } },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  const result = normalizeScoreboard(espnData, 'nba', {
+    401810776: {
+      header: 'Matchup Predictor',
+      homeTeam: { id: '5', gameProjection: '57' },
+      awayTeam: { id: '2', gameProjection: '43' },
+    },
+  });
+
+  assert.deepEqual(result.games[0].prediction, {
+    label: 'Matchup Predictor',
+    homeWinProbability: 57,
+    awayWinProbability: 43,
+  });
+});
+
 test('normalizeBoxscore: returns aligned team stats', () => {
   const espnData = {
     header: {

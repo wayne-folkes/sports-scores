@@ -40,12 +40,47 @@ function parseScore(competitor) {
   return Number.isNaN(num) ? null : num;
 }
 
+function parseProbability(value) {
+  if (value === undefined || value === null || value === '') return null;
+  const num = Number(value);
+  if (Number.isNaN(num)) return null;
+  return Math.max(0, Math.min(100, Math.round(num)));
+}
+
+function normalizePrediction(predictor, homeCompetitor, awayCompetitor, status) {
+  if (status !== 'scheduled' || !predictor) return null;
+
+  const homeTeamId = String(homeCompetitor?.team?.id || '');
+  const awayTeamId = String(awayCompetitor?.team?.id || '');
+  const homePredictor = predictor.homeTeam?.id === homeTeamId ? predictor.homeTeam : predictor.awayTeam?.id === homeTeamId ? predictor.awayTeam : null;
+  const awayPredictor = predictor.awayTeam?.id === awayTeamId ? predictor.awayTeam : predictor.homeTeam?.id === awayTeamId ? predictor.homeTeam : null;
+
+  let homeWinProbability = parseProbability(homePredictor?.gameProjection);
+  let awayWinProbability = parseProbability(awayPredictor?.gameProjection);
+
+  if (homeWinProbability == null && awayWinProbability != null) {
+    homeWinProbability = 100 - awayWinProbability;
+  }
+  if (awayWinProbability == null && homeWinProbability != null) {
+    awayWinProbability = 100 - homeWinProbability;
+  }
+  if (homeWinProbability == null || awayWinProbability == null) {
+    return null;
+  }
+
+  return {
+    label: predictor.header || 'Matchup Predictor',
+    homeWinProbability,
+    awayWinProbability,
+  };
+}
+
 /**
  * Normalizes ESPN scoreboard API response into a consistent shape.
  * @param {object} data - Raw ESPN scoreboard API response
  * @param {string} sport - Sport identifier (e.g. 'nba', 'mlb')
  */
-function normalizeScoreboard(data, sport) {
+function normalizeScoreboard(data, sport, predictorsByEventId = {}) {
   const events = data.events || [];
 
   const games = events.map((event) => {
@@ -56,6 +91,7 @@ function normalizeScoreboard(data, sport) {
 
     const home = competitors.find((c) => c.homeAway === 'home') || {};
     const away = competitors.find((c) => c.homeAway === 'away') || {};
+    const prediction = normalizePrediction(predictorsByEventId[String(event.id)], home, away, normalizeStatus(statusType.name));
 
     return {
       id: String(event.id || ''),
@@ -66,6 +102,7 @@ function normalizeScoreboard(data, sport) {
       awayTeam: normalizeTeamInfo(away.team || {}, away),
       homeScore: parseScore(home),
       awayScore: parseScore(away),
+      prediction,
     };
   });
 
