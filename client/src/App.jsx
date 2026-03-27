@@ -14,7 +14,6 @@ function App() {
         </div>
         <div className="app-header__meta" aria-label="App highlights">
           <span className="app-header__pill app-header__pill--live">Live</span>
-          <span className="app-header__pill">NBA + MLB</span>
         </div>
       </header>
       <main className="app-main">
