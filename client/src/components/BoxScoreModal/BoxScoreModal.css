@@ -69,6 +69,38 @@
   background: var(--accent-mlb);
 }
 
+.box-score-modal--college-baseball .box-score-modal__header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent-college-baseball);
+}
+
+.box-score-modal--college-softball .box-score-modal__header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent-college-softball);
+}
+
+.box-score-modal--mens-college-basketball .box-score-modal__header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent-mcbb);
+}
+
+.box-score-modal--womens-college-basketball .box-score-modal__header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent-wcbb);
+}
+
 .box-score-modal__eyebrow {
   font-family: var(--font);
   font-size: 0.65rem;

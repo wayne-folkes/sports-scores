@@ -11,6 +11,10 @@ import './SportWidget.css';
 const SPORT_META = {
   nba: { icon: '🏀', label: 'NBA' },
   mlb: { icon: '⚾', label: 'MLB' },
+  'mens-college-basketball': { icon: '🏀', label: 'MCBB' },
+  'womens-college-basketball': { icon: '🏀', label: 'WCBB' },
+  'college-baseball': { icon: '⚾', label: 'CBASE' },
+  'college-softball': { icon: '🥎', label: 'CSOFT' },
 };
 
 const DEFAULT_THEME = {
@@ -21,6 +25,22 @@ const DEFAULT_THEME = {
   mlb: {
     primary: '#0f766e',
     secondary: '#f97316',
+  },
+  'mens-college-basketball': {
+    primary: '#1a5276',
+    secondary: '#e67e22',
+  },
+  'womens-college-basketball': {
+    primary: '#8e44ad',
+    secondary: '#e74c3c',
+  },
+  'college-baseball': {
+    primary: '#1e6bb8',
+    secondary: '#c9a227',
+  },
+  'college-softball': {
+    primary: '#d4457a',
+    secondary: '#6b3fa0',
   },
 };
 

@@ -13,6 +13,10 @@ const FETCH_TIMEOUT_MS = 10_000;
 const ESPN_URLS = {
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/teams`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/teams`,
+  'college-baseball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-baseball/teams`,
+  'college-softball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-softball/teams`,
+  'mens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/mens-college-basketball/teams`,
+  'womens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/womens-college-basketball/teams`,
 };
 
 async function fetchWithTimeout(url) {
@@ -64,5 +68,9 @@ async function fetchTeams(req, res, sport) {
 
 router.get('/nba', cache, (req, res) => fetchTeams(req, res, 'nba'));
 router.get('/mlb', cache, (req, res) => fetchTeams(req, res, 'mlb'));
+router.get('/college-baseball', cache, (req, res) => fetchTeams(req, res, 'college-baseball'));
+router.get('/college-softball', cache, (req, res) => fetchTeams(req, res, 'college-softball'));
+router.get('/mens-college-basketball', cache, (req, res) => fetchTeams(req, res, 'mens-college-basketball'));
+router.get('/womens-college-basketball', cache, (req, res) => fetchTeams(req, res, 'womens-college-basketball'));
 
 module.exports = router;

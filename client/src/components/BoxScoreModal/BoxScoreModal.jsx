@@ -99,9 +99,15 @@ export default function BoxScoreModal({ sport, game, onClose }) {
   const statRows = useMemo(() => {
     const all = boxscore?.statistics || [];
     // Limit to key stats to keep the modal compact
+    const basketballStats = ['PTS', 'REB', 'AST', 'FG%', '3P%', 'FT%', 'TO', 'STL', 'BLK'];
+    const baseballStats = ['R', 'H', 'HR', 'RBI', 'BB', 'K', 'SO', '2B', '3B', 'AVG'];
     const keyStats = {
-      nba: ['PTS', 'REB', 'AST', 'FG%', '3P%', 'FT%', 'TO', 'STL', 'BLK'],
-      mlb: ['R', 'H', 'HR', 'RBI', 'BB', 'K', 'SO', '2B', '3B', 'AVG'],
+      nba: basketballStats,
+      'mens-college-basketball': basketballStats,
+      'womens-college-basketball': basketballStats,
+      mlb: baseballStats,
+      'college-baseball': baseballStats,
+      'college-softball': baseballStats,
     };
     const allowed = keyStats[sport];
     if (!allowed) return all;
@@ -111,17 +117,20 @@ export default function BoxScoreModal({ sport, game, onClose }) {
 
   const playersAway = useMemo(() => boxscore?.players?.away || [], [boxscore]);
   const playersHome = useMemo(() => boxscore?.players?.home || [], [boxscore]);
-  const hasPlayers = sport === 'nba' && (playersAway.length > 0 || playersHome.length > 0);
+  const isBasketballSport = sport === 'nba' || sport === 'mens-college-basketball' || sport === 'womens-college-basketball';
+  const hasPlayers = isBasketballSport && (playersAway.length > 0 || playersHome.length > 0);
+
+  const isBaseballSport = sport === 'mlb' || sport === 'college-baseball' || sport === 'college-softball';
 
   const mlbPlayers = useMemo(() => {
-    if (sport !== 'mlb') return null;
+    if (!isBaseballSport) return null;
     const p = boxscore?.players;
     if (!p) return null;
     const awayHasData = (p.away?.batting?.length > 0) || (p.away?.pitching?.length > 0);
     const homeHasData = (p.home?.batting?.length > 0) || (p.home?.pitching?.length > 0);
     if (!awayHasData && !homeHasData) return null;
     return p;
-  }, [sport, boxscore]);
+  }, [isBaseballSport, boxscore]);
 
   const bodyRef = useRef(null);
 

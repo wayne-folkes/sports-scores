@@ -26,6 +26,10 @@
   --accent-mlb-2: #ff9d56;
   --accent-mlb-light: rgba(41, 201, 154, 0.1);
   --accent-mlb-glow: rgba(41, 201, 154, 0.2);
+  --accent-college-baseball: #1e6bb8;
+  --accent-college-softball: #d4457a;
+  --accent-mcbb: #1a5276;
+  --accent-wcbb: #8e44ad;
   --status-live: #ff3535;
   --status-live-bg: rgba(255, 53, 53, 0.1);
   --status-live-glow: rgba(255, 53, 53, 0.28);

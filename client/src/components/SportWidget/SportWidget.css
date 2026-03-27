@@ -74,6 +74,22 @@
   background: var(--accent-mlb);
 }
 
+.sport-widget--college-baseball .sport-widget__header::after {
+  background: var(--accent-college-baseball);
+}
+
+.sport-widget--college-softball .sport-widget__header::after {
+  background: var(--accent-college-softball);
+}
+
+.sport-widget--mens-college-basketball .sport-widget__header::after {
+  background: var(--accent-mcbb);
+}
+
+.sport-widget--womens-college-basketball .sport-widget__header::after {
+  background: var(--accent-wcbb);
+}
+
 .sport-widget__header-left,
 .sport-widget__header-right {
   position: relative;
