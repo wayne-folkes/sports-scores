@@ -8,8 +8,8 @@
   --bg-card-hover: #1a1d2a;
   --bg-soft: rgba(255, 255, 255, 0.04);
   --text-primary: #edf0fb;
-  --text-secondary: #5c6787;
-  --text-muted: #2e3758;
+  --text-secondary: #8a94b2;
+  --text-muted: #4e5a7a;
   --border: rgba(255, 255, 255, 0.07);
   --border-strong: rgba(255, 255, 255, 0.14);
   --border-focus: #c8ff00;
@@ -33,7 +33,7 @@
   --status-live: #ff3535;
   --status-live-bg: rgba(255, 53, 53, 0.1);
   --status-live-glow: rgba(255, 53, 53, 0.28);
-  --status-final: #3d4660;
+  --status-final: #6b7794;
   --status-final-bg: rgba(61, 70, 96, 0.3);
   --status-scheduled: #29c99a;
   --status-scheduled-bg: rgba(41, 201, 154, 0.1);
