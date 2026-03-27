@@ -172,6 +172,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
           >
             <TeamLogo src={away.team.logo} alt={away.team.name} />
             <span className="box-score-modal__team-name">{away.team.abbreviation || away.team.name}</span>
+            {away.team.record && <span className="box-score-modal__team-record">{away.team.record}</span>}
             <span className="box-score-modal__team-score">{away.score ?? '—'}</span>
           </div>
           <div className="box-score-modal__divider">vs</div>
@@ -184,6 +185,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
           >
             <TeamLogo src={home.team.logo} alt={home.team.name} />
             <span className="box-score-modal__team-name">{home.team.abbreviation || home.team.name}</span>
+            {home.team.record && <span className="box-score-modal__team-record">{home.team.record}</span>}
             <span className="box-score-modal__team-score">{home.score ?? '—'}</span>
           </div>
         </div>
