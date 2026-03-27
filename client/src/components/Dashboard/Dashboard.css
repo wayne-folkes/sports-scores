@@ -36,8 +36,9 @@
 
 .dashboard__sport-picker {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 8px 16px;
   padding: 8px 14px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
@@ -59,6 +60,24 @@
 .dashboard__sport-option input[type="checkbox"] {
   accent-color: var(--accent);
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .dashboard__toolbar {
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .dashboard__sport-picker {
+    width: 100%;
+    gap: 6px 14px;
+    padding: 10px 12px;
+  }
+
+  .dashboard__sport-option {
+    font-size: 0.78rem;
+  }
 }
 
 .dashboard__empty {
