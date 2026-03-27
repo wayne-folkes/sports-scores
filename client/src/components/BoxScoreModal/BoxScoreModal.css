@@ -141,6 +141,16 @@
   border: 1px solid var(--border);
 }
 
+.box-score-modal__team-card--clickable {
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.box-score-modal__team-card--clickable:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+}
+
 .box-score-modal__team-logo {
   width: 44px;
   height: 44px;

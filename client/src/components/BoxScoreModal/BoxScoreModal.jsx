@@ -123,6 +123,8 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     return p;
   }, [sport, boxscore]);
 
+  const bodyRef = useRef(null);
+
   const away = boxscore?.teams?.away || {
     team: game.awayTeam,
     score: game.awayScore,
@@ -130,6 +132,13 @@ export default function BoxScoreModal({ sport, game, onClose }) {
   const home = boxscore?.teams?.home || {
     team: game.homeTeam,
     score: game.homeScore,
+  };
+
+  const scrollToTeam = (side) => {
+    const target = bodyRef.current?.querySelector(`[data-team-section="${side}"]`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -145,20 +154,32 @@ export default function BoxScoreModal({ sport, game, onClose }) {
         </div>
 
         <div className="box-score-modal__scoreboard">
-          <div className="box-score-modal__team-card">
+          <div
+            className="box-score-modal__team-card box-score-modal__team-card--clickable"
+            onClick={() => scrollToTeam('away')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToTeam('away'); } }}
+          >
             <TeamLogo src={away.team.logo} alt={away.team.name} />
             <span className="box-score-modal__team-name">{away.team.abbreviation || away.team.name}</span>
             <span className="box-score-modal__team-score">{away.score ?? '—'}</span>
           </div>
           <div className="box-score-modal__divider">vs</div>
-          <div className="box-score-modal__team-card box-score-modal__team-card--home">
+          <div
+            className="box-score-modal__team-card box-score-modal__team-card--home box-score-modal__team-card--clickable"
+            onClick={() => scrollToTeam('home')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToTeam('home'); } }}
+          >
             <TeamLogo src={home.team.logo} alt={home.team.name} />
             <span className="box-score-modal__team-name">{home.team.abbreviation || home.team.name}</span>
             <span className="box-score-modal__team-score">{home.score ?? '—'}</span>
           </div>
         </div>
 
-        <div className="box-score-modal__body">
+        <div className="box-score-modal__body" ref={bodyRef}>
           {isLoading && <div className="box-score-modal__state">Loading box score…</div>}
 
           {!isLoading && error && (
@@ -196,10 +217,10 @@ export default function BoxScoreModal({ sport, game, onClose }) {
           {!isLoading && !error && hasPlayers && (
             <div className="bs-players">
               {[
-                { label: `${away.team.abbreviation || 'Away'} Starters + Bench`, players: playersAway },
-                { label: `${home.team.abbreviation || 'Home'} Starters + Bench`, players: playersHome },
-              ].map(({ label, players: teamPlayers }) => (
-                <div key={label} className="bs-players__section">
+                { side: 'away', label: `${away.team.abbreviation || 'Away'} Starters + Bench`, players: playersAway },
+                { side: 'home', label: `${home.team.abbreviation || 'Home'} Starters + Bench`, players: playersHome },
+              ].map(({ side, label, players: teamPlayers }) => (
+                <div key={label} className="bs-players__section" data-team-section={side}>
                   <div className="bs-players__heading">{label}</div>
                   <div className="bs-players__table-wrap">
                     <table className="bs-players__table">
@@ -245,7 +266,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
                 { side: 'away', abbr: away.team.abbreviation || 'Away', data: mlbPlayers.away },
                 { side: 'home', abbr: home.team.abbreviation || 'Home', data: mlbPlayers.home },
               ].map(({ side, abbr, data }) => (
-                <div key={side} className="bs-players__group">
+                <div key={side} className="bs-players__group" data-team-section={side}>
                   {data?.batting?.length > 0 && (
                     <>
                       <p className="bs-players__group-heading">{abbr} Batting</p>
