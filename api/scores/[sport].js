@@ -7,6 +7,10 @@ const { ESPN_API_BASE } = require('../_lib/config');
 const ESPN_URLS = {
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/scoreboard`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/scoreboard`,
+  'mens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard`,
+  'womens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/womens-college-basketball/scoreboard`,
+  'college-baseball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-baseball/scoreboard`,
+  'college-softball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-softball/scoreboard`,
 };
 
 const SUMMARY_URLS = {

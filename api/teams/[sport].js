@@ -7,6 +7,10 @@ const { ESPN_API_BASE } = require('../_lib/config');
 const ESPN_URLS = {
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/teams`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/teams`,
+  'mens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/mens-college-basketball/teams`,
+  'womens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/womens-college-basketball/teams`,
+  'college-baseball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-baseball/teams`,
+  'college-softball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-softball/teams`,
 };
 
 module.exports = async function handler(req, res) {

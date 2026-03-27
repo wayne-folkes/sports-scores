@@ -187,11 +187,16 @@ function normalizeBoxscore(data, sport, eventId) {
   const MLB_BATTING_DISPLAY = ['H-AB', 'R', 'H', 'RBI', 'HR', 'BB', 'K', 'AVG'];
   const MLB_PITCHING_DISPLAY = ['IP', 'H', 'R', 'ER', 'BB', 'K', 'HR', 'ERA'];
 
-  let players = sport === 'mlb'
+  const BASEBALL_SPORTS = ['mlb', 'college-baseball', 'college-softball'];
+  const BASKETBALL_SPORTS = ['nba', 'mens-college-basketball', 'womens-college-basketball'];
+  const isBaseball = BASEBALL_SPORTS.includes(sport);
+  const isBasketball = BASKETBALL_SPORTS.includes(sport);
+
+  let players = isBaseball
     ? { away: { batting: [], pitching: [] }, home: { batting: [], pitching: [] } }
     : { away: [], home: [] };
 
-  if (sport === 'mlb' && data.boxscore?.players?.length) {
+  if (isBaseball && data.boxscore?.players?.length) {
     const awayTeamId = String(awayCompetitor?.team?.id || '');
     const homeTeamId = String(homeCompetitor?.team?.id || '');
 
@@ -273,8 +278,8 @@ function normalizeBoxscore(data, sport, eventId) {
     }
   }
 
-  // Extract NBA player stats
-  if (sport === 'nba' && data.boxscore?.players?.length) {
+  // Extract basketball player stats
+  if (isBasketball && data.boxscore?.players?.length) {
     const PLAYER_STAT_KEYS = ['MIN', 'PTS', 'FG', '3PT', 'FT', 'REB', 'AST', 'TO', 'STL', 'BLK'];
 
     // Match each players entry to away/home using competitor ids or display order
