@@ -11,8 +11,8 @@ import './SportWidget.css';
 const SPORT_META = {
   nba: { icon: '🏀', label: 'NBA' },
   mlb: { icon: '⚾', label: 'MLB' },
-  'mens-college-basketball': { icon: '🏀', label: 'MCBB' },
-  'womens-college-basketball': { icon: '🏀', label: 'WCBB' },
+  'mens-college-basketball': { icon: '🏀', label: 'NCAAM' },
+  'womens-college-basketball': { icon: '🏀', label: 'NCAAW' },
   'college-baseball': { icon: '⚾', label: 'CBASE' },
   'college-softball': { icon: '🥎', label: 'CSOFT' },
 };
