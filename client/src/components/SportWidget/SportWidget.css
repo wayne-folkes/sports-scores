@@ -62,8 +62,16 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: var(--widget-accent-primary, var(--border-strong));
+  background: var(--border-strong);
   opacity: 0.7;
+}
+
+.sport-widget--nba .sport-widget__header::after {
+  background: var(--accent-nba);
+}
+
+.sport-widget--mlb .sport-widget__header::after {
+  background: var(--accent-mlb);
 }
 
 .sport-widget__header-left,

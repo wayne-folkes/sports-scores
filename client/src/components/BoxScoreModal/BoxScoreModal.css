@@ -254,7 +254,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .box-score-modal__stats-header span:nth-child(2),
@@ -523,7 +523,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-align: right;
   padding: 6px 8px 5px;
   white-space: nowrap;
