@@ -116,6 +116,14 @@
   background: rgba(255, 255, 255, 0.025);
 }
 
+.scorecard__team--clickable {
+  cursor: pointer;
+}
+
+.scorecard__team--clickable:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 /* ── Logo ─────────────────────────────────────────────────────────────── */
 
 .scorecard__logo,
