@@ -1,7 +1,16 @@
+import { useEffect } from 'react'
 import './index.css'
 import Dashboard from './components/Dashboard'
+import { THEMES, applyTheme } from './themes'
+import { useLocalStorage } from './hooks/useLocalStorage'
 
 function App() {
+  const [theme, setTheme] = useLocalStorage('theme', 'default')
+
+  useEffect(() => {
+    applyTheme(theme)
+  }, [theme])
+
   return (
     <div className="app">
       <header className="app-header">
@@ -14,6 +23,16 @@ function App() {
         </div>
         <div className="app-header__meta" aria-label="App highlights">
           <span className="app-header__pill app-header__pill--live">Live</span>
+          <select
+            className="app-header__theme-select"
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            aria-label="Select theme"
+          >
+            {Object.entries(THEMES).map(([key, { label }]) => (
+              <option key={key} value={key}>{label}</option>
+            ))}
+          </select>
         </div>
       </header>
       <main className="app-main">
