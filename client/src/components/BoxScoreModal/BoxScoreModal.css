@@ -47,7 +47,10 @@
   padding: 16px 22px 14px;
   border-bottom: 1px solid var(--border);
   background: var(--bg-card);
-  overflow: hidden;
+}
+
+.box-score-modal__header > div:first-child {
+  min-width: 0;
 }
 
 .box-score-modal--nba .box-score-modal__header::before {

@@ -96,7 +96,18 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     };
   }, [game.status, fetchBoxscore]);
 
-  const statRows = useMemo(() => boxscore?.statistics || [], [boxscore]);
+  const statRows = useMemo(() => {
+    const all = boxscore?.statistics || [];
+    // Limit to key stats to keep the modal compact
+    const keyStats = {
+      nba: ['PTS', 'REB', 'AST', 'FG%', '3P%', 'FT%', 'TO', 'STL', 'BLK'],
+      mlb: ['R', 'H', 'HR', 'RBI', 'BB', 'K', '2B', '3B', 'AVG'],
+    };
+    const allowed = keyStats[sport];
+    if (!allowed) return all;
+    const filtered = all.filter((s) => allowed.includes(s.key));
+    return filtered.length > 0 ? filtered : all.slice(0, 9);
+  }, [boxscore, sport]);
 
   const playersAway = useMemo(() => boxscore?.players?.away || [], [boxscore]);
   const playersHome = useMemo(() => boxscore?.players?.home || [], [boxscore]);
