@@ -123,9 +123,21 @@ function normalizeBoxscore(data, sport, eventId) {
 
   const teamStats = (data.boxscore?.teams || []).reduce((accumulator, entry) => {
     const homeAway = entry.homeAway || 'unknown';
+    const rawStats = entry.statistics || [];
+
+    // MLB returns nested categories (batting, pitching, etc.) with a stats array inside.
+    // NBA returns flat stat objects. Detect and flatten accordingly.
+    let flatStats;
+    if (rawStats.length > 0 && Array.isArray(rawStats[0]?.stats)) {
+      // Nested (MLB): flatten all category stats into one list
+      flatStats = rawStats.flatMap((category) => (category.stats || []));
+    } else {
+      flatStats = rawStats;
+    }
+
     accumulator[homeAway] = {
       team: normalizeTeamInfo(entry.team || {}),
-      statistics: (entry.statistics || []).map((stat) => ({
+      statistics: flatStats.map((stat) => ({
         key: stat.abbreviation || stat.name || stat.label || '',
         label: stat.label || stat.abbreviation || stat.name || '',
         value: stat.displayValue || '',

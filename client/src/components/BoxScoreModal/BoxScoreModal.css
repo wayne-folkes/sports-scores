@@ -85,10 +85,6 @@
   line-height: 1.2;
   letter-spacing: 0.04em;
   color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: calc(100% - 10px);
 }
 
 .box-score-modal__subtitle {

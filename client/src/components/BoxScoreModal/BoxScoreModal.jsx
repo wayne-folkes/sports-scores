@@ -101,7 +101,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     // Limit to key stats to keep the modal compact
     const keyStats = {
       nba: ['PTS', 'REB', 'AST', 'FG%', '3P%', 'FT%', 'TO', 'STL', 'BLK'],
-      mlb: ['R', 'H', 'HR', 'RBI', 'BB', 'K', '2B', '3B', 'AVG'],
+      mlb: ['R', 'H', 'HR', 'RBI', 'BB', 'K', 'SO', '2B', '3B', 'AVG'],
     };
     const allowed = keyStats[sport];
     if (!allowed) return all;
