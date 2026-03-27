@@ -1,3 +1,5 @@
+/* ── TeamSelector ──────────────────────────────────────────────────────── */
+
 .team-selector__backdrop {
   position: fixed;
   inset: 0;
@@ -6,10 +8,10 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: rgba(2, 6, 23, 0.56);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  animation: team-selector-fade-in 180ms ease;
+  background: rgba(4, 5, 10, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: team-selector-fade-in 160ms ease;
 }
 
 @keyframes team-selector-fade-in {
@@ -19,132 +21,172 @@
 
 .team-selector__panel {
   width: min(720px, 100%);
-  max-height: min(86vh, 860px);
+  max-height: min(88vh, 860px);
   display: flex;
   flex-direction: column;
-  border-radius: 30px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  background: color-mix(in srgb, var(--bg-widget-strong) 82%, transparent);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  animation: team-selector-panel-in 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  background: var(--bg-widget);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.04);
+  animation: team-selector-panel-in 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes team-selector-panel-in {
-  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* ── Header ────────────────────────────────────────────────────────────── */
+
 .team-selector__header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 18px;
-  padding: 22px 24px 18px;
+  gap: 16px;
+  padding: 20px 22px 18px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-widget-strong) 98%, transparent), color-mix(in srgb, var(--bg-widget) 80%, transparent));
+  background: var(--bg-card);
+  overflow: hidden;
 }
 
-.team-selector--nba .team-selector__header {
-  box-shadow: inset 0 4px 0 var(--accent-nba);
+/* Sport accent line at the top */
+.team-selector--nba .team-selector__header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent-nba);
 }
 
-.team-selector--mlb .team-selector__header {
-  box-shadow: inset 0 4px 0 var(--accent-mlb);
+.team-selector--mlb .team-selector__header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent-mlb);
 }
 
 .team-selector__eyebrow {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  font-family: var(--font);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
+  margin-bottom: 6px;
 }
 
 .team-selector__title {
-  margin-top: 8px;
-  font-size: 1.45rem;
+  font-family: var(--font-display);
+  font-size: 2rem;
   line-height: 1;
-  font-weight: 900;
-  letter-spacing: -0.05em;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
 }
 
 .team-selector__subtitle {
-  margin-top: 8px;
+  margin-top: 6px;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 500;
   color: var(--text-secondary);
-  font-size: 0.92rem;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .team-selector__close {
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
   display: grid;
   place-items: center;
   color: var(--text-secondary);
-  background: color-mix(in srgb, var(--bg-card) 90%, transparent);
+  background: var(--bg-soft);
   border: 1px solid var(--border);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 1;
   touch-action: manipulation;
+  flex-shrink: 0;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
 }
+
+.team-selector__close:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+}
+
+/* ── Search ────────────────────────────────────────────────────────────── */
 
 .team-selector__search-wrap,
 .team-selector__meta {
-  padding: 0 24px;
+  padding: 0 22px;
 }
 
 .team-selector__search-wrap {
-  padding-top: 16px;
+  padding-top: 14px;
 }
 
 .team-selector__search {
   width: 100%;
-  height: 52px;
-  padding: 0 16px 0 48px;
-  border-radius: 18px;
+  height: 44px;
+  padding: 0 14px 0 42px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%237c89a5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 18px center / 18px 18px no-repeat,
-    color-mix(in srgb, var(--bg-card) 96%, transparent);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232e3758' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") 14px center / 16px 16px no-repeat,
+    var(--bg-card);
   color: var(--text-primary);
-  transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.team-selector__search::placeholder {
+  color: var(--text-muted);
 }
 
 .team-selector__search:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--border-focus) 14%, transparent);
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(200, 255, 0, 0.1);
 }
+
+/* ── Meta bar ──────────────────────────────────────────────────────────── */
 
 .team-selector__meta {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  padding-top: 14px;
-  padding-bottom: 10px;
+  gap: 10px;
+  padding-top: 12px;
+  padding-bottom: 8px;
 }
 
 .team-selector__results,
 .team-selector__hint,
 .team-selector__count {
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-muted);
 }
+
+/* ── Grid ──────────────────────────────────────────────────────────────── */
 
 .team-selector__body {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 24px 24px;
+  padding: 6px 22px 22px;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
 
 .team-selector__state {
-  min-height: 220px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -153,11 +195,11 @@
 }
 
 .team-selector__spinner {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
-  border: 3px solid var(--border);
-  border-top-color: var(--border-focus);
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
   animation: team-selector-spin 0.7s linear infinite;
 }
 
@@ -168,110 +210,118 @@
 .team-selector__error {
   max-width: 28ch;
   text-align: center;
+  font-family: var(--font);
   color: var(--status-live);
   line-height: 1.6;
 }
 
 .team-selector__retry {
-  padding: 10px 16px;
-  border-radius: 999px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg-card) 96%, transparent);
+  background: var(--bg-card);
   color: var(--text-primary);
+  font-family: var(--font);
   font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   touch-action: manipulation;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.team-selector__retry:hover {
+  color: var(--accent);
+  border-color: rgba(200, 255, 0, 0.3);
 }
 
 .team-selector__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 8px;
+  padding-top: 4px;
 }
+
+/* ── Team card ─────────────────────────────────────────────────────────── */
 
 .team-selector__card {
   position: relative;
-  min-height: 118px;
-  padding: 16px 12px;
-  border-radius: 22px;
+  min-height: 100px;
+  padding: 14px 10px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-card) 98%, transparent), color-mix(in srgb, var(--bg-card-hover) 94%, transparent));
+  background: var(--bg-card);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   text-align: center;
-  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+  transition: transform var(--transition), border-color var(--transition), background var(--transition);
   touch-action: manipulation;
 }
 
 .team-selector__card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
 }
 
-.team-selector--nba .team-selector__card--selected {
-  border-color: color-mix(in srgb, var(--accent-nba) 60%, white 10%);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-nba-light) 88%, var(--bg-card) 12%), color-mix(in srgb, var(--accent-nba-light) 42%, var(--bg-card-hover) 58%));
-  box-shadow: 0 18px 42px color-mix(in srgb, var(--accent-nba) 18%, transparent);
-}
-
+/* Selected state */
+.team-selector--nba .team-selector__card--selected,
 .team-selector--mlb .team-selector__card--selected {
-  border-color: color-mix(in srgb, var(--accent-mlb) 60%, white 10%);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-mlb-light) 88%, var(--bg-card) 12%), color-mix(in srgb, var(--accent-mlb-light) 42%, var(--bg-card-hover) 58%));
-  box-shadow: 0 18px 42px color-mix(in srgb, var(--accent-mlb) 18%, transparent);
+  border-color: var(--accent);
+  background: rgba(200, 255, 0, 0.06);
 }
 
 .team-selector__card--selected::after {
   content: '✓';
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 22px;
-  height: 22px;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
   display: grid;
   place-items: center;
-  border-radius: 999px;
-  color: #fff;
-  font-size: 0.78rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  font-family: var(--font);
+  font-size: 0.65rem;
   font-weight: 900;
-}
-
-.team-selector--nba .team-selector__card--selected::after {
-  background: linear-gradient(135deg, var(--accent-nba), var(--accent-nba-2));
-}
-
-.team-selector--mlb .team-selector__card--selected::after {
-  background: linear-gradient(135deg, var(--accent-mlb), var(--accent-mlb-2));
 }
 
 .team-selector__logo,
 .team-selector__logo--fallback {
-  width: 46px;
-  height: 46px;
-  border-radius: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
 }
 
 .team-selector__logo {
   object-fit: contain;
-  background: rgba(255, 255, 255, 0.4);
-  padding: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 5px;
 }
 
 .team-selector__logo--fallback {
   display: grid;
   place-items: center;
-  background: color-mix(in srgb, var(--bg-soft) 100%, transparent);
+  background: var(--bg-soft);
   border: 1px solid var(--border);
   color: var(--text-secondary);
-  font-size: 0.68rem;
+  font-family: var(--font);
+  font-size: 0.65rem;
   font-weight: 800;
 }
 
 .team-selector__team-name {
-  font-size: 0.8rem;
-  font-weight: 800;
-  line-height: 1.35;
+  font-family: var(--font);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.3;
   color: var(--text-primary);
 }
 
@@ -279,48 +329,54 @@
   grid-column: 1 / -1;
   padding: 36px 0;
   text-align: center;
+  font-family: var(--font);
   color: var(--text-secondary);
 }
+
+/* ── Footer ────────────────────────────────────────────────────────────── */
 
 .team-selector__footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  padding: 18px 24px 24px;
+  gap: 14px;
+  padding: 16px 22px 20px;
   border-top: 1px solid var(--border);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--bg-widget) 90%, transparent), color-mix(in srgb, var(--bg-widget-strong) 100%, transparent));
+  background: var(--bg-card);
 }
 
 .team-selector__done {
-  min-width: 120px;
-  padding: 12px 20px;
-  border-radius: 999px;
-  color: #fff;
+  min-width: 110px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #000;
+  font-family: var(--font);
+  font-size: 0.8rem;
   font-weight: 800;
-  letter-spacing: 0.01em;
-  box-shadow: var(--shadow-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(200, 255, 0, 0.2);
   transition: transform var(--transition), filter var(--transition);
 }
 
 .team-selector__done:hover {
   transform: translateY(-1px);
-  filter: brightness(1.04);
+  filter: brightness(1.08);
 }
 
-.team-selector--nba .team-selector__done {
-  background: linear-gradient(135deg, var(--accent-nba), var(--accent-nba-2));
-}
-
+/* The sport-specific done button colors are now unified as accent color */
+.team-selector--nba .team-selector__done,
 .team-selector--mlb .team-selector__done {
-  background: linear-gradient(135deg, var(--accent-mlb), var(--accent-mlb-2));
+  background: var(--accent);
 }
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
 
 @media (max-width: 720px) {
   .team-selector__panel {
     width: 100%;
     max-height: calc(100vh - 24px);
-    border-radius: 24px;
   }
 
   .team-selector__grid {
@@ -330,7 +386,7 @@
 
 @media (max-width: 520px) {
   .team-selector__backdrop {
-    padding: 12px;
+    padding: 10px;
   }
 
   .team-selector__header,
@@ -338,12 +394,12 @@
   .team-selector__meta,
   .team-selector__body,
   .team-selector__footer {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 14px;
+    padding-right: 14px;
   }
 
   .team-selector__title {
-    font-size: 1.2rem;
+    font-size: 1.6rem;
   }
 
   .team-selector__footer {
@@ -353,5 +409,6 @@
 
   .team-selector__done {
     width: 100%;
+    text-align: center;
   }
 }

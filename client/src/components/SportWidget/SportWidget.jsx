@@ -154,7 +154,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
 
   return (
     <div className={`sport-widget sport-widget--${sport}`} style={widgetStyle}>
-      <header className={`sport-widget__header${isReorderable ? ' drag-handle' : ''}`}>
+      <header className={`sport-widget__header${isReorderable ? ' drag-handle' : ''}`} data-sport-label={meta.label}>
         <div className="sport-widget__header-left">
           <span className="sport-widget__icon-shell" aria-hidden="true">
             <span className="sport-widget__icon">{meta.icon}</span>

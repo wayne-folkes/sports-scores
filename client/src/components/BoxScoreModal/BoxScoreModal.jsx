@@ -98,6 +98,20 @@ export default function BoxScoreModal({ sport, game, onClose }) {
 
   const statRows = useMemo(() => boxscore?.statistics || [], [boxscore]);
 
+  const playersAway = useMemo(() => boxscore?.players?.away || [], [boxscore]);
+  const playersHome = useMemo(() => boxscore?.players?.home || [], [boxscore]);
+  const hasPlayers = sport === 'nba' && (playersAway.length > 0 || playersHome.length > 0);
+
+  const mlbPlayers = useMemo(() => {
+    if (sport !== 'mlb') return null;
+    const p = boxscore?.players;
+    if (!p) return null;
+    const awayHasData = (p.away?.batting?.length > 0) || (p.away?.pitching?.length > 0);
+    const homeHasData = (p.home?.batting?.length > 0) || (p.home?.pitching?.length > 0);
+    if (!awayHasData && !homeHasData) return null;
+    return p;
+  }, [sport, boxscore]);
+
   const away = boxscore?.teams?.away || {
     team: game.awayTeam,
     score: game.awayScore,
@@ -166,6 +180,142 @@ export default function BoxScoreModal({ sport, game, onClose }) {
 
           {!isLoading && !error && statRows.length === 0 && (
             <div className="box-score-modal__state">No box score is available for this game yet.</div>
+          )}
+
+          {!isLoading && !error && hasPlayers && (
+            <div className="bs-players">
+              {[
+                { label: `${away.team.abbreviation || 'Away'} Starters + Bench`, players: playersAway },
+                { label: `${home.team.abbreviation || 'Home'} Starters + Bench`, players: playersHome },
+              ].map(({ label, players: teamPlayers }) => (
+                <div key={label} className="bs-players__section">
+                  <div className="bs-players__heading">{label}</div>
+                  <div className="bs-players__table-wrap">
+                    <table className="bs-players__table">
+                      <thead>
+                        <tr className="bs-players__row bs-players__row--head">
+                          <th className="bs-players__name bs-players__col-head" scope="col">Player</th>
+                          <th className="bs-players__stat bs-players__col-head" scope="col">PTS</th>
+                          <th className="bs-players__stat bs-players__col-head" scope="col">REB</th>
+                          <th className="bs-players__stat bs-players__col-head" scope="col">AST</th>
+                          <th className="bs-players__stat bs-players__stat--secondary bs-players__col-head" scope="col">FG</th>
+                          <th className="bs-players__stat bs-players__stat--secondary bs-players__col-head" scope="col">3PT</th>
+                          <th className="bs-players__stat bs-players__stat--secondary bs-players__col-head" scope="col">FT</th>
+                          <th className="bs-players__stat bs-players__col-head" scope="col">MIN</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {teamPlayers.map((player, idx) => (
+                          <tr
+                            key={player.name || idx}
+                            className={`bs-players__row${idx === 0 ? ' bs-players__row--top' : ''}`}
+                          >
+                            <td className="bs-players__name">{player.shortName || player.name}</td>
+                            <td className="bs-players__stat">{player.stats.PTS ?? '—'}</td>
+                            <td className="bs-players__stat">{player.stats.REB ?? '—'}</td>
+                            <td className="bs-players__stat">{player.stats.AST ?? '—'}</td>
+                            <td className="bs-players__stat bs-players__stat--secondary">{player.stats.FG ?? '—'}</td>
+                            <td className="bs-players__stat bs-players__stat--secondary">{player.stats['3PT'] ?? '—'}</td>
+                            <td className="bs-players__stat bs-players__stat--secondary">{player.stats.FT ?? '—'}</td>
+                            <td className="bs-players__stat">{player.stats.MIN ?? '—'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!isLoading && !error && mlbPlayers && (
+            <div className="bs-players">
+              {[
+                { side: 'away', abbr: away.team.abbreviation || 'Away', data: mlbPlayers.away },
+                { side: 'home', abbr: home.team.abbreviation || 'Home', data: mlbPlayers.home },
+              ].map(({ side, abbr, data }) => (
+                <div key={side} className="bs-players__group">
+                  {data?.batting?.length > 0 && (
+                    <>
+                      <p className="bs-players__group-heading">{abbr} Batting</p>
+                      <div className="bs-players__table-wrap">
+                        <table className="bs-players__table">
+                          <thead>
+                            <tr className="bs-players__row bs-players__row--head">
+                              <th className="bs-players__th bs-players__th--name" scope="col">Player</th>
+                              <th className="bs-players__th" scope="col">H-AB</th>
+                              <th className="bs-players__th" scope="col">R</th>
+                              <th className="bs-players__th" scope="col">H</th>
+                              <th className="bs-players__th" scope="col">RBI</th>
+                              <th className="bs-players__th" scope="col">HR</th>
+                              <th className="bs-players__th" scope="col">BB</th>
+                              <th className="bs-players__th" scope="col">K</th>
+                              <th className="bs-players__th bs-players__td--secondary" scope="col">AVG</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {data.batting.map((player, idx) => (
+                              <tr key={player.name || idx} className="bs-players__row">
+                                <td className="bs-players__td-name">
+                                  {player.shortName || player.name}
+                                  {player.position && <span className="bs-players__pos">&nbsp;{player.position}</span>}
+                                </td>
+                                <td className="bs-players__td">{player.stats['H-AB'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['R'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['H'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['RBI'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['HR'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['BB'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['K'] || '—'}</td>
+                                <td className="bs-players__td bs-players__td--secondary">{player.stats['AVG'] || '—'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
+                  )}
+
+                  {data?.pitching?.length > 0 && (
+                    <>
+                      <p className="bs-players__group-heading">{abbr} Pitching</p>
+                      <div className="bs-players__table-wrap">
+                        <table className="bs-players__table">
+                          <thead>
+                            <tr className="bs-players__row bs-players__row--head">
+                              <th className="bs-players__th bs-players__th--name" scope="col">Pitcher</th>
+                              <th className="bs-players__th" scope="col">IP</th>
+                              <th className="bs-players__th" scope="col">H</th>
+                              <th className="bs-players__th" scope="col">R</th>
+                              <th className="bs-players__th" scope="col">ER</th>
+                              <th className="bs-players__th" scope="col">BB</th>
+                              <th className="bs-players__th" scope="col">K</th>
+                              <th className="bs-players__th" scope="col">HR</th>
+                              <th className="bs-players__th bs-players__td--secondary" scope="col">ERA</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {data.pitching.map((player, idx) => (
+                              <tr key={player.name || idx} className="bs-players__row">
+                                <td className="bs-players__td-name">{player.shortName || player.name}</td>
+                                <td className="bs-players__td">{player.stats['IP'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['H'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['R'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['ER'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['BB'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['K'] || '—'}</td>
+                                <td className="bs-players__td">{player.stats['HR'] || '—'}</td>
+                                <td className="bs-players__td bs-players__td--secondary">{player.stats['ERA'] || '—'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
