@@ -117,7 +117,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(6, 7, 12, 0.92);
+  background: color-mix(in srgb, var(--bg-page) 92%, transparent);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
