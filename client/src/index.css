@@ -18,10 +18,10 @@
   --shadow-sm: 0 2px 16px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 6px 32px rgba(0, 0, 0, 0.6);
   --shadow-lg: 0 12px 60px rgba(0, 0, 0, 0.7);
-  --accent-nba: #5b8fff;
+  --accent-nba: #ee6730;
   --accent-nba-2: #ff6b8a;
-  --accent-nba-light: rgba(91, 143, 255, 0.1);
-  --accent-nba-glow: rgba(91, 143, 255, 0.2);
+  --accent-nba-light: rgba(238, 103, 48, 0.1);
+  --accent-nba-glow: rgba(238, 103, 48, 0.2);
   --accent-mlb: #29c99a;
   --accent-mlb-2: #ff9d56;
   --accent-mlb-light: rgba(41, 201, 154, 0.1);
