@@ -538,8 +538,8 @@
 
 .bs-players__pos {
   font-size: 0.68rem;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-weight: 600;
+  color: var(--text-secondary);
   text-transform: uppercase;
 }
 
@@ -547,7 +547,7 @@
   font-family: var(--font);
   font-size: 0.82rem;
   font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   text-align: right;
   padding: 8px 10px;
   white-space: nowrap;
