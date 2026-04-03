@@ -13,11 +13,11 @@ struct SportsScoresApp: App {
                 }
 
                 Tab("Favorites", systemImage: "star.fill") {
-                    Text("Favorites")
+                    FavoritesTab()
                 }
 
                 Tab("Settings", systemImage: "gearshape") {
-                    Text("Settings")
+                    SettingsTab()
                 }
             }
             .environment(favoritesStore)

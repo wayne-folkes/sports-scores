@@ -12,6 +12,7 @@ final class ScoresViewModel {
     var error: String?
 
     private let apiClient: APIClient
+    private let hapticManager = HapticManager.shared
     private var timerCancellable: AnyCancellable?
 
     // MARK: - Computed
@@ -98,6 +99,8 @@ final class ScoresViewModel {
             isLoading = games.isEmpty
             error = nil
 
+            let previousGames = games
+
             await withTaskGroup(of: (String, [Game])?.self) { group in
                 for sport in enabledSports {
                     group.addTask { [apiClient] in
@@ -115,6 +118,10 @@ final class ScoresViewModel {
                         games[key] = sportGames
                     }
                 }
+            }
+
+            if !previousGames.isEmpty {
+                hapticManager.checkForScoreChanges(previous: previousGames, current: games)
             }
 
             isLoading = false
