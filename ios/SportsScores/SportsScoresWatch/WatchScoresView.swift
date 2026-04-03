@@ -5,6 +5,7 @@ import SportsScoresKit
 // MARK: - ViewModel
 
 @Observable
+@MainActor
 final class WatchScoresViewModel {
     var games: [String: [Game]] = [:]
     var isLoading = false
@@ -62,7 +63,7 @@ final class WatchScoresViewModel {
     // MARK: - Fetching
 
     func fetchAllScores() {
-        Task { @MainActor in
+        Task {
             isLoading = games.isEmpty
             error = nil
 

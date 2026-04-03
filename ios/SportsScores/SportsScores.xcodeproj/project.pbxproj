@@ -1,0 +1,924 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06370113A7E8CC0F388FE2E8 /* BoxScoreViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C05E20DA0F84380EFD1F8C /* BoxScoreViewModel.swift */; };
+		0680E963E3B069EAC1BF24C5 /* SportsScoresWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9714AAACD7F15069D20286B9 /* SportsScoresWatchApp.swift */; };
+		06D43D841D0FB1CA92CCF7F5 /* StatusBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = E493384E15E4229F96BE0108 /* StatusBadge.swift */; };
+		1AD241865573CAECCCCAB0FB /* SportsScoresWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7D34B02A91716C93FEF0F197 /* SportsScoresWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1AEAB82E07B26E127596238D /* BoxScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C3FE29C09144752054CE55 /* BoxScoreView.swift */; };
+		1E7F2C60D708D62775FF1F57 /* SettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03134096CFB29CB6569B817 /* SettingsTab.swift */; };
+		25FAB92E2B624950ADD5B949 /* SportAccent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0315A57C2303EAE39D666 /* SportAccent.swift */; };
+		27967D6E19EDD354A8D470E4 /* TeamSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD4AF9179A766F04E56E68DF /* TeamSelector.swift */; };
+		28C83F68D1C0C8415712837A /* PlayerStatsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D6402019A2988B511F29D /* PlayerStatsTable.swift */; };
+		2E4E01660CD6D0622E1A6D23 /* ModelDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3B7D2598894E22D8A3EB6E /* ModelDecodingTests.swift */; };
+		2E84F73847B5A0C7F8A17FA1 /* SportsScoresKit in Frameworks */ = {isa = PBXBuildFile; productRef = 783D19A854EBF674F0CB96D9 /* SportsScoresKit */; };
+		30C955330030C13DCD5AF7A2 /* TeamLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5271758FEC953658DD7002FC /* TeamLogo.swift */; };
+		4AF638A9D9166310F917ADE0 /* SportsScoresKit in Frameworks */ = {isa = PBXBuildFile; productRef = D24FE787BED85724E5E5C2F9 /* SportsScoresKit */; };
+		4E7DF4D11E4FE3712884F869 /* FavoritesStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3ABF33724AB825A80B597BA /* FavoritesStoreTests.swift */; };
+		50D8A3C2E8A7FF1B553F735E /* SportsScoresWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340E1BF37D0C242CB97B6237 /* SportsScoresWidgets.swift */; };
+		56D72A778FD42B5FF8090101 /* WatchScoresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7BBC79EA4ED0597C6B139D /* WatchScoresView.swift */; };
+		6132A8F7DC55BB4308BF28A2 /* EndpointsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0902DA7BCE678DB78A6F6EFE /* EndpointsTests.swift */; };
+		616B41C0AA703736790F8388 /* ScoresWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9306DBC47AD6FBE2B3DBAF0 /* ScoresWidget.swift */; };
+		61F1817046CF5BE3D21BDF92 /* WatchGameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAE66DFDED75F1BAABF49C56 /* WatchGameRow.swift */; };
+		742C8DC190368D1379BFEED7 /* ScoresTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C15C04F8C467C83E22EDAD /* ScoresTab.swift */; };
+		779531D7B6BDE51074AE50CF /* SportPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C462995AEB6C7463565B015 /* SportPicker.swift */; };
+		7E46C3927E01E9603474CAA1 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1CD30792664366B84A549B /* SettingsViewModel.swift */; };
+		8D54F1FE90508463AF301CE7 /* SportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD63712534944BC3B290CADC /* SportTests.swift */; };
+		8FC1F8D018DE0F1DDB61CB97 /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E1F5B81753A6B48A47E900 /* LiveActivityManager.swift */; };
+		A8F0854E70B2AFB2B509096B /* SportsScoresApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045E688B56B63E34533E4BF8 /* SportsScoresApp.swift */; };
+		B4010B138E30A62510C01960 /* ScoresViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEC309880AB2ADBB9696E41 /* ScoresViewModel.swift */; };
+		B695481CE68E8043BE154DE4 /* SportsScoresLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FE6725C9A5471E93AD6B19 /* SportsScoresLiveActivity.swift */; };
+		BA2D359F79E30556F764832F /* GameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56C50F4F4CF8E5D05AF124C /* GameRow.swift */; };
+		BB35DE50F225E921E9DEACB6 /* SportsScoresKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8CEF7B7D2A8B6E795D73A877 /* SportsScoresKit */; };
+		C2D3DC0623AC7B64812845A3 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252A881BDE945DD2835E4C12 /* APIClientTests.swift */; };
+		C36C7964910FF89F21A4E69E /* SportsScoresKit in Frameworks */ = {isa = PBXBuildFile; productRef = 107E825CE0CA71C470CBD880 /* SportsScoresKit */; };
+		D007C491998C607D42917EFE /* SportsScoresWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 1C93B25A39A8EEFB196FD631 /* SportsScoresWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DD391A5CAAF84B88031F06CF /* WidgetTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8ADFEA0717FFFAC2E740484 /* WidgetTimelineProvider.swift */; };
+		E79F421CAF0CCE65AD5D9A95 /* LinescoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E13E81127252E637B19DE6 /* LinescoreView.swift */; };
+		E9B5DAD079C134DDDAEE1F82 /* FavoritesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = C961B675A208ADBCA7369ACF /* FavoritesTab.swift */; };
+		EEE1D7488848FD5F07FB044C /* LiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8F884EFE2F44A3269A0E97 /* LiveActivityAttributes.swift */; };
+		F60E48EAE646C4B0904060E3 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F5EAAC84BF1B8F020FD342E /* HapticManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1194CF90086182586E72EE71 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 76E19A7D39715887A61C957C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9A28FE76E8B554370A01D153;
+			remoteInfo = "SportsScoresWatch Watch App";
+		};
+		2EB573F03AEB8C17080D870F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 76E19A7D39715887A61C957C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A9B008DFCA169D8E9BF1FAEE;
+			remoteInfo = SportsScores;
+		};
+		2F828F81BB155473F515B2F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 76E19A7D39715887A61C957C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 41AA47E0E7E0203F81C04758;
+			remoteInfo = SportsScoresWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		063EC94C84F8A38B779BB365 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				1AD241865573CAECCCCAB0FB /* SportsScoresWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5181948A23C5714BD28A3981 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D007C491998C607D42917EFE /* SportsScoresWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		045E688B56B63E34533E4BF8 /* SportsScoresApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsScoresApp.swift; sourceTree = "<group>"; };
+		0902DA7BCE678DB78A6F6EFE /* EndpointsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointsTests.swift; sourceTree = "<group>"; };
+		1C3E87CD273A22E278284964 /* SportsScores.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SportsScores.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C93B25A39A8EEFB196FD631 /* SportsScoresWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SportsScoresWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CC0315A57C2303EAE39D666 /* SportAccent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportAccent.swift; sourceTree = "<group>"; };
+		252A881BDE945DD2835E4C12 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
+		2C462995AEB6C7463565B015 /* SportPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportPicker.swift; sourceTree = "<group>"; };
+		2E348BDE64F64FA6C17A30D4 /* SportsScoresKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SportsScoresKit; path = SportsScoresKit; sourceTree = SOURCE_ROOT; };
+		33E13E81127252E637B19DE6 /* LinescoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinescoreView.swift; sourceTree = "<group>"; };
+		340E1BF37D0C242CB97B6237 /* SportsScoresWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsScoresWidgets.swift; sourceTree = "<group>"; };
+		36C3FE29C09144752054CE55 /* BoxScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxScoreView.swift; sourceTree = "<group>"; };
+		38FE6725C9A5471E93AD6B19 /* SportsScoresLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsScoresLiveActivity.swift; sourceTree = "<group>"; };
+		3F5EAAC84BF1B8F020FD342E /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		5271758FEC953658DD7002FC /* TeamLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamLogo.swift; sourceTree = "<group>"; };
+		5C3B7D2598894E22D8A3EB6E /* ModelDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDecodingTests.swift; sourceTree = "<group>"; };
+		7D34B02A91716C93FEF0F197 /* SportsScoresWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SportsScoresWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84C15C04F8C467C83E22EDAD /* ScoresTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresTab.swift; sourceTree = "<group>"; };
+		883D6402019A2988B511F29D /* PlayerStatsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsTable.swift; sourceTree = "<group>"; };
+		91C05E20DA0F84380EFD1F8C /* BoxScoreViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxScoreViewModel.swift; sourceTree = "<group>"; };
+		9714AAACD7F15069D20286B9 /* SportsScoresWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsScoresWatchApp.swift; sourceTree = "<group>"; };
+		A03134096CFB29CB6569B817 /* SettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTab.swift; sourceTree = "<group>"; };
+		A9306DBC47AD6FBE2B3DBAF0 /* ScoresWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresWidget.swift; sourceTree = "<group>"; };
+		AD4AF9179A766F04E56E68DF /* TeamSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamSelector.swift; sourceTree = "<group>"; };
+		AD8F884EFE2F44A3269A0E97 /* LiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityAttributes.swift; sourceTree = "<group>"; };
+		B5476014192AD3AF84866C40 /* SportsScores.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SportsScores.entitlements; sourceTree = "<group>"; };
+		BAE66DFDED75F1BAABF49C56 /* WatchGameRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchGameRow.swift; sourceTree = "<group>"; };
+		BC1CD30792664366B84A549B /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		BD63712534944BC3B290CADC /* SportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTests.swift; sourceTree = "<group>"; };
+		BDEC309880AB2ADBB9696E41 /* ScoresViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresViewModel.swift; sourceTree = "<group>"; };
+		C3ABF33724AB825A80B597BA /* FavoritesStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStoreTests.swift; sourceTree = "<group>"; };
+		C56C50F4F4CF8E5D05AF124C /* GameRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRow.swift; sourceTree = "<group>"; };
+		C961B675A208ADBCA7369ACF /* FavoritesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesTab.swift; sourceTree = "<group>"; };
+		D8ADFEA0717FFFAC2E740484 /* WidgetTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTimelineProvider.swift; sourceTree = "<group>"; };
+		DE7BBC79EA4ED0597C6B139D /* WatchScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchScoresView.swift; sourceTree = "<group>"; };
+		DFE5B0A37455557BD07C80C9 /* SportsScoresWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SportsScoresWidgets.entitlements; sourceTree = "<group>"; };
+		E493384E15E4229F96BE0108 /* StatusBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBadge.swift; sourceTree = "<group>"; };
+		E7E1F5B81753A6B48A47E900 /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
+		F6C3579E7572B3643857B267 /* SportsScoresTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SportsScoresTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		27006F80E8454AA9EE05C545 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C36C7964910FF89F21A4E69E /* SportsScoresKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45D55D0553ECF324A3184273 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E84F73847B5A0C7F8A17FA1 /* SportsScoresKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC777C33F53E51613F2CD61D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4AF638A9D9166310F917ADE0 /* SportsScoresKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ED26DDA4DA209211BDBECE19 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB35DE50F225E921E9DEACB6 /* SportsScoresKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1DD81B9F0CE8F025AB062338 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				1CC0315A57C2303EAE39D666 /* SportAccent.swift */,
+				E493384E15E4229F96BE0108 /* StatusBadge.swift */,
+				5271758FEC953658DD7002FC /* TeamLogo.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		31718BF93C607380A9202713 /* Scores */ = {
+			isa = PBXGroup;
+			children = (
+				C56C50F4F4CF8E5D05AF124C /* GameRow.swift */,
+				84C15C04F8C467C83E22EDAD /* ScoresTab.swift */,
+				2C462995AEB6C7463565B015 /* SportPicker.swift */,
+			);
+			path = Scores;
+			sourceTree = "<group>";
+		};
+		359F1CF023C3AC7A21577986 /* LiveActivity */ = {
+			isa = PBXGroup;
+			children = (
+				AD8F884EFE2F44A3269A0E97 /* LiveActivityAttributes.swift */,
+				E7E1F5B81753A6B48A47E900 /* LiveActivityManager.swift */,
+				38FE6725C9A5471E93AD6B19 /* SportsScoresLiveActivity.swift */,
+			);
+			path = LiveActivity;
+			sourceTree = "<group>";
+		};
+		4005129127144811819B7095 /* SportsScoresKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				252A881BDE945DD2835E4C12 /* APIClientTests.swift */,
+				0902DA7BCE678DB78A6F6EFE /* EndpointsTests.swift */,
+				C3ABF33724AB825A80B597BA /* FavoritesStoreTests.swift */,
+				5C3B7D2598894E22D8A3EB6E /* ModelDecodingTests.swift */,
+				BD63712534944BC3B290CADC /* SportTests.swift */,
+			);
+			name = SportsScoresKitTests;
+			path = SportsScoresKit/Tests/SportsScoresKitTests;
+			sourceTree = "<group>";
+		};
+		4BCE537EDD36979971D3B751 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A03134096CFB29CB6569B817 /* SettingsTab.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		54867646532A3C9485982939 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				3F5EAAC84BF1B8F020FD342E /* HapticManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		56C71E8A9741549958302DDE /* SportsScoresWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				A9306DBC47AD6FBE2B3DBAF0 /* ScoresWidget.swift */,
+				DFE5B0A37455557BD07C80C9 /* SportsScoresWidgets.entitlements */,
+				340E1BF37D0C242CB97B6237 /* SportsScoresWidgets.swift */,
+				D8ADFEA0717FFFAC2E740484 /* WidgetTimelineProvider.swift */,
+			);
+			path = SportsScoresWidgets;
+			sourceTree = "<group>";
+		};
+		75CA8C28B9D39AAE47A61FBF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C3E87CD273A22E278284964 /* SportsScores.app */,
+				F6C3579E7572B3643857B267 /* SportsScoresTests.xctest */,
+				7D34B02A91716C93FEF0F197 /* SportsScoresWatch Watch App.app */,
+				1C93B25A39A8EEFB196FD631 /* SportsScoresWidgets.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7CB57AA5B6AA25905B606801 /* BoxScore */ = {
+			isa = PBXGroup;
+			children = (
+				36C3FE29C09144752054CE55 /* BoxScoreView.swift */,
+				33E13E81127252E637B19DE6 /* LinescoreView.swift */,
+				883D6402019A2988B511F29D /* PlayerStatsTable.swift */,
+			);
+			path = BoxScore;
+			sourceTree = "<group>";
+		};
+		93F89AD5194F005298C2DA73 /* SportsScores */ = {
+			isa = PBXGroup;
+			children = (
+				A5024E962AF4531E24397FC2 /* App */,
+				359F1CF023C3AC7A21577986 /* LiveActivity */,
+				54867646532A3C9485982939 /* Utilities */,
+				9F98C5D1BD0977A262C48E87 /* ViewModels */,
+				B999BF77AA5A87F134EEB291 /* Views */,
+				B5476014192AD3AF84866C40 /* SportsScores.entitlements */,
+			);
+			path = SportsScores;
+			sourceTree = "<group>";
+		};
+		9F98C5D1BD0977A262C48E87 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				91C05E20DA0F84380EFD1F8C /* BoxScoreViewModel.swift */,
+				BDEC309880AB2ADBB9696E41 /* ScoresViewModel.swift */,
+				BC1CD30792664366B84A549B /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A5024E962AF4531E24397FC2 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				045E688B56B63E34533E4BF8 /* SportsScoresApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B150B445B4FDF4456D9CD397 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				2E348BDE64F64FA6C17A30D4 /* SportsScoresKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		B999BF77AA5A87F134EEB291 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7CB57AA5B6AA25905B606801 /* BoxScore */,
+				1DD81B9F0CE8F025AB062338 /* Common */,
+				EB4F53B38B65278515AB6EE3 /* Favorites */,
+				31718BF93C607380A9202713 /* Scores */,
+				4BCE537EDD36979971D3B751 /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D0FD2DA0DFF7C8B54F8F3DD8 = {
+			isa = PBXGroup;
+			children = (
+				B150B445B4FDF4456D9CD397 /* Packages */,
+				93F89AD5194F005298C2DA73 /* SportsScores */,
+				4005129127144811819B7095 /* SportsScoresKitTests */,
+				D6EFE51D97F67B029F806BC6 /* SportsScoresWatch */,
+				56C71E8A9741549958302DDE /* SportsScoresWidgets */,
+				75CA8C28B9D39AAE47A61FBF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D6EFE51D97F67B029F806BC6 /* SportsScoresWatch */ = {
+			isa = PBXGroup;
+			children = (
+				9714AAACD7F15069D20286B9 /* SportsScoresWatchApp.swift */,
+				BAE66DFDED75F1BAABF49C56 /* WatchGameRow.swift */,
+				DE7BBC79EA4ED0597C6B139D /* WatchScoresView.swift */,
+			);
+			path = SportsScoresWatch;
+			sourceTree = "<group>";
+		};
+		EB4F53B38B65278515AB6EE3 /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				C961B675A208ADBCA7369ACF /* FavoritesTab.swift */,
+				AD4AF9179A766F04E56E68DF /* TeamSelector.swift */,
+			);
+			path = Favorites;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		40A2020391F7FC847CC6BD1E /* SportsScoresTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 80035928A3D7B8D4D4C8ED26 /* Build configuration list for PBXNativeTarget "SportsScoresTests" */;
+			buildPhases = (
+				478D473DC29DADA436C3F45C /* Sources */,
+				ED26DDA4DA209211BDBECE19 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				402E09310496EC0E31A9C80F /* PBXTargetDependency */,
+			);
+			name = SportsScoresTests;
+			packageProductDependencies = (
+				8CEF7B7D2A8B6E795D73A877 /* SportsScoresKit */,
+			);
+			productName = SportsScoresTests;
+			productReference = F6C3579E7572B3643857B267 /* SportsScoresTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		41AA47E0E7E0203F81C04758 /* SportsScoresWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 110B9442D9F4EF63161D5C65 /* Build configuration list for PBXNativeTarget "SportsScoresWidgets" */;
+			buildPhases = (
+				D83086EF725F4027135897EE /* Sources */,
+				45D55D0553ECF324A3184273 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SportsScoresWidgets;
+			packageProductDependencies = (
+				783D19A854EBF674F0CB96D9 /* SportsScoresKit */,
+			);
+			productName = SportsScoresWidgets;
+			productReference = 1C93B25A39A8EEFB196FD631 /* SportsScoresWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		9A28FE76E8B554370A01D153 /* SportsScoresWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E3C9D9FC6364E4599CF863E4 /* Build configuration list for PBXNativeTarget "SportsScoresWatch Watch App" */;
+			buildPhases = (
+				7E039F98365BF41988448287 /* Sources */,
+				AC777C33F53E51613F2CD61D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SportsScoresWatch Watch App";
+			packageProductDependencies = (
+				D24FE787BED85724E5E5C2F9 /* SportsScoresKit */,
+			);
+			productName = "SportsScoresWatch Watch App";
+			productReference = 7D34B02A91716C93FEF0F197 /* SportsScoresWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A9B008DFCA169D8E9BF1FAEE /* SportsScores */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0061743BD17149CB0D34A36 /* Build configuration list for PBXNativeTarget "SportsScores" */;
+			buildPhases = (
+				B01D79E877D1BEB9DB80AECC /* Sources */,
+				27006F80E8454AA9EE05C545 /* Frameworks */,
+				5181948A23C5714BD28A3981 /* Embed Foundation Extensions */,
+				063EC94C84F8A38B779BB365 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E996EC8AA811719911FF7BC1 /* PBXTargetDependency */,
+				DC4CC691C8464B5F3D9C16C1 /* PBXTargetDependency */,
+			);
+			name = SportsScores;
+			packageProductDependencies = (
+				107E825CE0CA71C470CBD880 /* SportsScoresKit */,
+			);
+			productName = SportsScores;
+			productReference = 1C3E87CD273A22E278284964 /* SportsScores.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		76E19A7D39715887A61C957C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					40A2020391F7FC847CC6BD1E = {
+						DevelopmentTeam = "";
+					};
+					41AA47E0E7E0203F81C04758 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					9A28FE76E8B554370A01D153 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					A9B008DFCA169D8E9BF1FAEE = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 850FEF3B5DECC6C82CB83CC7 /* Build configuration list for PBXProject "SportsScores" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D0FD2DA0DFF7C8B54F8F3DD8;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				588E854319D27B87A0854309 /* XCLocalSwiftPackageReference "SportsScoresKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 75CA8C28B9D39AAE47A61FBF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A9B008DFCA169D8E9BF1FAEE /* SportsScores */,
+				40A2020391F7FC847CC6BD1E /* SportsScoresTests */,
+				9A28FE76E8B554370A01D153 /* SportsScoresWatch Watch App */,
+				41AA47E0E7E0203F81C04758 /* SportsScoresWidgets */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		478D473DC29DADA436C3F45C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2D3DC0623AC7B64812845A3 /* APIClientTests.swift in Sources */,
+				6132A8F7DC55BB4308BF28A2 /* EndpointsTests.swift in Sources */,
+				4E7DF4D11E4FE3712884F869 /* FavoritesStoreTests.swift in Sources */,
+				2E4E01660CD6D0622E1A6D23 /* ModelDecodingTests.swift in Sources */,
+				8D54F1FE90508463AF301CE7 /* SportTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E039F98365BF41988448287 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0680E963E3B069EAC1BF24C5 /* SportsScoresWatchApp.swift in Sources */,
+				61F1817046CF5BE3D21BDF92 /* WatchGameRow.swift in Sources */,
+				56D72A778FD42B5FF8090101 /* WatchScoresView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B01D79E877D1BEB9DB80AECC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AEAB82E07B26E127596238D /* BoxScoreView.swift in Sources */,
+				06370113A7E8CC0F388FE2E8 /* BoxScoreViewModel.swift in Sources */,
+				E9B5DAD079C134DDDAEE1F82 /* FavoritesTab.swift in Sources */,
+				BA2D359F79E30556F764832F /* GameRow.swift in Sources */,
+				F60E48EAE646C4B0904060E3 /* HapticManager.swift in Sources */,
+				E79F421CAF0CCE65AD5D9A95 /* LinescoreView.swift in Sources */,
+				EEE1D7488848FD5F07FB044C /* LiveActivityAttributes.swift in Sources */,
+				8FC1F8D018DE0F1DDB61CB97 /* LiveActivityManager.swift in Sources */,
+				28C83F68D1C0C8415712837A /* PlayerStatsTable.swift in Sources */,
+				742C8DC190368D1379BFEED7 /* ScoresTab.swift in Sources */,
+				B4010B138E30A62510C01960 /* ScoresViewModel.swift in Sources */,
+				1E7F2C60D708D62775FF1F57 /* SettingsTab.swift in Sources */,
+				7E46C3927E01E9603474CAA1 /* SettingsViewModel.swift in Sources */,
+				25FAB92E2B624950ADD5B949 /* SportAccent.swift in Sources */,
+				779531D7B6BDE51074AE50CF /* SportPicker.swift in Sources */,
+				A8F0854E70B2AFB2B509096B /* SportsScoresApp.swift in Sources */,
+				B695481CE68E8043BE154DE4 /* SportsScoresLiveActivity.swift in Sources */,
+				06D43D841D0FB1CA92CCF7F5 /* StatusBadge.swift in Sources */,
+				30C955330030C13DCD5AF7A2 /* TeamLogo.swift in Sources */,
+				27967D6E19EDD354A8D470E4 /* TeamSelector.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D83086EF725F4027135897EE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				616B41C0AA703736790F8388 /* ScoresWidget.swift in Sources */,
+				50D8A3C2E8A7FF1B553F735E /* SportsScoresWidgets.swift in Sources */,
+				DD391A5CAAF84B88031F06CF /* WidgetTimelineProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		402E09310496EC0E31A9C80F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A9B008DFCA169D8E9BF1FAEE /* SportsScores */;
+			targetProxy = 2EB573F03AEB8C17080D870F /* PBXContainerItemProxy */;
+		};
+		DC4CC691C8464B5F3D9C16C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9A28FE76E8B554370A01D153 /* SportsScoresWatch Watch App */;
+			targetProxy = 1194CF90086182586E72EE71 /* PBXContainerItemProxy */;
+		};
+		E996EC8AA811719911FF7BC1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 41AA47E0E7E0203F81C04758 /* SportsScoresWidgets */;
+			targetProxy = 2F828F81BB155473F515B2F0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1662EA0178826A6CA951DB80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScoresTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SportsScores.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SportsScores";
+			};
+			name = Debug;
+		};
+		200EAE98A9BDB90D4AD71EBC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = SportsScores/SportsScores.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Sports Scores";
+				INFOPLIST_KEY_NSAppTransportSecurity = "{NSAllowsArbitraryLoads = NO;}";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScores;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4AEC8B39D3AC59F9A5A2CB64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.sportsscores.SportsScores;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScoresWatchWatchApp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		4C19E1510C758FF64D167738 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScoresTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SportsScores.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SportsScores";
+			};
+			name = Release;
+		};
+		80B76FF674A9FE6CA791743D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = SportsScores/SportsScores.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Sports Scores";
+				INFOPLIST_KEY_NSAppTransportSecurity = "{NSAllowsArbitraryLoads = NO;}";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScores;
+				SDKROOT = iphoneos;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A474CD115D4569E96D15D037 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.sportsscores.SportsScores;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScoresWatchWatchApp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		A83B21279E595CD37A0F98CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = SportsScoresWidgets/SportsScoresWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScoresWidgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C35DBFAF1C0E7BDD3163B90D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = SportsScoresWidgets/SportsScoresWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sportsscores.SportsScoresWidgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		ED5B7EE6FD35E8813B2D5FD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		F8CBC79BCC4F3DFCD771828E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		110B9442D9F4EF63161D5C65 /* Build configuration list for PBXNativeTarget "SportsScoresWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A83B21279E595CD37A0F98CA /* Debug */,
+				C35DBFAF1C0E7BDD3163B90D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		80035928A3D7B8D4D4C8ED26 /* Build configuration list for PBXNativeTarget "SportsScoresTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1662EA0178826A6CA951DB80 /* Debug */,
+				4C19E1510C758FF64D167738 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		850FEF3B5DECC6C82CB83CC7 /* Build configuration list for PBXProject "SportsScores" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F8CBC79BCC4F3DFCD771828E /* Debug */,
+				ED5B7EE6FD35E8813B2D5FD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E3C9D9FC6364E4599CF863E4 /* Build configuration list for PBXNativeTarget "SportsScoresWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A474CD115D4569E96D15D037 /* Debug */,
+				4AEC8B39D3AC59F9A5A2CB64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F0061743BD17149CB0D34A36 /* Build configuration list for PBXNativeTarget "SportsScores" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				80B76FF674A9FE6CA791743D /* Debug */,
+				200EAE98A9BDB90D4AD71EBC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		588E854319D27B87A0854309 /* XCLocalSwiftPackageReference "SportsScoresKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = SportsScoresKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		107E825CE0CA71C470CBD880 /* SportsScoresKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SportsScoresKit;
+		};
+		783D19A854EBF674F0CB96D9 /* SportsScoresKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SportsScoresKit;
+		};
+		8CEF7B7D2A8B6E795D73A877 /* SportsScoresKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SportsScoresKit;
+		};
+		D24FE787BED85724E5E5C2F9 /* SportsScoresKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SportsScoresKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 76E19A7D39715887A61C957C /* Project object */;
+}

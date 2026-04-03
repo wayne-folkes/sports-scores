@@ -39,6 +39,10 @@ public struct StatComparison: Codable, Sendable {
     public let label: String
     public let awayValue: String
     public let homeValue: String
+
+    public init(key: String, label: String, awayValue: String, homeValue: String) {
+        self.key = key; self.label = label; self.awayValue = awayValue; self.homeValue = homeValue
+    }
 }
 
 // MARK: - Player Data

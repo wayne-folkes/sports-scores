@@ -29,6 +29,16 @@ public struct Game: Codable, Identifiable, Sendable {
         guard let startTime else { return nil }
         return ISO8601DateFormatter().date(from: startTime)
     }
+
+    public init(
+        id: String, status: GameStatus, statusDetail: String,
+        startTime: String?, homeTeam: TeamInfo, awayTeam: TeamInfo,
+        homeScore: Int?, awayScore: Int?, prediction: Prediction?
+    ) {
+        self.id = id; self.status = status; self.statusDetail = statusDetail
+        self.startTime = startTime; self.homeTeam = homeTeam; self.awayTeam = awayTeam
+        self.homeScore = homeScore; self.awayScore = awayScore; self.prediction = prediction
+    }
 }
 
 // MARK: - GameStatus

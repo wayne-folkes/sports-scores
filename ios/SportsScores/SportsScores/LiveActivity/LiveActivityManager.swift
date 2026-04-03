@@ -1,10 +1,12 @@
 import ActivityKit
 import SportsScoresKit
 
+@MainActor
 final class LiveActivityManager {
     static let shared = LiveActivityManager()
 
-    private var activeActivities: [String: Activity<SportsScoresLiveActivityAttributes>] = [:]
+    /// Maps game ID → ActivityKit activity ID string (Sendable)
+    private var activityIdsByGame: [String: String] = [:]
 
     private init() {}
 
@@ -35,7 +37,7 @@ final class LiveActivityManager {
                 attributes: attributes,
                 content: .init(state: state, staleDate: nil)
             )
-            activeActivities[game.id] = activity
+            activityIdsByGame[game.id] = activity.id
         } catch {
             print("Failed to start live activity for game \(game.id): \(error)")
         }
@@ -44,36 +46,37 @@ final class LiveActivityManager {
     // MARK: - Update
 
     func updateActivity(gameId: String, awayScore: Int, homeScore: Int, statusDetail: String, isLive: Bool) {
-        guard let activity = activeActivities[gameId] else { return }
-
+        guard let activityId = activityIdsByGame[gameId] else { return }
         let state = SportsScoresLiveActivityAttributes.ContentState(
             awayScore: awayScore,
             homeScore: homeScore,
             statusDetail: statusDetail,
             isLive: isLive
         )
-
         Task {
-            await activity.update(.init(state: state, staleDate: nil))
+            for activity in Activity<SportsScoresLiveActivityAttributes>.activities where activity.id == activityId {
+                await activity.update(.init(state: state, staleDate: nil))
+            }
         }
     }
 
     // MARK: - End
 
     func endActivity(gameId: String) {
-        guard let activity = activeActivities.removeValue(forKey: gameId) else { return }
-
+        guard let activityId = activityIdsByGame.removeValue(forKey: gameId) else { return }
         Task {
-            await activity.end(nil, dismissalPolicy: .default)
+            for activity in Activity<SportsScoresLiveActivityAttributes>.activities where activity.id == activityId {
+                await activity.end(nil, dismissalPolicy: .default)
+            }
         }
     }
 
     func endAllActivities() {
-        for (gameId, activity) in activeActivities {
-            Task {
+        activityIdsByGame.removeAll()
+        Task {
+            for activity in Activity<SportsScoresLiveActivityAttributes>.activities {
                 await activity.end(nil, dismissalPolicy: .default)
             }
-            activeActivities.removeValue(forKey: gameId)
         }
     }
 }

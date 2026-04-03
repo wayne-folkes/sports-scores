@@ -3,6 +3,7 @@ import Combine
 import SportsScoresKit
 
 @Observable
+@MainActor
 final class BoxScoreViewModel {
     // MARK: - Properties
 
@@ -26,7 +27,7 @@ final class BoxScoreViewModel {
     // MARK: - Loading
 
     func load() {
-        Task { @MainActor in
+        Task {
             isLoading = boxScore == nil
             error = nil
 

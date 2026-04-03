@@ -8,17 +8,14 @@ struct SportsScoresApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                Tab("Scores", systemImage: "sportscourt") {
-                    ScoresTab()
-                }
+                ScoresTab()
+                    .tabItem { Label("Scores", systemImage: "sportscourt") }
 
-                Tab("Favorites", systemImage: "star.fill") {
-                    FavoritesTab()
-                }
+                FavoritesTab()
+                    .tabItem { Label("Favorites", systemImage: "star.fill") }
 
-                Tab("Settings", systemImage: "gearshape") {
-                    SettingsTab()
-                }
+                SettingsTab()
+                    .tabItem { Label("Settings", systemImage: "gearshape") }
             }
             .environment(favoritesStore)
             .preferredColorScheme(.dark)

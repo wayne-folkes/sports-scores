@@ -3,6 +3,7 @@ import Combine
 import SportsScoresKit
 
 @Observable
+@MainActor
 final class ScoresViewModel {
     // MARK: - Properties
 
@@ -12,7 +13,6 @@ final class ScoresViewModel {
     var error: String?
 
     private let apiClient: APIClient
-    private let hapticManager = HapticManager.shared
     private var timerCancellable: AnyCancellable?
 
     // MARK: - Computed
@@ -95,7 +95,7 @@ final class ScoresViewModel {
     // MARK: - Fetching
 
     func fetchAllScores() {
-        Task { @MainActor in
+        Task {
             isLoading = games.isEmpty
             error = nil
 
@@ -121,7 +121,7 @@ final class ScoresViewModel {
             }
 
             if !previousGames.isEmpty {
-                hapticManager.checkForScoreChanges(previous: previousGames, current: games)
+                HapticManager.shared.checkForScoreChanges(previous: previousGames, current: games)
             }
 
             isLoading = false

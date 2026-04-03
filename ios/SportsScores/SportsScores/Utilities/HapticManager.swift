@@ -1,6 +1,7 @@
 import UIKit
 import SportsScoresKit
 
+@MainActor
 final class HapticManager {
     static let shared = HapticManager()
 

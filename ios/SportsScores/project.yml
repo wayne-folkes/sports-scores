@@ -1,0 +1,109 @@
+name: SportsScores
+options:
+  bundleIdPrefix: com.sportsscores
+  deploymentTarget:
+    iOS: "17.0"
+    watchOS: "10.0"
+  xcodeVersion: "26.4"
+  groupSortPosition: top
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: ""
+
+packages:
+  SportsScoresKit:
+    path: SportsScoresKit
+
+targets:
+  SportsScores:
+    type: application
+    platform: iOS
+    sources:
+      - path: SportsScores
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: SportsScoresKit
+      - target: SportsScoresWidgets
+      - target: SportsScoresWatch Watch App
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+        INFOPLIST_KEY_CFBundleDisplayName: "Sports Scores"
+        INFOPLIST_KEY_NSAppTransportSecurity: "{NSAllowsArbitraryLoads = NO;}"
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: false
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: true
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_REQUIRED: false
+        CODE_SIGNING_ALLOWED: false
+    entitlements:
+      path: SportsScores/SportsScores.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.sportsscores.shared
+
+  SportsScoresWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: SportsScoresWidgets
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: SportsScoresKit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME: WidgetBackground
+        ENABLE_PREVIEWS: true
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_REQUIRED: false
+        CODE_SIGNING_ALLOWED: false
+    entitlements:
+      path: SportsScoresWidgets/SportsScoresWidgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.sportsscores.shared
+
+  SportsScoresWatch Watch App:
+    type: application
+    platform: watchOS
+    sources:
+      - path: SportsScoresWatch
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: SportsScoresKit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: true
+        INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.sportsscores.SportsScores
+        ENABLE_PREVIEWS: true
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGNING_REQUIRED: false
+        CODE_SIGNING_ALLOWED: false
+
+  SportsScoresTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: SportsScoresKit/Tests/SportsScoresKitTests
+        excludes:
+          - "**/.DS_Store"
+          - Fixtures
+    resources:
+      - path: SportsScoresKit/Tests/SportsScoresKitTests/Fixtures
+    dependencies:
+      - target: SportsScores
+      - package: SportsScoresKit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/SportsScores.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SportsScores"
+        BUNDLE_LOADER: "$(TEST_HOST)"

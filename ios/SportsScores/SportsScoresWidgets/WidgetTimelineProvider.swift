@@ -23,14 +23,15 @@ struct ScoresTimelineProvider: TimelineProvider {
 
     // MARK: - Snapshot
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
+    func getSnapshot(in context: Context, completion: @escaping @Sendable (SimpleEntry) -> Void) {
         if context.isPreview {
             completion(placeholder(in: context))
             return
         }
 
+        let client = apiClient
         Task {
-            let games = await fetchAllGames()
+            let games = await Self.fetchAllGames(client: client, favorites: Set<String>())
             let entry = SimpleEntry(date: .now, games: Array(games.prefix(6)), sport: nil)
             completion(entry)
         }
@@ -38,9 +39,11 @@ struct ScoresTimelineProvider: TimelineProvider {
 
     // MARK: - Timeline
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<SimpleEntry>) -> Void) {
+    func getTimeline(in context: Context, completion: @escaping @Sendable (Timeline<SimpleEntry>) -> Void) {
+        let client = apiClient
+        let favoriteIds = favoritesStore.favoriteIds
         Task {
-            let allGames = await fetchAllGames()
+            let allGames = await Self.fetchAllGames(client: client, favorites: favoriteIds)
 
             let hasLiveGames = allGames.contains { $0.isLive }
             let refreshInterval: TimeInterval = hasLiveGames ? 300 : 900
@@ -59,12 +62,12 @@ struct ScoresTimelineProvider: TimelineProvider {
 
     // MARK: - Fetching
 
-    private func fetchAllGames() async -> [Game] {
+    private static func fetchAllGames(client: APIClient, favorites: Set<String>) async -> [Game] {
         await withTaskGroup(of: [Game].self) { group in
             for sport in Sport.allCases {
                 group.addTask {
                     do {
-                        let response = try await apiClient.fetchScores(sport: sport)
+                        let response = try await client.fetchScores(sport: sport)
                         return response.games
                     } catch {
                         return []
@@ -77,8 +80,6 @@ struct ScoresTimelineProvider: TimelineProvider {
                 allGames.append(contentsOf: games)
             }
 
-            // Filter to favorites if any are set
-            let favorites = favoritesStore.favoriteIds
             if !favorites.isEmpty {
                 let filtered = allGames.filter { game in
                     favorites.contains(game.homeTeam.id) || favorites.contains(game.awayTeam.id)
