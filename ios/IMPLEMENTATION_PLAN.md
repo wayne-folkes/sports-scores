@@ -27,105 +27,105 @@ Sports: `nba`, `mlb`, `mens-college-basketball`, `womens-college-basketball`, `c
 ## Phase 1: Foundation (~10 files)
 **SportsScoresKit package + Xcode project setup**
 
-- [ ] Create Xcode project with app, widget, and watchOS targets
-- [ ] Create `SportsScoresKit` Swift Package with `Package.swift`
-- [ ] `Sport.swift` — Enum with raw values matching API keys, display names, accent colors
-- [ ] `Game.swift` — Codable structs for `/api/scores` response (Game, Team, Score, Status)
-- [ ] `BoxScore.swift` — Codable structs for `/api/boxscore` response (BoxScore, PlayerStats, TeamStats)
-- [ ] `TeamInfo.swift` — Codable struct for `/api/teams` response
-- [ ] `APIClient.swift` — Generic async/await URLSession client with error handling
-- [ ] `Endpoints.swift` — URL construction for all API routes
-- [ ] `FavoritesStore.swift` — SwiftData model + App Group container
-- [ ] `AppGroup.swift` — Shared container ID constant
-- [ ] **Tests**: Unit tests for JSON decoding (all model types against sample API responses)
-- [ ] **Tests**: Unit tests for URL construction in Endpoints
-- [ ] **Tests**: Mock-based tests for APIClient error handling
-- [ ] Run tests, verify all pass
-- [ ] Commit
+- [x] Create Xcode project with app, widget, and watchOS targets
+- [x] Create `SportsScoresKit` Swift Package with `Package.swift`
+- [x] `Sport.swift` — Enum with raw values matching API keys, display names, accent colors
+- [x] `Game.swift` — Codable structs for `/api/scores` response (Game, Team, Score, Status)
+- [x] `BoxScore.swift` — Codable structs for `/api/boxscore` response (BoxScore, PlayerStats, TeamStats)
+- [x] `TeamInfo.swift` — Codable struct for `/api/teams` response
+- [x] `APIClient.swift` — Generic async/await URLSession client with error handling
+- [x] `Endpoints.swift` — URL construction for all API routes
+- [x] `FavoritesStore.swift` — SwiftData model + App Group container
+- [x] `AppGroup.swift` — Shared container ID constant
+- [x] **Tests**: Unit tests for JSON decoding (all model types against sample API responses)
+- [x] **Tests**: Unit tests for URL construction in Endpoints
+- [x] **Tests**: Mock-based tests for APIClient error handling
+- [x] Run tests, verify all pass
+- [x] Commit
 
 ## Phase 2: Scores Tab (~8 files)
 **Main scores list — core app experience**
 
-- [ ] `SportsScoresApp.swift` — Entry point with TabView (Scores, Favorites, Settings)
-- [ ] `ScoresViewModel.swift` — @Observable, concurrent fetching with TaskGroup, 30s polling, scenePhase pause
-- [ ] `ScoresTab.swift` — Sport filter pills + game list
-- [ ] `SportPicker.swift` — Horizontal ScrollView of toggleable sport chips
-- [ ] `GameRow.swift` — Score card (team logos, names, scores, status, records)
-- [ ] `StatusBadge.swift` — Live (pulsing red), Final (gray), Scheduled (green)
-- [ ] `TeamLogo.swift` — AsyncImage with placeholder and disk cache
-- [ ] `SportAccent.swift` — Color extension mapping Sport → accent Color
-- [ ] **Tests**: ScoresViewModel unit tests (mock APIClient, verify polling, sport filtering)
-- [ ] **Tests**: Snapshot/preview tests for GameRow, StatusBadge, SportPicker
-- [ ] Run tests, verify all pass
-- [ ] Commit
+- [x] `SportsScoresApp.swift` — Entry point with TabView (Scores, Favorites, Settings)
+- [x] `ScoresViewModel.swift` — @Observable, concurrent fetching with TaskGroup, 30s polling, scenePhase pause
+- [x] `ScoresTab.swift` — Sport filter pills + game list
+- [x] `SportPicker.swift` — Horizontal ScrollView of toggleable sport chips
+- [x] `GameRow.swift` — Score card (team logos, names, scores, status, records)
+- [x] `StatusBadge.swift` — Live (pulsing red), Final (gray), Scheduled (green)
+- [x] `TeamLogo.swift` — AsyncImage with placeholder and disk cache
+- [x] `SportAccent.swift` — Color extension mapping Sport → accent Color
+- [x] **Tests**: ScoresViewModel unit tests (mock APIClient, verify polling, sport filtering)
+- [x] **Tests**: Snapshot/preview tests for GameRow, StatusBadge, SportPicker
+- [x] Run tests, verify all pass
+- [x] Commit
 
 ## Phase 3: Box Score Detail (~4 files)
 **Tapping a game → full box score view**
 
-- [ ] `BoxScoreViewModel.swift` — Fetches box score, 30s polling for live games
-- [ ] `BoxScoreView.swift` — Score header, linescore, team stats, player stats
-- [ ] `PlayerStatsTable.swift` — Reusable: NBA (PTS/REB/AST/FG/3PT/FT/MIN), MLB batting + pitching
-- [ ] `LinescoreView.swift` — Horizontal grid of period/inning scores
-- [ ] **Tests**: BoxScoreViewModel unit tests (mock data, polling lifecycle)
-- [ ] **Tests**: PlayerStatsTable rendering tests for NBA vs MLB data shapes
-- [ ] Run tests, verify all pass
-- [ ] Commit
+- [x] `BoxScoreViewModel.swift` — Fetches box score, 30s polling for live games
+- [x] `BoxScoreView.swift` — Score header, linescore, team stats, player stats
+- [x] `PlayerStatsTable.swift` — Reusable: NBA (PTS/REB/AST/FG/3PT/FT/MIN), MLB batting + pitching
+- [x] `LinescoreView.swift` — Horizontal grid of period/inning scores
+- [x] **Tests**: BoxScoreViewModel unit tests (mock data, polling lifecycle)
+- [x] **Tests**: PlayerStatsTable rendering tests for NBA vs MLB data shapes
+- [x] Run tests, verify all pass
+- [x] Commit
 
 ## Phase 4: Favorites & Settings (~4 files)
 **Team favorites and app preferences**
 
-- [ ] `FavoritesTab.swift` — Filtered view of games involving favorite teams
-- [ ] `TeamSelector.swift` — Sheet with sport-grouped team list, search, toggle
-- [ ] `SettingsTab.swift` — Refresh interval, enabled sports, about section
-- [ ] Wire SwiftData favorites to filter ScoresViewModel output
-- [ ] **Tests**: FavoritesStore persistence tests (add/remove/persist across launches)
-- [ ] **Tests**: TeamSelector search filtering tests
-- [ ] Run tests, verify all pass
-- [ ] Commit
+- [x] `FavoritesTab.swift` — Filtered view of games involving favorite teams
+- [x] `TeamSelector.swift` — Sheet with sport-grouped team list, search, toggle
+- [x] `SettingsTab.swift` — Refresh interval, enabled sports, about section
+- [x] Wire SwiftData favorites to filter ScoresViewModel output
+- [x] **Tests**: FavoritesStore persistence tests (add/remove/persist across launches)
+- [x] **Tests**: TeamSelector search filtering tests
+- [x] Run tests, verify all pass
+- [x] Commit
 
 ## Phase 5: iOS-Specific Features (~4 files)
 **Haptics, Live Activities**
 
-- [ ] `HapticManager.swift` — Score change detection, impact feedback (light/medium/heavy)
-- [ ] `LiveActivityAttributes.swift` — ActivityAttributes with teams, scores, status, period
-- [ ] `SportsScoresLiveActivity.swift` — Lock screen / Dynamic Island UI, start/update/end lifecycle
-- [ ] Integrate haptics into ScoresViewModel score change detection
-- [ ] **Tests**: HapticManager unit tests (score change detection logic)
-- [ ] **Tests**: LiveActivity attributes encoding/decoding tests
-- [ ] Run tests, verify all pass
-- [ ] Commit
+- [x] `HapticManager.swift` — Score change detection, impact feedback (light/medium/heavy)
+- [x] `LiveActivityAttributes.swift` — ActivityAttributes with teams, scores, status, period
+- [x] `SportsScoresLiveActivity.swift` — Lock screen / Dynamic Island UI, start/update/end lifecycle
+- [x] Integrate haptics into ScoresViewModel score change detection
+- [x] **Tests**: HapticManager unit tests (score change detection logic)
+- [x] **Tests**: LiveActivity attributes encoding/decoding tests
+- [x] Run tests, verify all pass
+- [x] Commit
 
 ## Phase 6: Home Screen Widgets (~3 files)
 **WidgetKit extension**
 
-- [ ] `WidgetTimelineProvider.swift` — TimelineProvider with 5-15 min refresh, favorite team filtering
-- [ ] `ScoresWidget.swift` — Small (single game), Medium (2-3 games), Large (full sport)
-- [ ] `SportsScoresWidgets.swift` — Widget bundle registration
-- [ ] **Tests**: TimelineProvider unit tests (timeline generation, refresh intervals)
-- [ ] Run tests, verify all pass
-- [ ] Commit
+- [x] `WidgetTimelineProvider.swift` — TimelineProvider with 5-15 min refresh, favorite team filtering
+- [x] `ScoresWidget.swift` — Small (single game), Medium (2-3 games), Large (full sport)
+- [x] `SportsScoresWidgets.swift` — Widget bundle registration
+- [x] **Tests**: TimelineProvider unit tests (timeline generation, refresh intervals)
+- [x] Run tests, verify all pass
+- [x] Commit
 
 ## Phase 7: watchOS Companion (~3 files)
 **Glanceable scores on Apple Watch**
 
-- [ ] `SportsScoresWatchApp.swift` — NavigationStack entry point
-- [ ] `WatchScoresView.swift` — Compact game list using SportsScoresKit
-- [ ] `WatchGameRow.swift` — Minimal score display for small screen
-- [ ] **Tests**: WatchOS view preview tests
-- [ ] Run tests, verify all pass
-- [ ] Commit
+- [x] `SportsScoresWatchApp.swift` — NavigationStack entry point
+- [x] `WatchScoresView.swift` — Compact game list using SportsScoresKit
+- [x] `WatchGameRow.swift` — Minimal score display for small screen
+- [x] **Tests**: WatchOS view preview tests
+- [x] Run tests, verify all pass
+- [x] Commit
 
 ## Phase 8: Integration Testing & Polish
 **End-to-end validation**
 
-- [ ] Pull-to-refresh on scores list
-- [ ] Loading states and error handling UI (empty states, retry buttons)
-- [ ] Accessibility labels on all interactive elements
-- [ ] **Tests**: Integration tests hitting production API (scores load, box scores load)
-- [ ] **Tests**: UI tests for core navigation flows (tab switching, game tap → box score, favorites)
-- [ ] **Tests**: Accessibility audit (VoiceOver labels, Dynamic Type)
-- [ ] Run full test suite
-- [ ] Final commit
+- [x] Pull-to-refresh on scores list
+- [x] Loading states and error handling UI (empty states, retry buttons)
+- [x] Accessibility labels on all interactive elements
+- [x] **Tests**: Integration tests hitting production API (scores load, box scores load)
+- [x] **Tests**: UI tests for core navigation flows (tab switching, game tap → box score, favorites)
+- [x] **Tests**: Accessibility audit (VoiceOver labels, Dynamic Type)
+- [x] Run full test suite
+- [x] Final commit
 
 ---
 
