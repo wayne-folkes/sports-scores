@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Express backend for sports scores app",
   "main": "index.js",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "node --watch index.js",
     "start": "node index.js",

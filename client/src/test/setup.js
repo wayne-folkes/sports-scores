@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
-// jsdom 28 exposes localStorage with a null-prototype object (no Storage methods).
-// Set up a fully functional localStorage polyfill for all tests.
+// Provide a predictable localStorage implementation for DOM-based tests.
+// This keeps browser storage behavior stable across test environments.
 const localStorageMock = (() => {
   let store = {};
   return {

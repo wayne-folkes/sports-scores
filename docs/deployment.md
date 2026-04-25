@@ -4,6 +4,8 @@
 
 This app can be deployed to Vercel with zero environment variables required — ESPN's API is fully public.
 
+> Use a Node.js 20.x+ runtime for builds and local Vercel CLI workflows. The frontend build now depends on the Vite 8 toolchain.
+
 ## How it works on Vercel
 
 | Layer | Local dev | Vercel |

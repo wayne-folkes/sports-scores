@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-- Node.js 18 or later
+- Node.js 20.19 or later
 
 ## Install
 
@@ -50,9 +50,14 @@ The app runs at:
 | `npm run build` | Create a production build in `dist/` |
 | `npm run preview` | Preview the production build locally |
 | `npm run lint` | Run ESLint |
+| `npm test` | Run the Vitest unit test suite |
+| `npm run test:watch` | Run Vitest in watch mode |
+| `npm run test:e2e` | Run the Playwright end-to-end suite |
+| `npm run test:e2e:ui` | Open the Playwright UI runner |
 
 ## Development Notes
 
 - The frontend proxies API requests to the backend during local development.
 - Widget layout and favorite-team selections persist in the browser with `localStorage`.
 - Score polling refreshes every 30 seconds and pauses while the tab is hidden.
+- Client tooling now targets the Vite 8 / ESLint 10 ecosystem, so use Node.js 20.19+ locally and in CI.

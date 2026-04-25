@@ -7,7 +7,7 @@
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 19, Vite, react-grid-layout |
-| Backend (local) | Node.js 18+ native `fetch`, Express 5 |
+| Backend (local) | Node.js 20.19+ native `fetch`, Express 5 |
 | Backend (Vercel) | Node.js serverless functions in `api/` |
 | Data | ESPN public scoreboard, teams, and summary endpoints |
 
