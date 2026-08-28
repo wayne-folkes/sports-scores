@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import BoxScoreModal from '../BoxScoreModal';
 import ScoreCard from '../ScoreCard';
+import WireBulletin from '../WireBulletin';
 import TeamSelector from '../TeamSelector';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useRelativeTime } from '../../hooks/useRelativeTime';
+import { useTheme } from '../../theme-context';
 import { normalizeHexColor, rgba, mixColors } from '../../utils/colors';
 import { SCORES_POLL_INTERVAL } from '../../constants';
 import './SportWidget.css';
@@ -45,6 +48,7 @@ const DEFAULT_THEME = {
 };
 
 const POLL_INTERVAL = SCORES_POLL_INTERVAL;
+const PERFORATION_DOTS = Array.from({ length: 14 });
 
 function SkeletonCard() {
   return <div className="sport-widget__skeleton" aria-hidden="true" />;
@@ -53,6 +57,8 @@ function SkeletonCard() {
 export default function SportWidget({ sport, isReorderable = true }) {
   const meta = SPORT_META[sport] ?? SPORT_META.nba;
   const defaultTheme = DEFAULT_THEME[sport] ?? DEFAULT_THEME.nba;
+  const theme = useTheme();
+  const isWire = theme === 'wire';
 
   const [favorites, setFavorites] = useLocalStorage(`favoriteTeams.${sport}`, []);
   const [games, setGames] = useState([]);
@@ -65,6 +71,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
   const [selectedGame, setSelectedGame] = useState(null);
 
   const intervalRef = useRef(null);
+  const relativeUpdated = useRelativeTime(lastUpdated);
 
   const fetchScores = useCallback(() => {
     if (document.hidden) return;
@@ -172,8 +179,26 @@ export default function SportWidget({ sport, isReorderable = true }) {
     '--widget-accent-ring': rgba(dynamicPrimary, 0.3),
   };
 
+  const renderGame = (game) => (
+    isWire
+      ? (
+        <WireBulletin
+          key={game.id}
+          game={game}
+          onOpenBoxScore={() => setSelectedGame(game)}
+        />
+      )
+      : (
+        <ScoreCard
+          key={game.id}
+          game={game}
+          onOpenBoxScore={() => setSelectedGame(game)}
+        />
+      )
+  );
+
   return (
-    <div className={`sport-widget sport-widget--${sport}`} style={widgetStyle}>
+    <div className={`sport-widget sport-widget--${sport}${isWire ? ' sport-widget--wire' : ''}`} style={widgetStyle}>
       <header className={`sport-widget__header${isReorderable ? ' drag-handle' : ''}`} data-sport-label={meta.label}>
         <div className="sport-widget__header-left">
           <span className="sport-widget__icon-shell" aria-hidden="true">
@@ -185,7 +210,14 @@ export default function SportWidget({ sport, isReorderable = true }) {
           </div>
         </div>
         <div className="sport-widget__header-right">
-          <span className="sport-widget__updated" aria-live="polite">{lastUpdatedLabel}</span>
+          {isWire ? (
+            <span className="sport-widget__updated sport-widget__updated--wire" aria-live="polite">
+              <i className="sport-widget__live-dot" aria-hidden="true"></i>
+              Receiving · updated {relativeUpdated}
+            </span>
+          ) : (
+            <span className="sport-widget__updated" aria-live="polite">{lastUpdatedLabel}</span>
+          )}
           <button
             className={`sport-widget__refresh${isLoading ? ' sport-widget__refresh--spinning' : ''}`}
             onClick={fetchScores}
@@ -207,6 +239,12 @@ export default function SportWidget({ sport, isReorderable = true }) {
           </button>
         </div>
       </header>
+
+      {isWire && (
+        <div className="sport-widget__perf" aria-hidden="true">
+          {PERFORATION_DOTS.map((_, i) => <i key={i} />)}
+        </div>
+      )}
 
       <div className="sport-widget__body" aria-live="polite" aria-atomic="false">
         {isInitialLoad && (
@@ -239,13 +277,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
                 {favorites.length > 0 && (
                   <p className="sport-widget__section-label">⭐ Favorites</p>
                 )}
-                {favoriteGames.map((game) => (
-                  <ScoreCard
-                    key={game.id}
-                    game={game}
-                    onOpenBoxScore={() => setSelectedGame(game)}
-                  />
-                ))}
+                {favoriteGames.map(renderGame)}
               </section>
             )}
 
@@ -254,13 +286,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
                 {favoriteGames.length > 0 && (
                   <p className="sport-widget__section-label">All games</p>
                 )}
-                {otherGames.map((game) => (
-                  <ScoreCard
-                    key={game.id}
-                    game={game}
-                    onOpenBoxScore={() => setSelectedGame(game)}
-                  />
-                ))}
+                {otherGames.map(renderGame)}
               </section>
             )}
           </>
