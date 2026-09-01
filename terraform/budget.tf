@@ -17,6 +17,14 @@ resource "aws_budgets_budget" "bedrock" {
     notification_type          = "ACTUAL"
     subscriber_email_addresses = [var.budget_email]
   }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = [var.budget_email]
+  }
 }
 
 # Attached to the app role by the budget action when spend crosses the cap.
