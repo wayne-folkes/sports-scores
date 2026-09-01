@@ -90,18 +90,13 @@ test('summary: cache key format for pre-game', () => {
   assert.equal(cacheKey, 'summary:v1:nba:401236:pre');
 });
 
-test('summary: model selection for final games', () => {
-  const selectModel = (gameState) => {
-    if (gameState === 'final' || gameState === 'post') {
-      return 'zai.glm-5';
-    }
-    return 'zai.glm-4.7-flash';
-  };
+test('summary: model selection per game state', () => {
+  const { selectModelAndPrompt } = require('../api/_lib/summarize');
 
-  assert.equal(selectModel('final'), 'zai.glm-5');
-  assert.equal(selectModel('post'), 'zai.glm-5');
-  assert.equal(selectModel('in'), 'zai.glm-4.7-flash');
-  assert.equal(selectModel('pre'), 'zai.glm-4.7-flash');
+  assert.equal(selectModelAndPrompt('final').model, 'zai.glm-5');
+  assert.equal(selectModelAndPrompt('post').model, 'zai.glm-5');
+  assert.equal(selectModelAndPrompt('in').model, 'us.anthropic.claude-haiku-4-5-20251001-v1:0');
+  assert.equal(selectModelAndPrompt('pre').model, 'us.anthropic.claude-haiku-4-5-20251001-v1:0');
 });
 
 test('summary: cache headers for in-progress games', () => {
