@@ -5,7 +5,7 @@ const { awsCredentialsProvider } = require('@vercel/functions/oidc');
 
 const region = process.env.SUMMARY_AWS_REGION || 'us-east-1';
 const modelFinal = process.env.SUMMARY_MODEL_FINAL || 'zai.glm-5';
-const modelLive = process.env.SUMMARY_MODEL_LIVE || 'us.anthropic.claude-haiku-4-5-20251001-v1:0';
+const modelLive = process.env.SUMMARY_MODEL_LIVE || 'google.gemma-3-27b-it';
 
 let cachedClient = null;
 

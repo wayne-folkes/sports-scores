@@ -95,8 +95,8 @@ test('summary: model selection per game state', () => {
 
   assert.equal(selectModelAndPrompt('final').model, 'zai.glm-5');
   assert.equal(selectModelAndPrompt('post').model, 'zai.glm-5');
-  assert.equal(selectModelAndPrompt('in').model, 'us.anthropic.claude-haiku-4-5-20251001-v1:0');
-  assert.equal(selectModelAndPrompt('pre').model, 'us.anthropic.claude-haiku-4-5-20251001-v1:0');
+  assert.equal(selectModelAndPrompt('in').model, 'google.gemma-3-27b-it');
+  assert.equal(selectModelAndPrompt('pre').model, 'google.gemma-3-27b-it');
 });
 
 test('summary: cache headers for in-progress games', () => {

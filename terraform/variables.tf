@@ -34,6 +34,7 @@ variable "bedrock_model_ids" {
   default = [
     "zai.glm-5",
     "zai.glm-4.7*",
+    "google.gemma-3*",
     "anthropic.claude-opus-5",
     "anthropic.claude-haiku-4-5*",
   ]
