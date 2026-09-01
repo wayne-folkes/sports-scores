@@ -41,7 +41,10 @@ export default function BoxScoreModal({ sport, game, onClose }) {
   const [boxscore, setBoxscore] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const intervalRef = useRef(null);
+  const summaryAbortRef = useRef(null);
 
   const fetchBoxscore = useCallback(() => {
     setIsLoading(true);
@@ -95,6 +98,49 @@ export default function BoxScoreModal({ sport, game, onClose }) {
       clearInterval(intervalRef.current);
     };
   }, [game.status, fetchBoxscore]);
+
+  // Fetch game summary
+  useEffect(() => {
+    const controller = new AbortController();
+    summaryAbortRef.current = controller;
+
+    const fetchSummary = () => {
+      setSummaryLoading(true);
+
+      fetch(`/api/summary/${sport}/${game.id}`, { signal: controller.signal })
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 404 || response.status === 502 || response.status === 503) {
+              // No summary available
+              setSummary(null);
+            } else {
+              throw new Error(`Failed to load summary (${response.status})`);
+            }
+            return null;
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data) {
+            setSummary(data);
+          }
+          setSummaryLoading(false);
+        })
+        .catch((fetchError) => {
+          if (fetchError.name !== 'AbortError') {
+            // Silently ignore errors for summary (non-critical feature)
+          }
+          setSummaryLoading(false);
+        });
+    };
+
+    const frameId = window.requestAnimationFrame(fetchSummary);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      controller.abort();
+    };
+  }, [sport, game.id]);
 
   const statRows = useMemo(() => {
     const all = boxscore?.statistics || [];
@@ -197,6 +243,25 @@ export default function BoxScoreModal({ sport, game, onClose }) {
             <div className="box-score-modal__state">
               <p className="box-score-modal__error">{error}</p>
               <button className="box-score-modal__retry" onClick={fetchBoxscore}>Retry</button>
+            </div>
+          )}
+
+          {!isLoading && !error && (summary || summaryLoading) && (
+            <div className="box-score-modal__summary">
+              {summaryLoading && (
+                <div className="box-score-modal__summary-placeholder">Generating summary…</div>
+              )}
+              {!summaryLoading && summary && (
+                <>
+                  <div className="box-score-modal__summary-header">
+                    <h3 className="box-score-modal__summary-title">Game Summary</h3>
+                    {summary.gameState === 'in' && (
+                      <span className="box-score-modal__summary-label">Live update — may change</span>
+                    )}
+                  </div>
+                  <p className="box-score-modal__summary-text">{summary.summary}</p>
+                </>
+              )}
             </div>
           )}
 

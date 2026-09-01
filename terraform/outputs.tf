@@ -1,0 +1,12 @@
+output "summaries_table_name" {
+  value = aws_dynamodb_table.summaries.name
+}
+
+output "app_policy_arn" {
+  value = aws_iam_policy.app.arn
+}
+
+output "vercel_role_arn" {
+  description = "Set this as AWS_ROLE_ARN in the Vercel project env vars"
+  value       = aws_iam_role.vercel_app.arn
+}

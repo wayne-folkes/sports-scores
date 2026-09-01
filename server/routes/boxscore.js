@@ -3,21 +3,12 @@
 const express = require('express');
 const { createCache } = require('../middleware/cache');
 const { normalizeBoxscore } = require('./normalize');
+const { SUMMARY_BASE_URLS } = require('../../api/_lib/config');
 
 const router = express.Router();
 const cache = createCache(30);
 
-const ESPN_API_BASE = process.env.ESPN_API_BASE || 'https://site.api.espn.com';
 const FETCH_TIMEOUT_MS = 10_000;
-
-const SUMMARY_BASE_URLS = {
-  nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/summary?event=`,
-  mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/summary?event=`,
-  'college-baseball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-baseball/summary?event=`,
-  'college-softball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-softball/summary?event=`,
-  'mens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=`,
-  'womens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/womens-college-basketball/summary?event=`,
-};
 
 async function fetchWithTimeout(url) {
   const controller = new AbortController();

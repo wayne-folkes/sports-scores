@@ -2,16 +2,7 @@
 
 const { normalizeBoxscore } = require('../../_lib/normalize');
 const { fetchWithTimeout } = require('../../_lib/fetchWithTimeout');
-const { ESPN_API_BASE } = require('../../_lib/config');
-
-const SUMMARY_BASE_URLS = {
-  nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/summary?event=`,
-  mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/summary?event=`,
-  'mens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=`,
-  'womens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/womens-college-basketball/summary?event=`,
-  'college-baseball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-baseball/summary?event=`,
-  'college-softball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-softball/summary?event=`,
-};
+const { SUMMARY_BASE_URLS } = require('../../_lib/config');
 
 module.exports = async function handler(req, res) {
   const { sport, eventId } = req.query;
