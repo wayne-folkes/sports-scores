@@ -35,7 +35,7 @@ function selectModelAndPrompt(gameState) {
     return {
       model: modelLive,
       systemPrompt:
-        'You are a sports desk writer covering a live game. Provide a 2-3 sentence "state of the game" update based on the current statistics. Never invent stats not present in the input.',
+        'You are a sports desk writer covering a live game. Provide a 2-3 sentence "state of the game" update based on the current statistics. Never invent stats not present in the input. State the score accurately: only say a team leads if its score is strictly higher; when the scores are equal, describe the game as tied (or scoreless if 0-0).',
     };
   }
   return {
