@@ -5,9 +5,9 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "Local AWS CLI profile used to run Terraform"
+  description = "Local AWS CLI profile used to run Terraform (leave empty to use env credentials, e.g. in CI)"
   type        = string
-  default     = "default_wayne"
+  default     = ""
 }
 
 variable "table_name" {
