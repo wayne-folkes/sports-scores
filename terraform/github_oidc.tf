@@ -105,6 +105,8 @@ data "aws_iam_policy_document" "github_actions_terraform" {
       "iam:GetRolePolicy",
       "iam:DeleteRolePolicy",
       "iam:ListRolePolicies",
+      "iam:ListRoleTags",
+      "iam:ListPolicyTags",
       "iam:PassRole",
     ]
     resources = [
@@ -127,6 +129,9 @@ data "aws_iam_policy_document" "github_actions_terraform" {
     actions = [
       "budgets:ViewBudget",
       "budgets:ModifyBudget",
+      "budgets:ListTagsForResource",
+      "budgets:TagResource",
+      "budgets:UntagResource",
       "budgets:CreateBudgetAction",
       "budgets:DescribeBudgetAction",
       "budgets:DescribeBudgetActionsForBudget",
