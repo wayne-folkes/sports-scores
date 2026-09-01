@@ -14,8 +14,10 @@ async function getDocClient() {
 
   let credentialsOption = undefined;
 
-  if (process.env.AWS_ROLE_ARN && process.env.VERCEL_OIDC_TOKEN) {
-    credentialsOption = await awsCredentialsProvider({ roleArn: process.env.AWS_ROLE_ARN });
+  // VERCEL_OIDC_TOKEN is only an env var locally/at build; at runtime the
+  // provider fetches the token from the request context itself.
+  if (process.env.AWS_ROLE_ARN) {
+    credentialsOption = awsCredentialsProvider({ roleArn: process.env.AWS_ROLE_ARN });
   }
 
   const dynamoDbClient = new DynamoDBClient({

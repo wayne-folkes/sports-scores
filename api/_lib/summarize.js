@@ -13,7 +13,9 @@ function getClient() {
   if (cachedClient) return cachedClient;
 
   const options = { region };
-  if (process.env.AWS_ROLE_ARN && process.env.VERCEL_OIDC_TOKEN) {
+  // VERCEL_OIDC_TOKEN is only an env var locally/at build; at runtime the
+  // provider fetches the token from the request context itself.
+  if (process.env.AWS_ROLE_ARN) {
     options.credentials = awsCredentialsProvider({ roleArn: process.env.AWS_ROLE_ARN });
   }
 
