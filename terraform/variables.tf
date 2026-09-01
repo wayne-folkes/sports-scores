@@ -28,6 +28,12 @@ variable "vercel_project_name" {
   default     = "sports-scores"
 }
 
+variable "budget_email" {
+  description = "Email notified at 80% of the Bedrock budget and when the cutoff action fires"
+  type        = string
+  default     = "wayne.folkes@gmail.com"
+}
+
 variable "bedrock_model_ids" {
   description = "Bedrock model IDs the app may invoke"
   type        = list(string)
