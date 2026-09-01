@@ -8,3 +8,10 @@ dist/
 # Playwright
 client/test-results/
 client/playwright-report/
+
+# Terraform
+terraform/.terraform/
+terraform/tfplan
+terraform/tfplan.txt
+terraform/*.tfstate
+terraform/*.tfstate.backup

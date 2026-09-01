@@ -10,3 +10,8 @@ output "vercel_role_arn" {
   description = "Set this as AWS_ROLE_ARN in the Vercel project env vars"
   value       = aws_iam_role.vercel_app.arn
 }
+
+output "github_actions_role_arn" {
+  description = "Set this as AWS_ROLE_ARN in the GitHub Actions terraform workflow"
+  value       = aws_iam_role.github_actions_terraform.arn
+}
