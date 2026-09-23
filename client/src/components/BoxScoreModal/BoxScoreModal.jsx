@@ -2,6 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BOXSCORE_POLL_INTERVAL } from '../../constants';
 import './BoxScoreModal.css';
 
+const FOOTBALL_PLAYER_TABLES = [
+  { key: 'passing', title: 'Passing', columns: ['C/ATT', 'YDS', 'TD', 'INT', 'QBR'] },
+  { key: 'rushing', title: 'Rushing', columns: ['CAR', 'YDS', 'AVG', 'TD', 'LONG'] },
+  { key: 'receiving', title: 'Receiving', columns: ['REC', 'YDS', 'TD', 'LONG', 'TGTS'] },
+];
+
 function getStatusLabel(boxscore) {
   if (boxscore.status === 'scheduled') {
     return 'Matchup';
@@ -147,7 +153,9 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     // Limit to key stats to keep the modal compact
     const basketballStats = ['PTS', 'REB', 'AST', 'FG%', '3P%', 'FT%', 'TO', 'STL', 'BLK'];
     const baseballStats = ['R', 'H', 'HR', 'RBI', 'BB', 'K', 'SO', '2B', '3B', 'AVG'];
+    const footballStats = ['firstDowns', 'totalYards', 'netPassingYards', 'rushingYards', 'thirdDownEff', 'fourthDownEff', 'turnovers', 'totalPenaltiesYards', 'possessionTime'];
     const keyStats = {
+      nfl: footballStats,
       nba: basketballStats,
       'mens-college-basketball': basketballStats,
       'womens-college-basketball': basketballStats,
@@ -177,6 +185,13 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     if (!awayHasData && !homeHasData) return null;
     return p;
   }, [isBaseballSport, boxscore]);
+
+  const footballPlayers = useMemo(() => {
+    if (sport !== 'nfl') return null;
+    const p = boxscore?.players;
+    const hasData = (side) => FOOTBALL_PLAYER_TABLES.some(({ key }) => p?.[side]?.[key]?.length > 0);
+    return hasData('away') || hasData('home') ? p : null;
+  }, [sport, boxscore]);
 
   const bodyRef = useRef(null);
 
@@ -331,6 +346,45 @@ export default function BoxScoreModal({ sport, game, onClose }) {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!isLoading && !error && footballPlayers && (
+            <div className="bs-players">
+              {[
+                { side: 'away', abbr: away.team.abbreviation || 'Away', data: footballPlayers.away },
+                { side: 'home', abbr: home.team.abbreviation || 'Home', data: footballPlayers.home },
+              ].map(({ side, abbr, data }) => (
+                <div key={side} className="bs-players__group" data-team-section={side}>
+                  {FOOTBALL_PLAYER_TABLES.filter(({ key }) => data?.[key]?.length > 0).map(({ key, title, columns }) => (
+                    <div key={key}>
+                      <p className="bs-players__group-heading">{abbr} {title}</p>
+                      <div className="bs-players__table-wrap">
+                        <table className="bs-players__table">
+                          <thead>
+                            <tr className="bs-players__row bs-players__row--head">
+                              <th className="bs-players__th bs-players__th--name" scope="col">Player</th>
+                              {columns.map((col) => (
+                                <th key={col} className="bs-players__th" scope="col">{col}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {data[key].map((player, idx) => (
+                              <tr key={player.name || idx} className="bs-players__row">
+                                <td className="bs-players__td-name">{player.shortName || player.name}</td>
+                                {columns.map((col) => (
+                                  <td key={col} className="bs-players__td">{player.stats[col] || '—'}</td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>

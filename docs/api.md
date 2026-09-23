@@ -12,7 +12,10 @@ Base URL for local development: `http://localhost:3001`
 | GET | `/api/scores/nba` | Today's NBA scoreboard | 60 seconds |
 | GET | `/api/scores/mlb` | Today's MLB scoreboard | 60 seconds |
 | GET | `/api/teams/nba` | Full list of NBA teams | 1 hour |
+| GET | `/api/scores/nfl` | This week's NFL scoreboard | 60 seconds |
 | GET | `/api/teams/mlb` | Full list of MLB teams | 1 hour |
+| GET | `/api/teams/nfl` | Full list of NFL teams | 1 hour |
+| GET | `/api/standings/:sport` | Standings for `nfl`, `nba` or `mlb` | 10 minutes |
 | GET | `/api/boxscore/:sport/:eventId` | Summary and box score for a live or final game | 30 seconds |
 
 ## Response Shapes
@@ -97,6 +100,51 @@ Returns a summary object for the modal:
   ]
 }
 ```
+
+### NFL `situation` field
+
+NFL games in `/api/scores/nfl` include a `situation` key. It is `null` unless the game is live and ESPN reports a situation (it is absent for other sports):
+
+```json
+"situation": {
+  "downDistanceText": "3rd & 7 at DAL 15",
+  "shortDownDistanceText": "3rd & 7",
+  "possession": "away",
+  "isRedZone": true,
+  "homeTimeouts": 3,
+  "awayTimeouts": 2,
+  "lastPlay": "J.Dart pass short right to M.Nabers for 12 yards"
+}
+```
+
+NFL box scores return `players` as `{ away: { passing, rushing, receiving }, home: { ... } }`, where each entry is `{ name, shortName, stats }` keyed by ESPN column label (`C/ATT`, `YDS`, `TD`, …).
+
+### `GET /api/standings/:sport`
+
+Supported sports: `nfl`, `nba`, `mlb`. Each node in ESPN's standings tree that carries entries becomes one group (a conference, league, or division, depending on what ESPN returns). Entries are sorted by playoff seed when available, otherwise by win percentage.
+
+```json
+{
+  "sport": "nfl",
+  "season": "2026",
+  "columns": ["W", "L", "T", "PCT", "PF", "PA", "STRK"],
+  "groups": [
+    {
+      "name": "National Football Conference",
+      "abbreviation": "NFC",
+      "parent": "",
+      "entries": [
+        {
+          "team": { "id": "19", "name": "New York Giants", "abbreviation": "NYG", "logo": "https://..." },
+          "stats": { "W": "3", "L": "0", "T": "0", "PCT": "1.000", "PF": "80", "PA": "40", "STRK": "W3" }
+        }
+      ]
+    }
+  ]
+}
+```
+
+NBA and MLB use the columns `W`, `L`, `PCT`, `GB`, `STRK`.
 
 ## Notes
 

@@ -4,6 +4,7 @@ import BoxScoreModal from '../BoxScoreModal';
 import ScoreCard from '../ScoreCard';
 import WireBulletin from '../WireBulletin';
 import TeamSelector from '../TeamSelector';
+import StandingsTable from '../StandingsTable';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useRelativeTime } from '../../hooks/useRelativeTime';
 import { useTheme } from '../../theme-context';
@@ -14,6 +15,7 @@ import './SportWidget.css';
 const SPORT_META = {
   nba: { icon: '🏀', label: 'NBA' },
   mlb: { icon: '⚾', label: 'MLB' },
+  nfl: { icon: '🏈', label: 'NFL' },
   'mens-college-basketball': { icon: '🏀', label: 'NCAAM' },
   'womens-college-basketball': { icon: '🏀', label: 'NCAAW' },
   'college-baseball': { icon: '⚾', label: 'CBASE' },
@@ -28,6 +30,10 @@ const DEFAULT_THEME = {
   mlb: {
     primary: '#0f766e',
     secondary: '#f97316',
+  },
+  nfl: {
+    primary: '#013369',
+    secondary: '#d50a0a',
   },
   'mens-college-basketball': {
     primary: '#1a5276',
@@ -48,6 +54,7 @@ const DEFAULT_THEME = {
 };
 
 const POLL_INTERVAL = SCORES_POLL_INTERVAL;
+const STANDINGS_SPORTS = ['nfl', 'nba', 'mlb'];
 const PERFORATION_DOTS = Array.from({ length: 14 });
 
 function SkeletonCard() {
@@ -69,6 +76,11 @@ export default function SportWidget({ sport, isReorderable = true }) {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [showSelector, setShowSelector] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [view, setView] = useLocalStorage(`widgetView.${sport}`, 'scores');
+  const [standingsRefreshKey, setStandingsRefreshKey] = useState(0);
+  const [isStandingsLoading, setIsStandingsLoading] = useState(false);
+  const hasStandings = STANDINGS_SPORTS.includes(sport);
+  const showStandings = hasStandings && view === 'standings';
 
   const intervalRef = useRef(null);
   const relativeUpdated = useRelativeTime(lastUpdated);
@@ -219,11 +231,11 @@ export default function SportWidget({ sport, isReorderable = true }) {
             <span className="sport-widget__updated" aria-live="polite">{lastUpdatedLabel}</span>
           )}
           <button
-            className={`sport-widget__refresh${isLoading ? ' sport-widget__refresh--spinning' : ''}`}
-            onClick={fetchScores}
-            title={`Refresh ${meta.label} scores`}
-            aria-label={`Refresh ${meta.label} scores`}
-            aria-busy={isLoading}
+            className={`sport-widget__refresh${(showStandings ? isStandingsLoading : isLoading) ? ' sport-widget__refresh--spinning' : ''}`}
+            onClick={showStandings ? () => setStandingsRefreshKey((key) => key + 1) : fetchScores}
+            title={`Refresh ${meta.label} ${showStandings ? 'standings' : 'scores'}`}
+            aria-label={`Refresh ${meta.label} ${showStandings ? 'standings' : 'scores'}`}
+            aria-busy={showStandings ? isStandingsLoading : isLoading}
           >
             <span className="sport-widget__control-icon" aria-hidden="true">⟳</span>
             <span className="sport-widget__control-label">Refresh</span>
@@ -246,8 +258,32 @@ export default function SportWidget({ sport, isReorderable = true }) {
         </div>
       )}
 
+      {hasStandings && (
+        <div className="sport-widget__view-toggle" role="group" aria-label={`${meta.label} view`}>
+          {['scores', 'standings'].map((option) => (
+            <button
+              key={option}
+              className={`sport-widget__view-option${(showStandings ? 'standings' : 'scores') === option ? ' sport-widget__view-option--active' : ''}`}
+              onClick={() => setView(option)}
+              aria-pressed={(showStandings ? 'standings' : 'scores') === option}
+            >
+              {option === 'scores' ? 'Scores' : 'Standings'}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="sport-widget__body" aria-live="polite" aria-atomic="false">
-        {isInitialLoad && (
+        {showStandings && (
+          <StandingsTable
+            sport={sport}
+            favorites={favorites}
+            refreshKey={standingsRefreshKey}
+            onLoadingChange={setIsStandingsLoading}
+          />
+        )}
+
+        {!showStandings && isInitialLoad && (
           <div aria-label="Loading scores" role="status">
             <SkeletonCard />
             <SkeletonCard />
@@ -255,7 +291,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
           </div>
         )}
 
-        {!isInitialLoad && error && (
+        {!showStandings && !isInitialLoad && error && (
           <div className="sport-widget__state" role="alert">
             <p className="sport-widget__state-kicker">Connection issue</p>
             <p className="sport-widget__error">{error}</p>
@@ -263,14 +299,14 @@ export default function SportWidget({ sport, isReorderable = true }) {
           </div>
         )}
 
-        {!isInitialLoad && !error && games.length === 0 && (
+        {!showStandings && !isInitialLoad && !error && games.length === 0 && (
           <div className="sport-widget__state" role="status">
             <p className="sport-widget__state-kicker">No games today</p>
             <p className="sport-widget__prompt">Check back later for today's schedule.</p>
           </div>
         )}
 
-        {!isInitialLoad && !error && games.length > 0 && (
+        {!showStandings && !isInitialLoad && !error && games.length > 0 && (
           <>
             {favoriteGames.length > 0 && (
               <section aria-label="Favorite teams' games">

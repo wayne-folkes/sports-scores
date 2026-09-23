@@ -1,18 +1,20 @@
 # Sports Scores
 
-> A web app for tracking live NBA and MLB scores — [live at sports-scores-silk.vercel.app](https://sports-scores-silk.vercel.app)
+> A web app for tracking live NBA, MLB and NFL scores — [live at sports-scores-silk.vercel.app](https://sports-scores-silk.vercel.app)
 
 ![Sports Scores dashboard showing Yankees and Knicks score cards](./docs/images/app-screenshot.png)
 
 ## Features
 
-- **Live & scheduled scores** — NBA and MLB games via ESPN's public API (no key required)
+- **Live & scheduled scores** — NBA, MLB and NFL games via ESPN's public API (no key required)
+- **NFL game situation** — live NFL cards show quarter/clock, down & distance, a 🏈 possession marker, and a red-zone highlight
+- **League standings** — NFL, NBA and MLB widgets have a Scores | Standings toggle; favorite teams are highlighted
 - **Draggable, resizable widgets** — powered by react-grid-layout; arrange the board however you like
 - **Favorite teams** — pin preferred teams per sport; selections persist across sessions
 - **Auto-refresh** — scores update every 30 seconds; pauses automatically when the browser tab is hidden (Page Visibility API)
 - **Light / dark theme** — adapts to your system color scheme via CSS `prefers-color-scheme`
 - **Persistent layout** — widget positions are saved to localStorage and restored on reload
-- **Box scores** — open live/final games to view a team-vs-team stat breakdown from ESPN's summary endpoint
+- **Box scores** — open live/final games to view a team-vs-team stat breakdown from ESPN's summary endpoint (NFL adds passing, rushing and receiving leaders)
 
 ---
 
