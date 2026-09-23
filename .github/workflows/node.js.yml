@@ -29,6 +29,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: server/package-lock.json
 
+      # api/_lib (required by server tests) resolves packages from the root node_modules
+      - name: Install root dependencies
+        run: npm ci
+
       - name: Install server dependencies
         working-directory: server
         run: npm ci
