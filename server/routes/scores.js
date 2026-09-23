@@ -11,6 +11,7 @@ const ESPN_API_BASE = process.env.ESPN_API_BASE || 'https://site.api.espn.com';
 const FETCH_TIMEOUT_MS = 10_000;
 
 const ESPN_URLS = {
+  nfl: `${ESPN_API_BASE}/apis/site/v2/sports/football/nfl/scoreboard`,
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/scoreboard`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/scoreboard`,
   'college-baseball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-baseball/scoreboard`,
@@ -82,6 +83,7 @@ async function fetchPredictorsForSport(sport, events) {
 
 router.get('/nba', cache, (req, res) => fetchScores(req, res, 'nba'));
 router.get('/mlb', cache, (req, res) => fetchScores(req, res, 'mlb'));
+router.get('/nfl', cache, (req, res) => fetchScores(req, res, 'nfl'));
 router.get('/college-baseball', cache, (req, res) => fetchScores(req, res, 'college-baseball'));
 router.get('/college-softball', cache, (req, res) => fetchScores(req, res, 'college-softball'));
 router.get('/mens-college-basketball', cache, (req, res) => fetchScores(req, res, 'mens-college-basketball'));

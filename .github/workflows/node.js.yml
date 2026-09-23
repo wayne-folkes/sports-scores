@@ -91,10 +91,13 @@ jobs:
         run: |
           node --check api/_lib/normalize.js
           node --check api/_lib/teams.js
+          node --check api/_lib/football.js
+          node --check api/_lib/standings.js
           node --check api/health.js
           node --check "api/scores/[sport].js"
           node --check "api/teams/[sport].js"
           node --check "api/boxscore/[sport]/[eventId].js"
+          node --check "api/standings/[sport].js"
 
   e2e:
     name: Playwright e2e tests
