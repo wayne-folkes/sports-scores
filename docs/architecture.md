@@ -67,6 +67,8 @@ The app prefers browser storage for user-specific state.
 |-----|-------|
 | `favoriteTeams.nba` | Array of favorited NBA team IDs |
 | `favoriteTeams.mlb` | Array of favorited MLB team IDs |
+| `favoriteTeams.nfl` | Array of favorited NFL team IDs |
+| `widgetView.<sport>` | `scores` or `standings` — the selected tab for NFL/NBA/MLB widgets |
 | `widgetLayout` | Saved react-grid-layout positions and sizes |
 
 ## UX Behaviors

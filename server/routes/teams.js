@@ -10,6 +10,7 @@ const ESPN_API_BASE = process.env.ESPN_API_BASE || 'https://site.api.espn.com';
 const FETCH_TIMEOUT_MS = 10_000;
 
 const ESPN_URLS = {
+  nfl: `${ESPN_API_BASE}/apis/site/v2/sports/football/nfl/teams`,
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/teams`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/teams`,
   'college-baseball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-baseball/teams?limit=500`,
@@ -67,6 +68,7 @@ async function fetchTeams(req, res, sport) {
 
 router.get('/nba', cache, (req, res) => fetchTeams(req, res, 'nba'));
 router.get('/mlb', cache, (req, res) => fetchTeams(req, res, 'mlb'));
+router.get('/nfl', cache, (req, res) => fetchTeams(req, res, 'nfl'));
 router.get('/college-baseball', cache, (req, res) => fetchTeams(req, res, 'college-baseball'));
 router.get('/college-softball', cache, (req, res) => fetchTeams(req, res, 'college-softball'));
 router.get('/mens-college-basketball', cache, (req, res) => fetchTeams(req, res, 'mens-college-basketball'));

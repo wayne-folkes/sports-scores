@@ -92,6 +92,43 @@
   color: var(--text-muted);
 }
 
+/* ── NFL situation ───────────────────────────────────────────────────── */
+
+.scorecard__situation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 4px 14px 0;
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.scorecard__situation-clock {
+  color: var(--status-live);
+}
+
+.scorecard__red-zone {
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--status-live);
+  background: var(--status-live-bg);
+}
+
+.scorecard--red-zone {
+  box-shadow: inset 0 0 0 1px var(--status-live-glow);
+}
+
+.scorecard__possession {
+  font-size: 0.8em;
+}
+
 /* ── Team rows ────────────────────────────────────────────────────────── */
 
 .scorecard__team {

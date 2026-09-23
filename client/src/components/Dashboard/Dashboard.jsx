@@ -6,11 +6,12 @@ import SportWidget from '../SportWidget';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import './Dashboard.css';
 
-const ALL_SPORTS = ['nba', 'mlb', 'mens-college-basketball', 'womens-college-basketball', 'college-baseball', 'college-softball'];
+const ALL_SPORTS = ['nba', 'mlb', 'nfl', 'mens-college-basketball', 'womens-college-basketball', 'college-baseball', 'college-softball'];
 
 const SPORT_LABELS = {
   nba: 'NBA',
   mlb: 'MLB',
+  nfl: 'NFL',
   'mens-college-basketball': "Men's College Basketball",
   'womens-college-basketball': "Women's College Basketball",
   'college-baseball': 'College Baseball',

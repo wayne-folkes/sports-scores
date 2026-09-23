@@ -43,6 +43,8 @@ export default function WireBulletin({ game, onOpenBoxScore }) {
   let stampClass = 'wire-bulletin__stamp--sched';
   if (isLive) {
     stampText = statusDetail ? `Live · ${statusDetail}` : 'Live';
+    if (game.situation?.shortDownDistanceText) stampText += ` · ${game.situation.shortDownDistanceText}`;
+    if (game.situation?.isRedZone) stampText += ' · Red zone';
     stampClass = 'wire-bulletin__stamp--live';
   } else if (isFinal) {
     stampText = getFinalStatusLabel(statusDetail);

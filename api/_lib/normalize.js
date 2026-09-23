@@ -1,7 +1,11 @@
 'use strict';
 
+const { normalizeFootballSituation, normalizeFootballPlayers } = require('./football');
+
 const ESPN_STATUS_MAP = {
   STATUS_IN_PROGRESS: 'live',
+  STATUS_HALFTIME: 'live',
+  STATUS_END_PERIOD: 'live',
   STATUS_FINAL: 'final',
 };
 
@@ -93,6 +97,9 @@ function normalizeScoreboard(data, sport, predictorsByEventId = {}) {
       homeScore: parseScore(home),
       awayScore: parseScore(away),
       prediction,
+      ...(sport === 'nfl' && {
+        situation: normalizeFootballSituation(competition.situation, String(home.team?.id || ''), String(away.team?.id || '')),
+      }),
     };
   });
 
@@ -326,6 +333,14 @@ function normalizeBoxscore(data, sport, eventId) {
 
     if (awayEntry) players.away = mapTeamPlayers(awayEntry);
     if (homeEntry) players.home = mapTeamPlayers(homeEntry);
+  }
+
+  if (sport === 'nfl') {
+    players = normalizeFootballPlayers(
+      data.boxscore?.players,
+      String(awayCompetitor?.team?.id || ''),
+      String(homeCompetitor?.team?.id || '')
+    );
   }
 
   return {

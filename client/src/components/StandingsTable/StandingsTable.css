@@ -1,0 +1,87 @@
+.standings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.standings__season,
+.standings__state {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.standings__state {
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.standings__table-wrap {
+  overflow-x: auto;
+}
+
+.standings__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.standings__table th,
+.standings__table td {
+  padding: 5px 6px;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.standings__table thead th {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.standings__table td {
+  color: var(--text-secondary);
+}
+
+.standings__table .standings__team-col {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.standings__team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.standings__logo {
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.standings__name {
+  color: var(--text-secondary);
+  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.standings__row--favorite {
+  background: var(--widget-accent-soft, var(--bg-soft));
+}
+
+.standings__row--favorite .standings__abbr::after {
+  content: ' ⭐';
+}
+
+@media (max-width: 520px) {
+  .standings__name {
+    display: none;
+  }
+}

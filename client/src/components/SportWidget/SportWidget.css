@@ -74,6 +74,10 @@
   background: var(--accent-mlb);
 }
 
+.sport-widget--nfl .sport-widget__header::after {
+  background: var(--accent-nfl);
+}
+
 .sport-widget--college-baseball .sport-widget__header::after {
   background: var(--accent-college-baseball);
 }
@@ -188,6 +192,37 @@
   color: var(--accent);
   border-color: rgba(200, 255, 0, 0.3);
   background: rgba(200, 255, 0, 0.05);
+}
+
+.sport-widget__view-toggle {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.sport-widget__view-option {
+  flex: 1;
+  min-height: 32px;
+  padding: 0 10px;
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  touch-action: manipulation;
+  transition: color var(--transition), background var(--transition);
+}
+
+.sport-widget__view-option:hover {
+  color: var(--accent);
+}
+
+.sport-widget__view-option--active {
+  color: var(--text-primary);
+  background: var(--widget-accent-soft, var(--bg-soft));
 }
 
 @keyframes sport-widget-spin {

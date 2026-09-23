@@ -29,6 +29,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: server/package-lock.json
 
+      # api/_lib (required by server tests) resolves packages from the root node_modules
+      - name: Install root dependencies
+        run: npm ci
+
       - name: Install server dependencies
         working-directory: server
         run: npm ci
@@ -91,10 +95,13 @@ jobs:
         run: |
           node --check api/_lib/normalize.js
           node --check api/_lib/teams.js
+          node --check api/_lib/football.js
+          node --check api/_lib/standings.js
           node --check api/health.js
           node --check "api/scores/[sport].js"
           node --check "api/teams/[sport].js"
           node --check "api/boxscore/[sport]/[eventId].js"
+          node --check "api/standings/[sport].js"
 
   e2e:
     name: Playwright e2e tests

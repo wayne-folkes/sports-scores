@@ -5,6 +5,7 @@ const { fetchWithTimeout } = require('../_lib/fetchWithTimeout');
 const { ESPN_API_BASE } = require('../_lib/config');
 
 const ESPN_URLS = {
+  nfl: `${ESPN_API_BASE}/apis/site/v2/sports/football/nfl/teams`,
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/teams`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/teams`,
   'mens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/mens-college-basketball/teams?limit=500`,
