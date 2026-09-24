@@ -1,12 +1,17 @@
+// ESPN start times are UTC; show them in Eastern time (EDT/EST handled by Intl).
+const EASTERN_TIME = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+});
+
 export function formatScheduledTime(isoString: string | null | undefined): string {
   if (!isoString) return '';
   const date = new Date(isoString);
-  let hours = date.getUTCHours();
-  const minutes = date.getUTCMinutes();
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12;
-  const mm = minutes === 0 ? '00' : String(minutes).padStart(2, '0');
-  return `${hours}:${mm} ${ampm} ET`;
+  if (Number.isNaN(date.getTime())) return '';
+  const parts = Object.fromEntries(EASTERN_TIME.formatToParts(date).map(({ type, value }) => [type, value]));
+  return `${parts.hour}:${parts.minute} ${parts.dayPeriod} ET`;
 }
 
 export function getFinalStatusLabel(statusDetail: string | null | undefined): string {
