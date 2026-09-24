@@ -4,7 +4,7 @@
 
 ## Prerequisites
 
-- Node.js 20.19 or later
+- Node.js 22.12 or later
 
 ## Install
 
@@ -60,4 +60,4 @@ The app runs at:
 - The frontend proxies API requests to the backend during local development.
 - Widget layout and favorite-team selections persist in the browser with `localStorage`.
 - Score polling refreshes every 30 seconds and pauses while the tab is hidden.
-- Client tooling now targets the Vite 8 / ESLint 10 ecosystem, so use Node.js 20.19+ locally and in CI.
+- Client tooling now targets the Vite 8 / ESLint 10 ecosystem, so use Node.js 22.12+ locally and in CI.

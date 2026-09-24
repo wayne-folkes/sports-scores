@@ -20,7 +20,7 @@
 
 ## Quick Start
 
-- Prerequisite: **Node.js 20.19+**
+- Prerequisite: **Node.js 22.12+**
 - Install dependencies:
 
 ```bash
