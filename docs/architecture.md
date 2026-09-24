@@ -39,8 +39,8 @@ sports-scores/
 │       └── [eventId].ts     # GET /api/summary/:sport/:eventId
 ├── scripts/
 │   └── dev-api.ts           # Serves api/ on port 3001 for local dev
-├── test/                    # Node test suite for api/ (npm test at root, via tsx)
-├── client/                  # React SPA on port 3000 (npm workspace)
+├── test/                    # Node test suite for api/ (pnpm test at root, via tsx)
+├── client/                  # React SPA on port 3000 (pnpm workspace)
 │   └── src/
 │       ├── api/queries.ts      # TanStack Query hooks typed with api/_lib/types.ts
 │       ├── components/

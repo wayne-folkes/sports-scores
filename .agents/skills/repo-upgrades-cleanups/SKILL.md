@@ -26,8 +26,8 @@ Use this skill when the user asks to:
 ### 1) Audit first
 Check:
 - `git status --short`
-- dependency drift with `npm outdated` at the repo root and in `client/`
-- security issues with `npm audit`
+- dependency drift with `pnpm outdated -r` (root and `client/`)
+- security issues with `pnpm audit`
 - large files / directories with `du -sh` and `find`
 - runtime requirements in `README.md`, `docs/`, and CI workflows
 
@@ -42,7 +42,7 @@ For this repo, the main packages live in:
 - `client/package.json`
 - `package.json` (root — `api/` dependencies)
 
-Both share the single root `package-lock.json` (npm workspaces); always install from the repo root.
+Both share the single root `pnpm-lock.yaml` (pnpm workspace); always install from the repo root. pnpm only lets a package import dependencies it declares, so add anything you import directly to that package's `package.json`.
 
 Typical upgrade targets:
 - frontend toolchain: Vite, plugin-react, ESLint, Vitest, Playwright
@@ -70,11 +70,11 @@ Only delete `.claude/worktrees/` if the user explicitly wants to remove agent se
 
 ### 5) Validate
 Run the relevant checks, then the full suite:
-- `npm test` (repo root)
-- `cd client && npm run lint`
-- `cd client && npm test`
-- `cd client && npm run build`
-- `cd client && npm run test:e2e`
+- `pnpm test` (repo root)
+- `cd client && pnpm run lint`
+- `cd client && pnpm test`
+- `cd client && pnpm run build`
+- `cd client && pnpm run test:e2e`
 
 If you changed iOS-related files, run the relevant Swift/Xcode validation too.
 
@@ -89,8 +89,8 @@ Before finishing a milestone:
 
 ```bash
 # dependency audit
-npm outdated --workspaces --include-workspace-root --json
-npm audit --json
+pnpm outdated -r --format json
+pnpm audit --json
 
 # space audit
 find . -type f \( -name '.DS_Store' -o -path '*/dist/*' -o -path '*/node_modules/*' -o -path '*/.build/*' -o -path '*/xcuserdata/*' \)

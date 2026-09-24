@@ -24,7 +24,7 @@
 - Install dependencies (one install covers the API and the `client/` workspace):
 
 ```bash
-cd sports-scores && npm install
+cd sports-scores && pnpm install
 ```
 
 - Run the API and client in separate terminals:
@@ -32,11 +32,11 @@ cd sports-scores && npm install
 ```bash
 # Terminal 1 — API (serves the api/ functions on port 3001)
 cd sports-scores
-npm run dev
+pnpm dev
 
 # Terminal 2 — Frontend dev server
 cd sports-scores/client
-npm run dev
+pnpm dev
 ```
 
 Open **http://localhost:3000** in your browser.

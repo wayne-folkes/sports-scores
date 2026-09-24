@@ -55,10 +55,10 @@ The standard local dev workflow still works too:
 
 ```bash
 # Terminal 1 — api/ functions on port 3001
-npm run dev
+pnpm dev
 
 # Terminal 2 — Vite frontend
-cd client && npm run dev
+cd client && pnpm dev
 ```
 
 ## API caching on Vercel
