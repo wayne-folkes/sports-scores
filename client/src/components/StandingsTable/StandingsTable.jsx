@@ -1,36 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useStandings } from '../../api/queries';
 import './StandingsTable.css';
 
-// `refreshKey` lets the widget's Refresh button trigger a refetch.
-export default function StandingsTable({ sport, favorites = [], refreshKey = 0, onLoadingChange }) {
-  const [standings, setStandings] = useState(null);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    onLoadingChange?.(true);
-
-    fetch(`/api/standings/${sport}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to load standings (${res.status})`);
-        return res.json();
-      })
-      .then((data) => {
-        if (!isMounted) return;
-        setStandings(data);
-        setError(null);
-      })
-      .catch((err) => {
-        if (isMounted) setError(err.message);
-      })
-      .finally(() => {
-        if (isMounted) onLoadingChange?.(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [sport, refreshKey, onLoadingChange]);
+export default function StandingsTable({ sport, favorites = [] }) {
+  const { data: standings, error: queryError } = useStandings(sport);
+  const error = queryError?.message;
 
   if (error) {
     return (

@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithQuery } from './renderWithQuery';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import TeamSelector from '../components/TeamSelector/TeamSelector';
 
@@ -23,7 +24,7 @@ describe('TeamSelector', () => {
   });
 
   it('renders the dialog with sport label', async () => {
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={() => {}} />
     );
 
@@ -32,7 +33,7 @@ describe('TeamSelector', () => {
   });
 
   it('shows teams after loading', async () => {
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={() => {}} />
     );
 
@@ -43,7 +44,7 @@ describe('TeamSelector', () => {
   });
 
   it('shows selected state for favorite teams', async () => {
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={['1']} onFavoritesChange={() => {}} onClose={() => {}} />
     );
 
@@ -58,7 +59,7 @@ describe('TeamSelector', () => {
 
   it('calls onFavoritesChange when a team is toggled', async () => {
     const onFavoritesChange = vi.fn();
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={onFavoritesChange} onClose={() => {}} />
     );
 
@@ -69,7 +70,7 @@ describe('TeamSelector', () => {
 
   it('removes a team from favorites when toggled off', async () => {
     const onFavoritesChange = vi.fn();
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={['1']} onFavoritesChange={onFavoritesChange} onClose={() => {}} />
     );
 
@@ -79,7 +80,7 @@ describe('TeamSelector', () => {
   });
 
   it('filters teams by search input', async () => {
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={() => {}} />
     );
 
@@ -92,7 +93,7 @@ describe('TeamSelector', () => {
   });
 
   it('shows no results message when search has no matches', async () => {
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={() => {}} />
     );
 
@@ -104,7 +105,7 @@ describe('TeamSelector', () => {
 
   it('calls onClose when Escape is pressed', () => {
     const onClose = vi.fn();
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={onClose} />
     );
 
@@ -115,7 +116,7 @@ describe('TeamSelector', () => {
   it('shows error state when fetch fails', async () => {
     global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
 
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={() => {}} />
     );
 
@@ -125,7 +126,7 @@ describe('TeamSelector', () => {
   });
 
   it('shows logo fallback when image fails to load', async () => {
-    render(
+    renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={() => {}} />
     );
 

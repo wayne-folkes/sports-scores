@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithQuery } from './renderWithQuery';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import SportWidget from '../components/SportWidget/SportWidget';
 
@@ -49,17 +50,17 @@ describe('SportWidget', () => {
   });
 
   it('renders the sport label', () => {
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
     expect(screen.getByText('NBA')).toBeInTheDocument();
   });
 
   it('shows skeleton cards during initial load', () => {
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
     expect(screen.getByLabelText('Loading scores')).toBeInTheDocument();
   });
 
   it('shows "no favorites" prompt when favorites list is empty', async () => {
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
 
     await waitFor(() => {
       expect(screen.getByText('Los Angeles Lakers')).toBeInTheDocument();
@@ -70,7 +71,7 @@ describe('SportWidget', () => {
   it('shows score cards when favorites match games', async () => {
     localStorage.setItem('favoriteTeams.nba', JSON.stringify(['13']));
 
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
 
     await waitFor(() => {
       expect(screen.getByText('Los Angeles Lakers')).toBeInTheDocument();
@@ -81,7 +82,7 @@ describe('SportWidget', () => {
   it('shows favorite games first then other games', async () => {
     localStorage.setItem('favoriteTeams.nba', JSON.stringify(['13']));
 
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("Favorite teams' games")).toBeInTheDocument();
@@ -90,7 +91,7 @@ describe('SportWidget', () => {
   });
 
   it('shows all games with no section labels when no favorites set', async () => {
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
 
     await waitFor(() => {
       expect(screen.queryByText('⭐ Favorites')).not.toBeInTheDocument();
@@ -106,7 +107,7 @@ describe('SportWidget', () => {
       return Promise.resolve({ ok: true, json: () => Promise.resolve({ teams: [] }) });
     });
 
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
 
     await waitFor(() => {
       expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -114,12 +115,12 @@ describe('SportWidget', () => {
   });
 
   it('renders MLB widget correctly', () => {
-    render(<SportWidget sport="mlb" />);
+    renderWithQuery(<SportWidget sport="mlb" />);
     expect(screen.getByText('MLB')).toBeInTheDocument();
   });
 
   it('opens TeamSelector when Teams button is clicked', async () => {
-    render(<SportWidget sport="nba" />);
+    renderWithQuery(<SportWidget sport="nba" />);
 
     fireEvent.click(screen.getByRole('button', { name: /Edit NBA teams/i }));
 

@@ -6,7 +6,7 @@
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React 19, Vite, react-grid-layout |
+| Frontend | React 19, Vite, react-grid-layout, TanStack Query |
 | Backend | Node.js 22.12+ serverless functions in `api/` (served locally by `scripts/dev-api.js`) |
 | Data | ESPN public scoreboard, teams, standings, and summary endpoints |
 | AI summaries | Amazon Bedrock, cached in DynamoDB; AWS reached from Vercel via OIDC |
@@ -40,6 +40,7 @@ sports-scores/
 ├── test/                    # Node test suite for api/ (npm test at root)
 ├── client/                  # React SPA on port 3000 (npm workspace)
 │   └── src/
+│       ├── api/queries.js      # TanStack Query hooks: one cache, polling, dedupe
 │       ├── components/
 │       │   ├── Dashboard/      # Grid layout and widget persistence
 │       │   ├── SportWidget/    # Score fetching, refresh, Scores | Standings toggle
@@ -64,7 +65,7 @@ sports-scores/
 
 ## Data Flow
 
-1. The React client requests normalized sports data from the `api/` functions (Vercel in production, `scripts/dev-api.js` locally).
+1. The React client requests normalized sports data from the `api/` functions (Vercel in production, `scripts/dev-api.js` locally) through the TanStack Query hooks in `client/src/api/queries.js`. Components asking for the same data share one request and one cached response; scores poll every 30 s (live box scores too), polling pauses while the tab is hidden, and data refetches when the tab becomes visible.
 2. The API fetches raw ESPN data and converts it into shapes tailored for the UI; Vercel's CDN caches responses per the `Cache-Control` headers.
 3. Widgets render only the user-selected teams for each sport.
 4. Opening a box score triggers a second API request to ESPN's summary endpoint for that event.

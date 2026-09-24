@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BOXSCORE_POLL_INTERVAL } from '../../constants';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useBoxscore, useSummary } from '../../api/queries';
 import './BoxScoreModal.css';
 
 const FOOTBALL_PLAYER_TABLES = [
@@ -44,34 +44,17 @@ function TeamLogo({ src, alt }) {
 }
 
 export default function BoxScoreModal({ sport, game, onClose }) {
-  const [boxscore, setBoxscore] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [summary, setSummary] = useState(null);
-  const [summaryLoading, setSummaryLoading] = useState(true);
-  const intervalRef = useRef(null);
-  const summaryAbortRef = useRef(null);
+  const boxscoreQuery = useBoxscore(sport, game.id, game.status === 'live');
+  const boxscore = boxscoreQuery.data ?? null;
+  // Only the first load (or a retry after a failed first load) shows the
+  // loading state; live polling updates the stats in place.
+  const isLoading = !boxscoreQuery.data && boxscoreQuery.isFetching;
+  const error = boxscoreQuery.isError ? boxscoreQuery.error.message : null;
+  const fetchBoxscore = () => boxscoreQuery.refetch();
 
-  const fetchBoxscore = useCallback(() => {
-    setIsLoading(true);
-    setError(null);
-
-    fetch(`/api/boxscore/${sport}/${game.id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to load box score (${response.status})`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setBoxscore(data);
-        setIsLoading(false);
-      })
-      .catch((fetchError) => {
-        setError(fetchError.message);
-        setIsLoading(false);
-      });
-  }, [game.id, sport]);
+  const summaryQuery = useSummary(sport, game.id);
+  const summary = summaryQuery.data ?? null;
+  const summaryLoading = summaryQuery.isPending;
 
   useEffect(() => {
     const handleKeydown = (event) => {
@@ -83,70 +66,6 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     document.addEventListener('keydown', handleKeydown);
     return () => document.removeEventListener('keydown', handleKeydown);
   }, [onClose]);
-
-  useEffect(() => {
-    const frameId = window.requestAnimationFrame(() => {
-      fetchBoxscore();
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-    };
-  }, [fetchBoxscore]);
-
-  // Auto-refresh every 30s while the game is live
-  useEffect(() => {
-    if (game.status !== 'live') return;
-
-    intervalRef.current = setInterval(fetchBoxscore, BOXSCORE_POLL_INTERVAL);
-
-    return () => {
-      clearInterval(intervalRef.current);
-    };
-  }, [game.status, fetchBoxscore]);
-
-  // Fetch game summary
-  useEffect(() => {
-    const controller = new AbortController();
-    summaryAbortRef.current = controller;
-
-    const fetchSummary = () => {
-      setSummaryLoading(true);
-
-      fetch(`/api/summary/${sport}/${game.id}`, { signal: controller.signal })
-        .then((response) => {
-          if (!response.ok) {
-            if (response.status === 404 || response.status === 502 || response.status === 503) {
-              // No summary available
-              setSummary(null);
-            } else {
-              throw new Error(`Failed to load summary (${response.status})`);
-            }
-            return null;
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data) {
-            setSummary(data);
-          }
-          setSummaryLoading(false);
-        })
-        .catch((fetchError) => {
-          if (fetchError.name !== 'AbortError') {
-            // Silently ignore errors for summary (non-critical feature)
-          }
-          setSummaryLoading(false);
-        });
-    };
-
-    const frameId = window.requestAnimationFrame(fetchSummary);
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-      controller.abort();
-    };
-  }, [sport, game.id]);
 
   const statRows = useMemo(() => {
     const all = boxscore?.statistics || [];
