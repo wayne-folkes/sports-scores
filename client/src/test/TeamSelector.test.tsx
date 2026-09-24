@@ -1,5 +1,6 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithQuery } from './renderWithQuery';
+import { mockFetch } from './fetchMock';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import TeamSelector from '../components/TeamSelector/TeamSelector';
 
@@ -11,7 +12,7 @@ const mockTeams = [
 
 describe('TeamSelector', () => {
   beforeEach(() => {
-    global.fetch = vi.fn(() =>
+    mockFetch(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve({ teams: mockTeams }),
@@ -64,7 +65,7 @@ describe('TeamSelector', () => {
     );
 
     await waitFor(() => screen.getByText('Boston Celtics'));
-    fireEvent.click(screen.getByText('Boston Celtics').closest('button'));
+    fireEvent.click(screen.getByText('Boston Celtics').closest('button')!);
     expect(onFavoritesChange).toHaveBeenCalledWith(['1']);
   });
 
@@ -75,7 +76,7 @@ describe('TeamSelector', () => {
     );
 
     await waitFor(() => screen.getByText('Boston Celtics'));
-    fireEvent.click(screen.getByText('Boston Celtics').closest('button'));
+    fireEvent.click(screen.getByText('Boston Celtics').closest('button')!);
     expect(onFavoritesChange).toHaveBeenCalledWith([]);
   });
 
@@ -114,7 +115,7 @@ describe('TeamSelector', () => {
   });
 
   it('shows error state when fetch fails', async () => {
-    global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
+    mockFetch(() => Promise.reject(new Error('Network error')));
 
     renderWithQuery(
       <TeamSelector sport="nba" favorites={[]} onFavoritesChange={() => {}} onClose={() => {}} />

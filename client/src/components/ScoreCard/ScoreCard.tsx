@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import type { Game } from '../../../../api/_lib/types';
 import { formatScheduledTime, getFinalStatusLabel } from '../../utils/gameStatus';
 import './ScoreCard.css';
 
-function TeamLogo({ logo, abbreviation, name }) {
+function TeamLogo({ logo, abbreviation, name }: { logo: string; abbreviation: string; name: string }) {
   const [imgFailed, setImgFailed] = useState(false);
 
   if (logo && !imgFailed) {
@@ -20,7 +21,12 @@ function TeamLogo({ logo, abbreviation, name }) {
   return <span className="scorecard__logo scorecard__logo--fallback">{abbreviation}</span>;
 }
 
-export default function ScoreCard({ game, onOpenBoxScore }) {
+interface ScoreCardProps {
+  game: Game;
+  onOpenBoxScore?: (game: Game) => void;
+}
+
+export default function ScoreCard({ game, onOpenBoxScore }: ScoreCardProps) {
   const {
     status,
     statusDetail,
@@ -38,7 +44,7 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
   const showScores = isLive || isFinal;
   // NFL only: down & distance, possession, red zone (live games).
   const liveSituation = isLive ? situation : null;
-  const possessionMarker = (side) => (
+  const possessionMarker = (side: 'home' | 'away') => (
     liveSituation?.possession === side
       ? <span className="scorecard__possession" role="img" aria-label="Has possession"> 🏈</span>
       : null
@@ -89,10 +95,10 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
 
       <div
         className={`scorecard__team${awayWins ? ' scorecard__team--winner' : ''}${canViewBoxScore ? ' scorecard__team--clickable' : ''}`}
-        onClick={canViewBoxScore ? () => onOpenBoxScore(game) : undefined}
+        onClick={canViewBoxScore ? () => onOpenBoxScore?.(game) : undefined}
         role={canViewBoxScore ? 'button' : undefined}
         tabIndex={canViewBoxScore ? 0 : undefined}
-        onKeyDown={canViewBoxScore ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenBoxScore(game); } } : undefined}
+        onKeyDown={canViewBoxScore ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenBoxScore?.(game); } } : undefined}
       >
         <TeamLogo logo={awayTeam.logo} abbreviation={awayTeam.abbreviation} name={awayTeam.name} />
         <div className="scorecard__team-copy">
@@ -107,10 +113,10 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
 
       <div
         className={`scorecard__team${homeWins ? ' scorecard__team--winner' : ''}${canViewBoxScore ? ' scorecard__team--clickable' : ''}`}
-        onClick={canViewBoxScore ? () => onOpenBoxScore(game) : undefined}
+        onClick={canViewBoxScore ? () => onOpenBoxScore?.(game) : undefined}
         role={canViewBoxScore ? 'button' : undefined}
         tabIndex={canViewBoxScore ? 0 : undefined}
-        onKeyDown={canViewBoxScore ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenBoxScore(game); } } : undefined}
+        onKeyDown={canViewBoxScore ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpenBoxScore?.(game); } } : undefined}
       >
         <TeamLogo logo={homeTeam.logo} abbreviation={homeTeam.abbreviation} name={homeTeam.name} />
         <div className="scorecard__team-copy">
@@ -125,7 +131,7 @@ export default function ScoreCard({ game, onOpenBoxScore }) {
 
       {canViewBoxScore && (
         <div className="scorecard__footer">
-          <button className="scorecard__action" onClick={() => onOpenBoxScore(game)}>
+          <button className="scorecard__action" onClick={() => onOpenBoxScore?.(game)}>
             View box score
           </button>
         </div>

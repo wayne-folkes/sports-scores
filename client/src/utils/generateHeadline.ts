@@ -1,16 +1,17 @@
+import type { Game, TeamInfo } from '../../../api/_lib/types';
 import { getFinalStatusLabel, formatScheduledTime } from './gameStatus';
 
-function teamLabel(team) {
+function teamLabel(team: TeamInfo | undefined): string {
   return team?.shortName || team?.name || 'Team';
 }
 
-function marginVerb(margin) {
+function marginVerb(margin: number): string {
   if (margin <= 4) return 'edge';
   if (margin <= 14) return 'beat';
   return 'rout';
 }
 
-export function generateHeadline(game) {
+export function generateHeadline(game: Game): string {
   const { status, statusDetail, startTime, homeTeam, awayTeam, homeScore, awayScore } = game;
 
   const home = teamLabel(homeTeam);

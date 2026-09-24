@@ -1,4 +1,4 @@
-export function normalizeHexColor(color, fallback) {
+export function normalizeHexColor(color: string | undefined, fallback: string): string {
   const cleaned = color?.replace('#', '').trim();
   if (!cleaned || !/^[\da-f]{6}$/i.test(cleaned)) {
     return fallback;
@@ -6,7 +6,7 @@ export function normalizeHexColor(color, fallback) {
   return `#${cleaned}`;
 }
 
-export function hexToRgb(hexColor) {
+export function hexToRgb(hexColor: string): { r: number; g: number; b: number } {
   const value = hexColor.replace('#', '');
   return {
     r: Number.parseInt(value.slice(0, 2), 16),
@@ -15,14 +15,14 @@ export function hexToRgb(hexColor) {
   };
 }
 
-export function rgba(hexColor, alpha) {
+export function rgba(hexColor: string, alpha: number): string {
   const { r, g, b } = hexToRgb(hexColor);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export function mixColors(primaryHex, secondaryHex, weight = 0.5) {
+export function mixColors(primaryHex: string, secondaryHex: string, weight = 0.5): string {
   const primary = hexToRgb(primaryHex);
   const secondary = hexToRgb(secondaryHex);
-  const mix = (first, second) => Math.round(first * weight + second * (1 - weight));
+  const mix = (first: number, second: number) => Math.round(first * weight + second * (1 - weight));
   return `rgb(${mix(primary.r, secondary.r)}, ${mix(primary.g, secondary.g)}, ${mix(primary.b, secondary.b)})`;
 }

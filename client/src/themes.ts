@@ -1,4 +1,9 @@
-export const THEMES = {
+interface Theme {
+  label: string;
+  vars: Record<string, string>;
+}
+
+export const THEMES: Record<string, Theme> = {
   default: {
     label: 'Default Dark',
     vars: {}, // uses index.css defaults
@@ -150,7 +155,7 @@ export const THEMES = {
 };
 
 // Default values from index.css so we can reset when switching back
-const DEFAULT_VARS = {
+const DEFAULT_VARS: Record<string, string> = {
   '--bg-page': '#06070c',
   '--bg-page-alt': '#06070c',
   '--bg-widget': '#0d1018',
@@ -183,7 +188,7 @@ const DEFAULT_VARS = {
   '--radius-lg': '12px',
 };
 
-export function applyTheme(themeKey) {
+export function applyTheme(themeKey: string) {
   const theme = THEMES[themeKey];
   if (!theme) return;
 
