@@ -1,5 +1,5 @@
 # CI for the sports-scores monorepo.
-# Runs server tests, client lint+build+unit tests, api/ syntax checks,
+# Runs api/ tests + syntax checks, client lint+build+unit tests,
 # and Playwright e2e tests (desktop + mobile Chrome).
 
 name: Node.js CI
@@ -11,8 +11,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  server:
-    name: Server tests (Node ${{ matrix.node-version }})
+  api:
+    name: API tests (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -27,18 +27,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: server/package-lock.json
+          cache-dependency-path: package-lock.json
 
-      # api/_lib (required by server tests) resolves packages from the root node_modules
-      - name: Install root dependencies
+      - name: Install dependencies
         run: npm ci
 
-      - name: Install server dependencies
-        working-directory: server
-        run: npm ci
+      - name: Check syntax of every api/ and scripts/ file
+        run: find api scripts -name '*.js' -print0 | xargs -0 -n1 node --check
 
-      - name: Run server tests
-        working-directory: server
+      - name: Run API tests
         run: npm test
 
   client:
@@ -74,34 +71,6 @@ jobs:
       - name: Build
         working-directory: client
         run: npm run build
-
-  api:
-    name: Serverless function syntax (Node ${{ matrix.node-version }})
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x, 24.x]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Check api/ syntax
-        run: |
-          node --check api/_lib/normalize.js
-          node --check api/_lib/teams.js
-          node --check api/_lib/football.js
-          node --check api/_lib/standings.js
-          node --check api/health.js
-          node --check "api/scores/[sport].js"
-          node --check "api/teams/[sport].js"
-          node --check "api/boxscore/[sport]/[eventId].js"
-          node --check "api/standings/[sport].js"
 
   e2e:
     name: Playwright e2e tests

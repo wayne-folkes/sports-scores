@@ -26,7 +26,7 @@ Use this skill when the user asks to:
 ### 1) Audit first
 Check:
 - `git status --short`
-- dependency drift with `npm outdated` in `client/` and `server/`
+- dependency drift with `npm outdated` at the repo root and in `client/`
 - security issues with `npm audit`
 - large files / directories with `du -sh` and `find`
 - runtime requirements in `README.md`, `docs/`, and CI workflows
@@ -40,11 +40,11 @@ Split work into:
 ### 3) Update dependencies
 For this repo, the main packages live in:
 - `client/package.json`
-- `server/package.json`
+- `package.json` (root — `api/` dependencies)
 
 Typical upgrade targets:
 - frontend toolchain: Vite, plugin-react, ESLint, Vitest, Playwright
-- server runtime: Express, native `fetch` usage
+- API runtime: AWS SDK, `@vercel/functions`, native `fetch` usage
 - test environment helpers: happy-dom, jsdom only if actually needed
 
 If a package introduces a new runtime baseline, update:
@@ -68,7 +68,7 @@ Only delete `.claude/worktrees/` if the user explicitly wants to remove agent se
 
 ### 5) Validate
 Run the relevant checks, then the full suite:
-- `cd server && npm test`
+- `npm test` (repo root)
 - `cd client && npm run lint`
 - `cd client && npm test`
 - `cd client && npm run build`
@@ -88,7 +88,7 @@ Before finishing a milestone:
 ```bash
 # dependency audit
 cd client && npm outdated --json
-cd server && npm outdated --json
+npm outdated --json
 cd client && npm audit --json
 
 # space audit
@@ -102,6 +102,6 @@ rm -rf client/dist ios/SportsScores/SportsScoresKit/.build
 ## Notes specific to this repo
 
 - The project currently targets Node.js 22.12+ for the client toolchain.
-- The server should use native `fetch` instead of `node-fetch`.
+- The API should use native `fetch` instead of `node-fetch`.
 - Prefer removing unused direct dependencies rather than keeping them for transitive reasons.
 - If a cleanup frees a lot of space, confirm the user is happy before deleting broader scratch areas like `.claude/worktrees/`.

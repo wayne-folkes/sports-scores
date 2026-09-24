@@ -24,7 +24,7 @@
 - Install dependencies:
 
 ```bash
-cd sports-scores/server && npm install
+cd sports-scores && npm install
 
 cd sports-scores/client && npm install
 ```
@@ -32,8 +32,8 @@ cd sports-scores/client && npm install
 - Run the API and client in separate terminals:
 
 ```bash
-# Terminal 1 — API server
-cd sports-scores/server
+# Terminal 1 — API (serves the api/ functions on port 3001)
+cd sports-scores
 npm run dev
 
 # Terminal 2 — Frontend dev server

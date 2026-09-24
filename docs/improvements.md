@@ -23,14 +23,14 @@ This document tracks potential improvements to the Sports Scores app, organized 
 ### Add request timeouts to all ESPN fetch calls
 All three backend routes (`scores.js`, `teams.js`, `boxscore.js`) call ESPN with no timeout. A hanging upstream request will freeze the route indefinitely for all users. Each `fetch()` call should use an `AbortController` with a 10–15 second timeout.
 
-**Files:** `server/routes/scores.js`, `server/routes/teams.js`, `server/routes/boxscore.js`
+**Files:** `api/scores/[sport].js`, `api/teams/[sport].js`, `api/boxscore/[sport]/[eventId].js`
 
 ---
 
 ## 🟠 Medium Priority
 
 ### Add React component tests
-The server has solid unit test coverage but there are zero React component tests. `SportWidget`, `ScoreCard`, and `TeamSelector` are the highest-value targets. Tests should cover: rendering with live/final/scheduled game states, favorite-team toggle, and modal open/close behavior.
+The API has solid unit test coverage but there are zero React component tests. `SportWidget`, `ScoreCard`, and `TeamSelector` are the highest-value targets. Tests should cover: rendering with live/final/scheduled game states, favorite-team toggle, and modal open/close behavior.
 
 **Files:** `client/src/components/`
 
@@ -53,7 +53,7 @@ The server has solid unit test coverage but there are zero React component tests
 ### Add environment variable support for ESPN URLs
 ESPN base URLs are hardcoded in three separate route files. Adding a `process.env.ESPN_BASE_URL` with a `.env` fallback would make it straightforward to swap endpoints for testing, staging, or future API changes.
 
-**Files:** `server/routes/scores.js`, `server/routes/teams.js`, `server/routes/boxscore.js`
+**Files:** `api/scores/[sport].js`, `api/teams/[sport].js`, `api/boxscore/[sport]/[eventId].js`
 
 ---
 
@@ -79,9 +79,9 @@ Scattered across the codebase:
 - Cache TTLs `60`, `3600`, `30` in route files
 - Skeleton count `3` in `SportWidget.jsx`
 
-Moving these to a shared `server/constants.js` and `client/src/constants.js` makes them easy to tune and self-documenting.
+Moving these to a shared `api/_lib/config.js` and `client/src/constants.js` makes them easy to tune and self-documenting.
 
-**Files:** `client/src/components/SportWidget/SportWidget.jsx`, `server/routes/`
+**Files:** `client/src/components/SportWidget/SportWidget.jsx`, `api/`
 
 ---
 

@@ -11,10 +11,10 @@ This app can be deployed to Vercel with zero environment variables required — 
 | Layer | Local dev | Vercel |
 |-------|-----------|--------|
 | Frontend | Vite dev server on port 3000 | Static site built from `client/dist` |
-| API | Express server on port 3001 | Serverless functions in `api/` |
-| Caching | In-memory Map | `Cache-Control` headers — Vercel Edge CDN |
+| API | `api/` functions via `scripts/dev-api.js` on port 3001 | Serverless functions in `api/` |
+| Caching | None (headers are set but not honored locally) | `Cache-Control` headers — Vercel Edge CDN |
 
-The `api/` directory at the repo root contains Vercel serverless functions that mirror every Express route. The React client's fetch calls already use relative `/api/...` paths, so no client code changes are needed between local and production.
+The `api/` directory at the repo root contains the Vercel serverless functions — the only backend. Locally, `scripts/dev-api.js` serves the same handlers with Vercel-style file routing. The React client's fetch calls already use relative `/api/...` paths, so no client code changes are needed between local and production.
 
 ## Deploy
 
@@ -44,8 +44,8 @@ vercel dev
 The standard local dev workflow still works too:
 
 ```bash
-# Terminal 1 — Express API
-cd server && npm run dev
+# Terminal 1 — api/ functions on port 3001
+npm run dev
 
 # Terminal 2 — Vite frontend
 cd client && npm run dev
@@ -76,5 +76,6 @@ api/                        ← Vercel serverless functions
     [eventId].js            → GET /api/boxscore/:sport/:eventId
 vercel.json                 ← build + output config
 client/                     ← React / Vite SPA
-server/                     ← Express server (local dev + CI tests only)
+scripts/dev-api.js          ← local runner for api/ (dev only)
+test/                       ← Node test suite for api/
 ```

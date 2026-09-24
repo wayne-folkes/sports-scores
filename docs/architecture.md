@@ -7,8 +7,7 @@
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 19, Vite, react-grid-layout |
-| Backend (local) | Node.js 22.12+ native `fetch`, Express 5 |
-| Backend (Vercel) | Node.js serverless functions in `api/` |
+| Backend | Node.js 22.12+ serverless functions in `api/` (served locally by `scripts/dev-api.js`) |
 | Data | ESPN public scoreboard, teams, and summary endpoints |
 
 ## Project Structure
@@ -24,16 +23,9 @@ sports-scores/
 │   ├── teams/[sport].js     # GET /api/teams/:sport
 │   └── boxscore/[sport]/
 │       └── [eventId].js     # GET /api/boxscore/:sport/:eventId
-├── server/                  # Express API on port 3001 (local dev + CI)
-│   ├── index.js             # App entry point
-│   ├── middleware/
-│   │   └── cache.js         # In-memory TTL cache
-│   ├── routes/
-│   │   ├── scores.js        # /api/scores/:sport
-│   │   ├── teams.js         # /api/teams/:sport
-│   │   ├── boxscore.js      # /api/boxscore/:sport/:eventId
-│   │   └── normalize.js     # ESPN payload normalization
-│   └── test.js              # Route and normalization tests
+├── scripts/
+│   └── dev-api.js           # Serves api/ on port 3001 for local dev
+├── test/                    # Node test suite for api/ (npm test at root)
 ├── client/                  # React SPA on port 3000
 │   ├── src/
 │   │   ├── components/
@@ -54,7 +46,7 @@ sports-scores/
 
 ## Data Flow
 
-1. The React client requests normalized sports data from the local Express API.
+1. The React client requests normalized sports data from the `api/` functions (Vercel in production, `scripts/dev-api.js` locally).
 2. The API fetches raw ESPN data, caches it, and converts it into shapes tailored for the UI.
 3. Widgets render only the user-selected teams for each sport.
 4. Opening a box score triggers a second API request to ESPN's summary endpoint for that event.

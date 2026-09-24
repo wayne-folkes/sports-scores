@@ -148,6 +148,6 @@ NBA and MLB use the columns `W`, `L`, `PCT`, `GB`, `STRK`.
 
 ## Notes
 
-- The server uses ESPN's public site APIs, so no API key is required.
+- The API uses ESPN's public site APIs, so no API key is required.
 - Box score data is pulled from ESPN's `summary` endpoint rather than the scoreboard endpoint.
 - Unsupported sports or invalid event IDs return non-2xx responses from the backend.

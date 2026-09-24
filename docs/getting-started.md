@@ -9,7 +9,7 @@
 ## Install
 
 ```bash
-cd sports-scores/server && npm install
+cd sports-scores && npm install
 cd sports-scores/client && npm install
 ```
 
@@ -18,8 +18,8 @@ cd sports-scores/client && npm install
 Start the API and frontend in separate terminals.
 
 ```bash
-# Terminal 1 — API server
-cd sports-scores/server
+# Terminal 1 — API (serves the api/ functions on port 3001)
+cd sports-scores
 npm run dev
 
 # Terminal 2 — Frontend dev server
@@ -34,13 +34,12 @@ The app runs at:
 
 ## Available Scripts
 
-### Server (`/server`)
+### API (repo root)
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Start the API server with `--watch` |
-| `npm start` | Start the API server without watch mode |
-| `npm test` | Run the Node built-in test suite |
+| `npm run dev` | Serve the `api/` functions on port 3001 with `--watch` (`scripts/dev-api.js`) |
+| `npm test` | Run the Node built-in test suite in `test/` |
 
 ### Client (`/client`)
 
