@@ -8,7 +8,9 @@
 |-------|-----------|
 | Frontend | React 19, Vite, react-grid-layout |
 | Backend | Node.js 22.12+ serverless functions in `api/` (served locally by `scripts/dev-api.js`) |
-| Data | ESPN public scoreboard, teams, and summary endpoints |
+| Data | ESPN public scoreboard, teams, standings, and summary endpoints |
+| AI summaries | Amazon Bedrock, cached in DynamoDB; AWS reached from Vercel via OIDC |
+| Infrastructure | Terraform (AWS), Vercel (hosting) |
 
 ## Project Structure
 
@@ -16,30 +18,46 @@
 sports-scores/
 ├── api/                     # Vercel serverless functions (production)
 │   ├── _lib/
-│   │   ├── normalize.js     # Shared scoreboard/boxscore normalization
-│   │   └── teams.js         # Shared team normalization
+│   │   ├── config.js        # ESPN base URL and summary endpoints
+│   │   ├── fetchWithTimeout.js
+│   │   ├── normalize.js     # Scoreboard/boxscore normalization
+│   │   ├── football.js      # NFL situation and player-stat normalization
+│   │   ├── teams.js         # Team normalization
+│   │   ├── standings.js     # Standings normalization
+│   │   ├── summarize.js     # Bedrock prompt + model selection
+│   │   ├── summaryHandler.js # Summary cache/lock/generate flow
+│   │   └── summaryStore.js  # DynamoDB cache access
 │   ├── health.js            # GET /api/health
 │   ├── scores/[sport].js    # GET /api/scores/:sport
 │   ├── teams/[sport].js     # GET /api/teams/:sport
-│   └── boxscore/[sport]/
-│       └── [eventId].js     # GET /api/boxscore/:sport/:eventId
+│   ├── standings/[sport].js # GET /api/standings/:sport
+│   ├── boxscore/[sport]/
+│   │   └── [eventId].js     # GET /api/boxscore/:sport/:eventId
+│   └── summary/[sport]/
+│       └── [eventId].js     # GET /api/summary/:sport/:eventId
 ├── scripts/
 │   └── dev-api.js           # Serves api/ on port 3001 for local dev
 ├── test/                    # Node test suite for api/ (npm test at root)
-├── client/                  # React SPA on port 3000
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Dashboard/   # Grid layout and widget persistence
-│   │   │   ├── SportWidget/ # Score fetching, refresh, controls
-│   │   │   ├── ScoreCard/   # Individual matchup cards
-│   │   │   ├── TeamSelector/ # Favorite-team selection modal
-│   │   │   └── BoxScoreModal/ # On-demand box score modal
-│   │   └── hooks/
-│   │       └── useLocalStorage.js
+├── client/                  # React SPA on port 3000 (npm workspace)
+│   └── src/
+│       ├── components/
+│       │   ├── Dashboard/      # Grid layout and widget persistence
+│       │   ├── SportWidget/    # Score fetching, refresh, Scores | Standings toggle
+│       │   ├── ScoreCard/      # Individual matchup cards
+│       │   ├── StandingsTable/ # League standings view
+│       │   ├── TeamSelector/   # Favorite-team selection modal
+│       │   ├── BoxScoreModal/  # Box score + AI summary modal
+│       │   └── WireBulletin/   # "The Wire" theme bulletins
+│       ├── hooks/              # useLocalStorage, usePrevious, useRelativeTime
+│       └── utils/              # colors, gameStatus, generateHeadline
+├── terraform/               # AWS: DynamoDB, IAM/OIDC roles, Bedrock budget cutoff
+├── ios/                     # Native SwiftUI app, widgets, watchOS
 ├── docs/
 │   ├── api.md
 │   ├── architecture.md
+│   ├── deployment.md
 │   ├── getting-started.md
+│   ├── improvements.md
 │   └── images/
 └── README.md
 ```
@@ -47,9 +65,10 @@ sports-scores/
 ## Data Flow
 
 1. The React client requests normalized sports data from the `api/` functions (Vercel in production, `scripts/dev-api.js` locally).
-2. The API fetches raw ESPN data, caches it, and converts it into shapes tailored for the UI.
+2. The API fetches raw ESPN data and converts it into shapes tailored for the UI; Vercel's CDN caches responses per the `Cache-Control` headers.
 3. Widgets render only the user-selected teams for each sport.
 4. Opening a box score triggers a second API request to ESPN's summary endpoint for that event.
+5. The box score modal also requests `/api/summary`, which returns a Bedrock-generated write-up, cached in DynamoDB per game state.
 
 ## Persistence
 

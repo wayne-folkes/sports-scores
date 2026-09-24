@@ -2,7 +2,17 @@
 
 [Back to README](../README.md)
 
-This app can be deployed to Vercel with zero environment variables required — ESPN's API is fully public.
+This app can be deployed to Vercel with zero environment variables for scores, teams, standings and box scores — ESPN's API is fully public. Only the AI game summaries (`/api/summary`) need configuration:
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `AWS_ROLE_ARN` | Yes, for summaries | IAM role Vercel assumes via OIDC — the `vercel_role_arn` output of `terraform/` |
+| `SUMMARY_TABLE` | No | DynamoDB table (default `sports-scores-summaries`) |
+| `SUMMARY_AWS_REGION` | No | AWS region (default `us-east-1`) |
+| `SUMMARY_MODEL_LIVE` / `SUMMARY_MODEL_FINAL` | No | Bedrock model IDs for preview/live and final summaries |
+| `ESPN_API_BASE` | No | Override the ESPN base URL (e.g. for testing) |
+
+Without `AWS_ROLE_ARN` the AWS SDK falls back to its default credential chain (e.g. a local AWS profile). With no AWS credentials at all, `/api/summary` returns `503`, the box score modal simply omits the summary, and the rest of the app works normally.
 
 > Use a Node.js 22.x+ runtime for builds and local Vercel CLI workflows. The frontend build now depends on the Vite 8 toolchain.
 
@@ -23,7 +33,7 @@ The `api/` directory at the repo root contains the Vercel serverless functions �
 1. Go to [vercel.com/new](https://vercel.com/new)
 2. Import the `wayne-folkes/sports-scores` repository
 3. Vercel auto-detects `vercel.json` and the `api/` functions
-4. Click **Deploy** — no environment variables needed
+4. Click **Deploy** — no environment variables needed except `AWS_ROLE_ARN` for AI summaries (see above)
 
 ### Option 2 — Vercel CLI
 
@@ -59,7 +69,9 @@ Vercel's Edge CDN caches responses using `Cache-Control` headers set by each fun
 |----------|-----------|--------------------------|
 | `/api/scores/:sport` | 60 s | 30 s |
 | `/api/teams/:sport` | 1 hr | 5 min |
+| `/api/standings/:sport` | 10 min | 5 min |
 | `/api/boxscore/:sport/:eventId` | 30 s | 10 s |
+| `/api/summary/:sport/:eventId` | 3 min live, 1 day otherwise | 1 min live |
 | `/api/health` | no cache | — |
 
 ## Project structure
@@ -72,8 +84,11 @@ api/                        ← Vercel serverless functions
   health.js                 → GET /api/health
   scores/[sport].js         → GET /api/scores/:sport
   teams/[sport].js          → GET /api/teams/:sport
+  standings/[sport].js      → GET /api/standings/:sport
   boxscore/[sport]/
     [eventId].js            → GET /api/boxscore/:sport/:eventId
+  summary/[sport]/
+    [eventId].js            → GET /api/summary/:sport/:eventId
 vercel.json                 ← build + output config
 client/                     ← React / Vite SPA
 scripts/dev-api.js          ← local runner for api/ (dev only)
