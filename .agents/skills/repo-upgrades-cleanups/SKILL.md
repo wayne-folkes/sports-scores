@@ -42,6 +42,8 @@ For this repo, the main packages live in:
 - `client/package.json`
 - `package.json` (root — `api/` dependencies)
 
+Both share the single root `package-lock.json` (npm workspaces); always install from the repo root.
+
 Typical upgrade targets:
 - frontend toolchain: Vite, plugin-react, ESLint, Vitest, Playwright
 - API runtime: AWS SDK, `@vercel/functions`, native `fetch` usage
@@ -87,9 +89,8 @@ Before finishing a milestone:
 
 ```bash
 # dependency audit
-cd client && npm outdated --json
-npm outdated --json
-cd client && npm audit --json
+npm outdated --workspaces --include-workspace-root --json
+npm audit --json
 
 # space audit
 find . -type f \( -name '.DS_Store' -o -path '*/dist/*' -o -path '*/node_modules/*' -o -path '*/.build/*' -o -path '*/xcuserdata/*' \)

@@ -21,12 +21,10 @@
 ## Quick Start
 
 - Prerequisite: **Node.js 22.12+**
-- Install dependencies:
+- Install dependencies (one install covers the API and the `client/` workspace):
 
 ```bash
 cd sports-scores && npm install
-
-cd sports-scores/client && npm install
 ```
 
 - Run the API and client in separate terminals:
