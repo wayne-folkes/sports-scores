@@ -2,8 +2,7 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const apiNormalize = require('../api/_lib/normalize');
-const serverNormalize = require('./routes/normalize');
+const normalize = require('../api/_lib/normalize');
 const { normalizeStandings } = require('../api/_lib/standings');
 
 // Shaped like ESPN's football scoreboard/summary responses.
@@ -46,32 +45,30 @@ const nflScoreboard = {
   ],
 };
 
-for (const [label, normalize] of [['api', apiNormalize], ['server', serverNormalize]]) {
-  test(`${label} normalizeScoreboard: NFL live game includes situation`, () => {
-    const [game] = normalize.normalizeScoreboard(nflScoreboard, 'nfl').games;
-    assert.equal(game.status, 'live');
-    assert.deepEqual(game.situation, {
-      downDistanceText: '3rd & 7 at DAL 15',
-      shortDownDistanceText: '3rd & 7',
-      possession: 'away',
-      isRedZone: true,
-      homeTimeouts: 3,
-      awayTimeouts: 2,
-      lastPlay: 'J.Dart pass short right to M.Nabers for 12 yards',
-    });
+test(`normalizeScoreboard: NFL live game includes situation`, () => {
+  const [game] = normalize.normalizeScoreboard(nflScoreboard, 'nfl').games;
+  assert.equal(game.status, 'live');
+  assert.deepEqual(game.situation, {
+    downDistanceText: '3rd & 7 at DAL 15',
+    shortDownDistanceText: '3rd & 7',
+    possession: 'away',
+    isRedZone: true,
+    homeTimeouts: 3,
+    awayTimeouts: 2,
+    lastPlay: 'J.Dart pass short right to M.Nabers for 12 yards',
   });
+});
 
-  test(`${label} normalizeScoreboard: halftime counts as live, no situation`, () => {
-    const game = normalize.normalizeScoreboard(nflScoreboard, 'nfl').games[1];
-    assert.equal(game.status, 'live');
-    assert.equal(game.situation, null);
-  });
+test(`normalizeScoreboard: halftime counts as live, no situation`, () => {
+  const game = normalize.normalizeScoreboard(nflScoreboard, 'nfl').games[1];
+  assert.equal(game.status, 'live');
+  assert.equal(game.situation, null);
+});
 
-  test(`${label} normalizeScoreboard: non-NFL games have no situation key`, () => {
-    const [game] = normalize.normalizeScoreboard(nflScoreboard, 'nba').games;
-    assert.equal('situation' in game, false);
-  });
-}
+test(`normalizeScoreboard: non-NFL games have no situation key`, () => {
+  const [game] = normalize.normalizeScoreboard(nflScoreboard, 'nba').games;
+  assert.equal('situation' in game, false);
+});
 
 const nflSummary = {
   header: {
@@ -114,19 +111,17 @@ const nflSummary = {
   },
 };
 
-for (const [label, normalize] of [['api', apiNormalize], ['server', serverNormalize]]) {
-  test(`${label} normalizeBoxscore: NFL team stats and players by side`, () => {
-    const box = normalize.normalizeBoxscore(nflSummary, 'nfl', '401772001');
-    assert.deepEqual(box.statistics, [{ key: 'totalYards', label: 'Total Yards', awayValue: '389', homeValue: '301' }]);
-    // Players are matched by team id, not array order.
-    assert.deepEqual(box.players.home.passing, [
-      { name: 'Dak Prescott', shortName: 'D. Prescott', stats: { 'C/ATT': '22/35', YDS: '240', TD: '1', INT: '1', QBR: '48.1' } },
-    ]);
-    assert.deepEqual(box.players.away.rushing[0].stats, { CAR: '18', YDS: '97', AVG: '5.4', TD: '2', LONG: '21' });
-    assert.deepEqual(box.players.away.passing, []);
-    assert.equal('fumbles' in box.players.away, false);
-  });
-}
+test(`normalizeBoxscore: NFL team stats and players by side`, () => {
+  const box = normalize.normalizeBoxscore(nflSummary, 'nfl', '401772001');
+  assert.deepEqual(box.statistics, [{ key: 'totalYards', label: 'Total Yards', awayValue: '389', homeValue: '301' }]);
+  // Players are matched by team id, not array order.
+  assert.deepEqual(box.players.home.passing, [
+    { name: 'Dak Prescott', shortName: 'D. Prescott', stats: { 'C/ATT': '22/35', YDS: '240', TD: '1', INT: '1', QBR: '48.1' } },
+  ]);
+  assert.deepEqual(box.players.away.rushing[0].stats, { CAR: '18', YDS: '97', AVG: '5.4', TD: '2', LONG: '21' });
+  assert.deepEqual(box.players.away.passing, []);
+  assert.equal('fumbles' in box.players.away, false);
+});
 
 const entry = (id, abbr, stats) => ({
   team: { id, displayName: abbr, abbreviation: abbr, logos: [{ href: `https://example.com/${abbr}.png` }] },
