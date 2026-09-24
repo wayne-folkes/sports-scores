@@ -7,6 +7,9 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "types": ["node"],
+    // Resolve imports the way Vercel's function builder does, so a type that
+    // only type-checks through pnpm's symlinks fails here too.
+    "preserveSymlinks": true,
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,

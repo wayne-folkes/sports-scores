@@ -5,3 +5,14 @@ packages:
 # (used by tsx and vite) only verifies its platform binary.
 onlyBuiltDependencies:
   - esbuild
+
+# Vercel's function builder type-checks api/ with symlinked paths preserved,
+# so packages that the AWS SDK's and Node's type declarations import must be
+# reachable from the root node_modules (as they were under npm). The first
+# two entries are pnpm's defaults.
+publicHoistPattern:
+  - '*eslint*'
+  - '*prettier*'
+  - '@smithy/*'
+  - '@aws-sdk/*'
+  - undici-types
