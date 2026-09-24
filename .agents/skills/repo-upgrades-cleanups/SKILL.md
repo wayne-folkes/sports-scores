@@ -101,7 +101,7 @@ rm -rf client/dist ios/SportsScores/SportsScoresKit/.build
 
 ## Notes specific to this repo
 
-- The project currently targets Node.js 20.19+ for the client toolchain.
+- The project currently targets Node.js 22.12+ for the client toolchain.
 - The server should use native `fetch` instead of `node-fetch`.
 - Prefer removing unused direct dependencies rather than keeping them for transitive reasons.
 - If a cleanup frees a lot of space, confirm the user is happy before deleting broader scratch areas like `.claude/worktrees/`.
