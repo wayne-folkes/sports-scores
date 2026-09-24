@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithQuery } from './renderWithQuery';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ScoreCard from '../components/ScoreCard/ScoreCard';
 import SportWidget from '../components/SportWidget/SportWidget';
@@ -40,7 +41,7 @@ const standings = {
 
 describe('ScoreCard NFL situation', () => {
   it('shows clock, down & distance, possession and red zone for live games', () => {
-    const { container } = render(<ScoreCard game={liveNflGame} onOpenBoxScore={vi.fn()} />);
+    const { container } = renderWithQuery(<ScoreCard game={liveNflGame} onOpenBoxScore={vi.fn()} />);
 
     expect(screen.getByText('3rd 8:42')).toBeInTheDocument();
     expect(screen.getByText('3rd & 7 at DAL 15')).toBeInTheDocument();
@@ -53,7 +54,7 @@ describe('ScoreCard NFL situation', () => {
   });
 
   it('hides situation once the game is final', () => {
-    render(<ScoreCard game={{ ...liveNflGame, status: 'final', statusDetail: 'Final' }} onOpenBoxScore={vi.fn()} />);
+    renderWithQuery(<ScoreCard game={{ ...liveNflGame, status: 'final', statusDetail: 'Final' }} onOpenBoxScore={vi.fn()} />);
 
     expect(screen.queryByText('3rd & 7 at DAL 15')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Has possession')).not.toBeInTheDocument();
@@ -83,7 +84,7 @@ describe('SportWidget standings toggle', () => {
 
   it('switches between scores and standings and highlights favorites', async () => {
     localStorage.setItem('favoriteTeams.nfl', JSON.stringify(['19']));
-    render(<SportWidget sport="nfl" />);
+    renderWithQuery(<SportWidget sport="nfl" />);
 
     await waitFor(() => expect(screen.getByText('3rd & 7 at DAL 15')).toBeInTheDocument());
 
@@ -103,7 +104,7 @@ describe('SportWidget standings toggle', () => {
 
   it('refresh refetches standings while in standings view', async () => {
     localStorage.setItem('widgetView.nfl', JSON.stringify('standings'));
-    render(<SportWidget sport="nfl" />);
+    renderWithQuery(<SportWidget sport="nfl" />);
 
     await waitFor(() => expect(screen.getByText('NFC East')).toBeInTheDocument());
     const standingsCalls = () => global.fetch.mock.calls.filter(([url]) => url.includes('/api/standings')).length;
@@ -114,7 +115,7 @@ describe('SportWidget standings toggle', () => {
   });
 
   it('shows no standings toggle for sports without standings', () => {
-    render(<SportWidget sport="college-baseball" />);
+    renderWithQuery(<SportWidget sport="college-baseball" />);
     expect(screen.queryByRole('button', { name: 'Standings' })).not.toBeInTheDocument();
   });
 });

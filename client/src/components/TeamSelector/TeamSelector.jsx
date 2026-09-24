@@ -1,5 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useTeams } from '../../api/queries';
 import './TeamSelector.css';
+
+const NO_TEAMS = [];
 
 function TeamLogo({ logo, abbreviation, name }) {
   const [imgFailed, setImgFailed] = useState(false);
@@ -21,39 +24,11 @@ function TeamLogo({ logo, abbreviation, name }) {
 }
 
 export default function TeamSelector({ sport, favorites, onFavoritesChange, onClose }) {
-  const [teams, setTeams] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const teamsQuery = useTeams(sport);
+  const teams = teamsQuery.data?.teams ?? NO_TEAMS;
+  const loading = !teamsQuery.data && teamsQuery.isFetching;
+  const error = teamsQuery.isError ? teamsQuery.error.message : null;
   const [search, setSearch] = useState('');
-
-  const fetchTeams = useCallback(() => {
-    setLoading(true);
-    setError(null);
-
-    fetch(`/api/teams/${sport}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to load teams (${res.status})`);
-        return res.json();
-      })
-      .then((data) => {
-        setTeams(data.teams || []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [sport]);
-
-  useEffect(() => {
-    const frameId = window.requestAnimationFrame(() => {
-      fetchTeams();
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-    };
-  }, [fetchTeams]);
 
   useEffect(() => {
     const handleKey = (event) => {
@@ -117,7 +92,7 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
           {error && !loading && (
             <div className="team-selector__state">
               <p className="team-selector__error">{error}</p>
-              <button className="team-selector__retry" onClick={fetchTeams}>Retry</button>
+              <button className="team-selector__retry" onClick={() => teamsQuery.refetch()}>Retry</button>
             </div>
           )}
 

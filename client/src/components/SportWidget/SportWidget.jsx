@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import BoxScoreModal from '../BoxScoreModal';
 import ScoreCard from '../ScoreCard';
 import WireBulletin from '../WireBulletin';
@@ -9,7 +10,7 @@ import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useRelativeTime } from '../../hooks/useRelativeTime';
 import { useTheme } from '../../theme-context';
 import { normalizeHexColor, rgba, mixColors } from '../../utils/colors';
-import { SCORES_POLL_INTERVAL } from '../../constants';
+import { useScores, useTeams } from '../../api/queries';
 import './SportWidget.css';
 
 const SPORT_META = {
@@ -53,7 +54,6 @@ const DEFAULT_THEME = {
   },
 };
 
-const POLL_INTERVAL = SCORES_POLL_INTERVAL;
 const STANDINGS_SPORTS = ['nfl', 'nba', 'mlb'];
 const PERFORATION_DOTS = Array.from({ length: 14 });
 
@@ -68,102 +68,34 @@ export default function SportWidget({ sport, isReorderable = true }) {
   const isWire = theme === 'wire';
 
   const [favorites, setFavorites] = useLocalStorage(`favoriteTeams.${sport}`, []);
-  const [games, setGames] = useState([]);
-  const [teamColors, setTeamColors] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [error, setError] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
   const [showSelector, setShowSelector] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [view, setView] = useLocalStorage(`widgetView.${sport}`, 'scores');
-  const [standingsRefreshKey, setStandingsRefreshKey] = useState(0);
-  const [isStandingsLoading, setIsStandingsLoading] = useState(false);
   const hasStandings = STANDINGS_SPORTS.includes(sport);
   const showStandings = hasStandings && view === 'standings';
 
-  const intervalRef = useRef(null);
+  const queryClient = useQueryClient();
+  const scoresQuery = useScores(sport);
+  const { data: teamsData } = useTeams(sport);
+  const isStandingsLoading = useIsFetching({ queryKey: ['standings', sport] }) > 0;
+
+  const games = scoresQuery.data?.games ?? [];
+  const isLoading = scoresQuery.isFetching;
+  const isInitialLoad = scoresQuery.isPending;
+  const error = scoresQuery.isError ? scoresQuery.error.message : null;
+  const lastUpdated = scoresQuery.dataUpdatedAt ? new Date(scoresQuery.dataUpdatedAt) : null;
   const relativeUpdated = useRelativeTime(lastUpdated);
+  const fetchScores = () => scoresQuery.refetch();
+  const refreshStandings = () => queryClient.invalidateQueries({ queryKey: ['standings', sport] });
 
-  const fetchScores = useCallback(() => {
-    if (document.hidden) return;
-    setIsLoading(true);
-    setError(null);
-
-    fetch(`/api/scores/${sport}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Failed to load scores (${res.status})`);
-        return res.json();
-      })
-      .then((data) => {
-        setGames(data.games || []);
-        setLastUpdated(new Date());
-        setIsLoading(false);
-        setIsInitialLoad(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setIsLoading(false);
-        setIsInitialLoad(false);
-      });
-  }, [sport]);
-
-  useEffect(() => {
-    const frameId = window.requestAnimationFrame(() => {
-      fetchScores();
-    });
-
-    intervalRef.current = setInterval(fetchScores, POLL_INTERVAL);
-
-    const handleVisibility = () => {
-      if (!document.hidden) {
-        fetchScores();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-      clearInterval(intervalRef.current);
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, [fetchScores]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    fetch(`/api/teams/${sport}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to load team colors (${response.status})`);
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        if (!isMounted) {
-          return;
-        }
-
-        const colors = Object.fromEntries(
-          (data.teams || [])
-            .filter((team) => team.id)
-            .map((team) => [team.id, team.color || ''])
-        );
-
-        setTeamColors(colors);
-      })
-      .catch(() => {
-        if (isMounted) {
-          setTeamColors({});
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [sport]);
+  const teamColors = useMemo(
+    () => Object.fromEntries(
+      (teamsData?.teams || [])
+        .filter((team) => team.id)
+        .map((team) => [team.id, team.color || ''])
+    ),
+    [teamsData]
+  );
 
   const isFavoriteGame = (game) =>
     favorites.includes(game.homeTeam?.id) || favorites.includes(game.awayTeam?.id);
@@ -232,7 +164,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
           )}
           <button
             className={`sport-widget__refresh${(showStandings ? isStandingsLoading : isLoading) ? ' sport-widget__refresh--spinning' : ''}`}
-            onClick={showStandings ? () => setStandingsRefreshKey((key) => key + 1) : fetchScores}
+            onClick={showStandings ? refreshStandings : fetchScores}
             title={`Refresh ${meta.label} ${showStandings ? 'standings' : 'scores'}`}
             aria-label={`Refresh ${meta.label} ${showStandings ? 'standings' : 'scores'}`}
             aria-busy={showStandings ? isStandingsLoading : isLoading}
@@ -275,12 +207,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
 
       <div className="sport-widget__body" aria-live="polite" aria-atomic="false">
         {showStandings && (
-          <StandingsTable
-            sport={sport}
-            favorites={favorites}
-            refreshKey={standingsRefreshKey}
-            onLoadingChange={setIsStandingsLoading}
-          />
+          <StandingsTable sport={sport} favorites={favorites} />
         )}
 
         {!showStandings && isInitialLoad && (
