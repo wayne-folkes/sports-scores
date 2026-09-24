@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build -w client",
+  "buildCommand": "pnpm --filter client build",
   "outputDirectory": "client/dist",
-  "installCommand": "npm ci"
+  "installCommand": "pnpm install --frozen-lockfile"
 }

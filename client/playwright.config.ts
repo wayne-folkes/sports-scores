@@ -9,7 +9,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: 'npm run build && npm run preview -- --host 127.0.0.1',
+    command: 'pnpm run build && pnpm run preview --host 127.0.0.1',
     url: 'http://localhost:4173',
     reuseExistingServer: false,
     timeout: 30_000,

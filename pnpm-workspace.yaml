@@ -1,0 +1,7 @@
+packages:
+  - client
+
+# pnpm 10 skips dependency install scripts unless listed here. esbuild's
+# (used by tsx and vite) only verifies its platform binary.
+onlyBuiltDependencies:
+  - esbuild
