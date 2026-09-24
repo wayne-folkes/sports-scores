@@ -10,8 +10,9 @@
 
 ```bash
 cd sports-scores && npm install
-cd sports-scores/client && npm install
 ```
+
+The repo is an npm workspace: the root holds the `api/` dependencies and `client/` is a workspace, so one install at the root covers both and there is a single `package-lock.json`.
 
 ## Run Locally
 
