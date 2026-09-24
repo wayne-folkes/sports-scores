@@ -8,7 +8,7 @@ Base URL for local development: `http://localhost:3001`
 
 | Method | Path | Description | Cache |
 |--------|------|-------------|-------|
-| GET | `/health` | Server health check | None |
+| GET | `/api/health` | Health check | None |
 | GET | `/api/scores/nba` | Today's NBA scoreboard | 60 seconds |
 | GET | `/api/scores/mlb` | Today's MLB scoreboard | 60 seconds |
 | GET | `/api/teams/nba` | Full list of NBA teams | 1 hour |
@@ -17,6 +17,7 @@ Base URL for local development: `http://localhost:3001`
 | GET | `/api/teams/nfl` | Full list of NFL teams | 1 hour |
 | GET | `/api/standings/:sport` | Standings for `nfl`, `nba` or `mlb` | 10 minutes |
 | GET | `/api/boxscore/:sport/:eventId` | Summary and box score for a live or final game | 30 seconds |
+| GET | `/api/summary/:sport/:eventId` | AI-written game preview, live update, or recap | 3 minutes live, 1 day otherwise |
 
 ## Response Shapes
 
@@ -145,6 +146,22 @@ Supported sports: `nfl`, `nba`, `mlb`. Each node in ESPN's standings tree that c
 ```
 
 NBA and MLB use the columns `W`, `L`, `PCT`, `GB`, `STRK`.
+
+### `GET /api/summary/:sport/:eventId`
+
+A short, AI-written write-up of the game, generated with Amazon Bedrock from the normalized box score: a 1–2 sentence preview before the game, a 2–3 sentence update while it is live, and a 3–4 sentence recap once it is final. Results are cached in DynamoDB per game state (live summaries are regenerated after 3 minutes), and a short lock prevents concurrent requests from generating the same summary twice.
+
+```json
+{
+  "summary": "The Giants lead the Cowboys 14-10 late in the third quarter...",
+  "gameState": "in",
+  "model": "google.gemma-3-27b-it",
+  "generatedAt": "2026-09-27T19:12:04.000Z",
+  "cached": true
+}
+```
+
+`gameState` is `pre`, `in`, or `post`. Returns `503` if the model call fails (including when the monthly Bedrock budget cutoff is active).
 
 ## Notes
 
