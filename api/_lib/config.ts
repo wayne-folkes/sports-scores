@@ -1,8 +1,6 @@
-'use strict';
+export const ESPN_API_BASE = process.env.ESPN_API_BASE || 'https://site.api.espn.com';
 
-const ESPN_API_BASE = process.env.ESPN_API_BASE || 'https://site.api.espn.com';
-
-const SUMMARY_BASE_URLS = {
+export const SUMMARY_BASE_URLS: Record<string, string> = {
   nfl: `${ESPN_API_BASE}/apis/site/v2/sports/football/nfl/summary?event=`,
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/summary?event=`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/summary?event=`,
@@ -11,5 +9,3 @@ const SUMMARY_BASE_URLS = {
   'mens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/mens-college-basketball/summary?event=`,
   'womens-college-basketball': `${ESPN_API_BASE}/apis/site/v2/sports/basketball/womens-college-basketball/summary?event=`,
 };
-
-module.exports = { ESPN_API_BASE, SUMMARY_BASE_URLS };

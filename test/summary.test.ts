@@ -1,8 +1,7 @@
-'use strict';
-
-const { test } = require('node:test');
-const assert = require('node:assert/strict');
-const { deriveGameState, buildCacheKey, buildCacheControl, isLiveRecordStale } = require('../api/_lib/summaryHandler');
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { deriveGameState, buildCacheKey, buildCacheControl, isLiveRecordStale } from '../api/_lib/summaryHandler';
+import { selectModelAndPrompt } from '../api/_lib/summarize';
 
 // Test game state derivation with state field preference
 test('summary: deriveGameState prefers statusType.state when available', () => {
@@ -91,8 +90,6 @@ test('summary: cache key format for pre-game', () => {
 });
 
 test('summary: model selection per game state', () => {
-  const { selectModelAndPrompt } = require('../api/_lib/summarize');
-
   assert.equal(selectModelAndPrompt('final').model, 'zai.glm-5');
   assert.equal(selectModelAndPrompt('post').model, 'zai.glm-5');
   assert.equal(selectModelAndPrompt('in').model, 'google.gemma-3-27b-it');
@@ -116,7 +113,7 @@ test('summary: cache headers for pre-game', () => {
 
 test('summary: isLiveRecordStale returns false for recent in-progress record', () => {
   const cached = {
-    gameState: 'in',
+    gameState: 'in' as const,
     generatedAt: new Date(Date.now() - 60000).toISOString(), // 1 minute ago
   };
 
@@ -125,7 +122,7 @@ test('summary: isLiveRecordStale returns false for recent in-progress record', (
 
 test('summary: isLiveRecordStale returns true for stale in-progress record', () => {
   const cached = {
-    gameState: 'in',
+    gameState: 'in' as const,
     generatedAt: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
   };
 
@@ -134,7 +131,7 @@ test('summary: isLiveRecordStale returns true for stale in-progress record', () 
 
 test('summary: isLiveRecordStale returns false for final game regardless of age', () => {
   const cached = {
-    gameState: 'post',
+    gameState: 'post' as const,
     generatedAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
   };
 
@@ -143,7 +140,7 @@ test('summary: isLiveRecordStale returns false for final game regardless of age'
 
 test('summary: isLiveRecordStale returns false for pre-game regardless of age', () => {
   const cached = {
-    gameState: 'pre',
+    gameState: 'pre' as const,
     generatedAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
   };
 
@@ -151,7 +148,7 @@ test('summary: isLiveRecordStale returns false for pre-game regardless of age', 
 });
 
 test('summary: lock re-acquisition after 180 second boundary', () => {
-  const isStale = (generatedAt) => {
+  const isStale = (generatedAt: string) => {
     const age = Date.now() - Date.parse(generatedAt);
     return age > 180000;
   };

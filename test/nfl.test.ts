@@ -1,9 +1,8 @@
-'use strict';
-
-const { test } = require('node:test');
-const assert = require('node:assert/strict');
-const normalize = require('../api/_lib/normalize');
-const { normalizeStandings } = require('../api/_lib/standings');
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import * as normalize from '../api/_lib/normalize';
+import { normalizeStandings } from '../api/_lib/standings';
+import type { FootballSide } from '../api/_lib/types';
 
 // Shaped like ESPN's football scoreboard/summary responses.
 const nflScoreboard = {
@@ -113,17 +112,18 @@ const nflSummary = {
 
 test(`normalizeBoxscore: NFL team stats and players by side`, () => {
   const box = normalize.normalizeBoxscore(nflSummary, 'nfl', '401772001');
+  const players = box.players as { away: FootballSide; home: FootballSide };
   assert.deepEqual(box.statistics, [{ key: 'totalYards', label: 'Total Yards', awayValue: '389', homeValue: '301' }]);
   // Players are matched by team id, not array order.
-  assert.deepEqual(box.players.home.passing, [
+  assert.deepEqual(players.home.passing, [
     { name: 'Dak Prescott', shortName: 'D. Prescott', stats: { 'C/ATT': '22/35', YDS: '240', TD: '1', INT: '1', QBR: '48.1' } },
   ]);
-  assert.deepEqual(box.players.away.rushing[0].stats, { CAR: '18', YDS: '97', AVG: '5.4', TD: '2', LONG: '21' });
-  assert.deepEqual(box.players.away.passing, []);
-  assert.equal('fumbles' in box.players.away, false);
+  assert.deepEqual(players.away.rushing[0].stats, { CAR: '18', YDS: '97', AVG: '5.4', TD: '2', LONG: '21' });
+  assert.deepEqual(players.away.passing, []);
+  assert.equal('fumbles' in players.away, false);
 });
 
-const entry = (id, abbr, stats) => ({
+const entry = (id: string, abbr: string, stats: Record<string, string | number>) => ({
   team: { id, displayName: abbr, abbreviation: abbr, logos: [{ href: `https://example.com/${abbr}.png` }] },
   stats: Object.entries(stats).map(([name, value]) => ({ name, value: typeof value === 'number' ? value : undefined, displayValue: String(value) })),
 });

@@ -1,8 +1,6 @@
-'use strict';
-
 const FETCH_TIMEOUT_MS = 10_000;
 
-async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
+export async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = FETCH_TIMEOUT_MS): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -11,5 +9,3 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS)
     clearTimeout(timer);
   }
 }
-
-module.exports = { fetchWithTimeout };

@@ -1,25 +1,41 @@
-'use strict';
+import { normalizeFootballSituation, normalizeFootballPlayers } from './football';
+import type {
+  BaseballSide,
+  BasketballPlayer,
+  Batter,
+  BoxscorePlayers,
+  BoxscoreResponse,
+  BoxscoreSide,
+  EspnJson,
+  Game,
+  GameStatus,
+  PlayerStats,
+  Prediction,
+  ScoreboardResponse,
+  StatLine,
+  StatRow,
+  TeamInfo,
+  TeamStat,
+} from './types';
 
-const { normalizeFootballSituation, normalizeFootballPlayers } = require('./football');
-
-const ESPN_STATUS_MAP = {
+const ESPN_STATUS_MAP: Record<string, GameStatus> = {
   STATUS_IN_PROGRESS: 'live',
   STATUS_HALFTIME: 'live',
   STATUS_END_PERIOD: 'live',
   STATUS_FINAL: 'final',
 };
 
-function normalizeStatus(espnStatusName) {
-  return ESPN_STATUS_MAP[espnStatusName] || 'scheduled';
+export function normalizeStatus(espnStatusName: string | undefined): GameStatus {
+  return (espnStatusName && ESPN_STATUS_MAP[espnStatusName]) || 'scheduled';
 }
 
-function getCompetition(data) {
+function getCompetition(data: EspnJson): EspnJson {
   return data?.header?.competitions?.[0] || data?.competitions?.[0] || {};
 }
 
-function normalizeTeamInfo(team, competitor = {}) {
+function normalizeTeamInfo(team: EspnJson, competitor: EspnJson = {}): TeamInfo {
   const logo = (team.logos || [])[0]?.href || team.logo || '';
-  const record = (competitor.records || []).find((item) => item.type === 'total')?.summary
+  const record = (competitor.records || []).find((item: EspnJson) => item.type === 'total')?.summary
     || (competitor.records || [])[0]?.summary
     || '';
   return {
@@ -32,21 +48,21 @@ function normalizeTeamInfo(team, competitor = {}) {
   };
 }
 
-function parseScore(competitor) {
+function parseScore(competitor: EspnJson): number | null {
   const score = competitor?.score;
   if (score === undefined || score === null || score === '') return null;
   const num = Number(score);
   return Number.isNaN(num) ? null : num;
 }
 
-function parseProbability(value) {
+function parseProbability(value: unknown): number | null {
   if (value === undefined || value === null || value === '') return null;
   const num = Number(value);
   if (Number.isNaN(num)) return null;
   return Math.max(0, Math.min(100, Math.round(num)));
 }
 
-function normalizePrediction(predictor, homeCompetitor, awayCompetitor, status) {
+function normalizePrediction(predictor: EspnJson, homeCompetitor: EspnJson, awayCompetitor: EspnJson, status: GameStatus): Prediction | null {
   if (status !== 'scheduled' || !predictor) return null;
 
   const homeTeamId = String(homeCompetitor?.team?.id || '');
@@ -74,17 +90,17 @@ function normalizePrediction(predictor, homeCompetitor, awayCompetitor, status) 
   };
 }
 
-function normalizeScoreboard(data, sport, predictorsByEventId = {}) {
-  const events = data.events || [];
+export function normalizeScoreboard(data: EspnJson, sport: string, predictorsByEventId: Record<string, EspnJson> = {}): ScoreboardResponse {
+  const events: EspnJson[] = data.events || [];
 
-  const games = events.map((event) => {
+  const games = events.map((event): Game => {
     const competition = (event.competitions || [])[0] || {};
     const competitors = competition.competitors || [];
     const statusObj = competition.status || event.status || {};
     const statusType = statusObj.type || {};
 
-    const home = competitors.find((c) => c.homeAway === 'home') || {};
-    const away = competitors.find((c) => c.homeAway === 'away') || {};
+    const home = competitors.find((c: EspnJson) => c.homeAway === 'home') || {};
+    const away = competitors.find((c: EspnJson) => c.homeAway === 'away') || {};
     const prediction = normalizePrediction(predictorsByEventId[String(event.id)], home, away, normalizeStatus(statusType.name));
 
     return {
@@ -110,23 +126,23 @@ function normalizeScoreboard(data, sport, predictorsByEventId = {}) {
   };
 }
 
-function normalizeBoxscore(data, sport, eventId) {
+export function normalizeBoxscore(data: EspnJson, sport: string, eventId: string): BoxscoreResponse {
   const competition = getCompetition(data);
   const competitors = competition.competitors || [];
   const statusType = competition.status?.type || {};
 
-  const homeCompetitor = competitors.find((c) => c.homeAway === 'home') || {};
-  const awayCompetitor = competitors.find((c) => c.homeAway === 'away') || {};
+  const homeCompetitor = competitors.find((c: EspnJson) => c.homeAway === 'home') || {};
+  const awayCompetitor = competitors.find((c: EspnJson) => c.homeAway === 'away') || {};
 
-  const teamStats = (data.boxscore?.teams || []).reduce((acc, entry) => {
-    const homeAway = entry.homeAway || 'unknown';
-    const rawStats = entry.statistics || [];
+  const teamStats = (data.boxscore?.teams || []).reduce((acc: Record<string, { team: TeamInfo; statistics: TeamStat[] }>, entry: EspnJson) => {
+    const homeAway: string = entry.homeAway || 'unknown';
+    const rawStats: EspnJson[] = entry.statistics || [];
 
     // Detect MLB nested format: [{ name: 'batting', stats: [...] }, ...]
     // vs NBA flat format: [{ abbreviation, displayValue, label }, ...]
     const isNested = rawStats.length > 0 && Array.isArray(rawStats[0].stats);
 
-    let flatStats;
+    let flatStats: TeamStat[];
     if (isNested) {
       // MLB: flatten each category's stats array into one list
       const MLB_BATTING_KEYS = new Set(['R', 'H', '2B', '3B', 'HR', 'RBI', 'BB', 'SO', 'AVG', 'OBP', 'SLG']);
@@ -135,8 +151,8 @@ function normalizeBoxscore(data, sport, eventId) {
 
       flatStats = rawStats.flatMap((category) =>
         (category.stats || [])
-          .filter((s) => allowedKeys.has(s.abbreviation))
-          .map((s) => ({
+          .filter((s: EspnJson) => allowedKeys.has(s.abbreviation))
+          .map((s: EspnJson) => ({
             key: `${category.name}:${s.abbreviation}`,
             label: s.shortDisplayName || s.abbreviation || s.name || '',
             value: s.displayValue || String(s.value ?? ''),
@@ -158,20 +174,20 @@ function normalizeBoxscore(data, sport, eventId) {
     return acc;
   }, {});
 
-  const away = {
+  const away: BoxscoreSide = {
     team: normalizeTeamInfo(awayCompetitor.team || teamStats.away?.team || {}, awayCompetitor),
     score: parseScore(awayCompetitor),
     statistics: teamStats.away?.statistics || [],
   };
 
-  const home = {
+  const home: BoxscoreSide = {
     team: normalizeTeamInfo(homeCompetitor.team || teamStats.home?.team || {}, homeCompetitor),
     score: parseScore(homeCompetitor),
     statistics: teamStats.home?.statistics || [],
   };
 
-  const statOrder = [];
-  const statMap = new Map();
+  const statOrder: string[] = [];
+  const statMap = new Map<string, StatRow>();
 
   for (const side of [away, home]) {
     for (const stat of side.statistics) {
@@ -184,10 +200,12 @@ function normalizeBoxscore(data, sport, eventId) {
   }
 
   for (const stat of away.statistics) {
-    if (statMap.has(stat.key)) statMap.get(stat.key).awayValue = stat.value || '—';
+    const row = statMap.get(stat.key);
+    if (row) row.awayValue = stat.value || '—';
   }
   for (const stat of home.statistics) {
-    if (statMap.has(stat.key)) statMap.get(stat.key).homeValue = stat.value || '—';
+    const row = statMap.get(stat.key);
+    if (row) row.homeValue = stat.value || '—';
   }
 
   // Extract MLB player stats (batting + pitching)
@@ -199,35 +217,37 @@ function normalizeBoxscore(data, sport, eventId) {
   const isBaseball = BASEBALL_SPORTS.includes(sport);
   const isBasketball = BASKETBALL_SPORTS.includes(sport);
 
-  let players = isBaseball
-    ? { away: { batting: [], pitching: [] }, home: { batting: [], pitching: [] } }
-    : { away: [], home: [] };
+  const baseballPlayers: { away: BaseballSide; home: BaseballSide } = {
+    away: { batting: [], pitching: [] },
+    home: { batting: [], pitching: [] },
+  };
+  const basketballPlayers: { away: BasketballPlayer[]; home: BasketballPlayer[] } = { away: [], home: [] };
 
   if (isBaseball && data.boxscore?.players?.length) {
     const awayTeamId = String(awayCompetitor?.team?.id || '');
     const homeTeamId = String(homeCompetitor?.team?.id || '');
 
-    const isBattingGroup = (group) =>
+    const isBattingGroup = (group: EspnJson) =>
       group.type === 'batting' || (group.names || []).includes('H-AB') || (group.names || []).includes('AB');
 
-    const isPitchingGroup = (group) =>
+    const isPitchingGroup = (group: EspnJson) =>
       group.type === 'pitching' || ((group.names || []).includes('IP') && !(group.names || []).includes('H-AB'));
 
-    const mapBatters = (group) => {
-      const names = group.names || [];
+    const mapBatters = (group: EspnJson): Batter[] => {
+      const names: string[] = group.names || [];
       const abIdx = names.indexOf('AB');
       return (group.athletes || [])
-        .filter((a) => {
+        .filter((a: EspnJson) => {
           // atBats can be a play-by-play array OR a numeric count depending on the game
           if (Array.isArray(a.atBats)) return a.atBats.length > 0;
           if (a.atBats != null && !Number.isNaN(Number(a.atBats))) return Number(a.atBats) > 0;
           // fall back to the AB column in the stats array
           if (abIdx >= 0 && a.stats?.[abIdx] != null) return Number(a.stats[abIdx]) > 0;
-          return (a.stats || []).some((s) => s !== '0' && s !== '' && s !== '.000' && s !== '0.000');
+          return (a.stats || []).some((s: string) => s !== '0' && s !== '' && s !== '.000' && s !== '0.000');
         })
-        .sort((a, b) => (Number(a.batOrder) || 99) - (Number(b.batOrder) || 99))
-        .map((a) => {
-          const statsObj = {};
+        .sort((a: EspnJson, b: EspnJson) => (Number(a.batOrder) || 99) - (Number(b.batOrder) || 99))
+        .map((a: EspnJson) => {
+          const statsObj: PlayerStats = {};
           names.forEach((name, i) => {
             if (MLB_BATTING_DISPLAY.includes(name)) {
               statsObj[name] = a.stats?.[i] ?? '';
@@ -243,10 +263,10 @@ function normalizeBoxscore(data, sport, eventId) {
         });
     };
 
-    const mapPitchers = (group) => {
-      const names = group.names || [];
-      return (group.athletes || []).map((a) => {
-        const statsObj = {};
+    const mapPitchers = (group: EspnJson): StatLine[] => {
+      const names: string[] = group.names || [];
+      return (group.athletes || []).map((a: EspnJson) => {
+        const statsObj: PlayerStats = {};
         names.forEach((name, i) => {
           if (MLB_PITCHING_DISPLAY.includes(name)) {
             statsObj[name] = a.stats?.[i] ?? '';
@@ -260,7 +280,7 @@ function normalizeBoxscore(data, sport, eventId) {
       });
     };
 
-    const resolveHomeAway = (entry, index) => {
+    const resolveHomeAway = (entry: EspnJson, index: number): 'away' | 'home' => {
       if (entry.displayOrder != null) {
         return entry.displayOrder === 1 ? 'away' : 'home';
       }
@@ -280,8 +300,8 @@ function normalizeBoxscore(data, sport, eventId) {
       const battingGroup = stats.find(isBattingGroup);
       const pitchingGroup = stats.find(isPitchingGroup);
 
-      if (battingGroup) players[side].batting = mapBatters(battingGroup);
-      if (pitchingGroup) players[side].pitching = mapPitchers(pitchingGroup);
+      if (battingGroup) baseballPlayers[side].batting = mapBatters(battingGroup);
+      if (pitchingGroup) baseballPlayers[side].pitching = mapPitchers(pitchingGroup);
     }
   }
 
@@ -293,15 +313,15 @@ function normalizeBoxscore(data, sport, eventId) {
     const awayTeamId = String(awayCompetitor?.team?.id || '');
     const homeTeamId = String(homeCompetitor?.team?.id || '');
 
-    const mapTeamPlayers = (entry) => {
+    const mapTeamPlayers = (entry: EspnJson): BasketballPlayer[] => {
       const statsBlock = (entry.statistics || [])[0] || {};
-      const names = statsBlock.names || [];
-      const athletes = statsBlock.athletes || [];
+      const names: string[] = statsBlock.names || [];
+      const athletes: EspnJson[] = statsBlock.athletes || [];
 
       return athletes
         .filter((a) => !a.didNotPlay && a.stats && a.stats.length > 0)
         .map((a) => {
-          const statsObj = {};
+          const statsObj: PlayerStats = {};
           names.forEach((name, i) => {
             if (PLAYER_STAT_KEYS.includes(name)) {
               statsObj[name] = a.stats[i] || '';
@@ -318,10 +338,10 @@ function normalizeBoxscore(data, sport, eventId) {
     };
 
     // Try to match by team id, fall back to index order (0 = away, 1 = home)
-    const findEntry = (teamId, fallbackIndex) => {
+    const findEntry = (teamId: string, fallbackIndex: number): EspnJson => {
       if (teamId) {
         const byId = data.boxscore.players.find(
-          (e) => String(e.team?.id || '') === teamId
+          (e: EspnJson) => String(e.team?.id || '') === teamId
         );
         if (byId) return byId;
       }
@@ -331,10 +351,11 @@ function normalizeBoxscore(data, sport, eventId) {
     const awayEntry = findEntry(awayTeamId, 0);
     const homeEntry = findEntry(homeTeamId, 1);
 
-    if (awayEntry) players.away = mapTeamPlayers(awayEntry);
-    if (homeEntry) players.home = mapTeamPlayers(homeEntry);
+    if (awayEntry) basketballPlayers.away = mapTeamPlayers(awayEntry);
+    if (homeEntry) basketballPlayers.home = mapTeamPlayers(homeEntry);
   }
 
+  let players: BoxscorePlayers = isBaseball ? baseballPlayers : basketballPlayers;
   if (sport === 'nfl') {
     players = normalizeFootballPlayers(
       data.boxscore?.players,
@@ -350,9 +371,7 @@ function normalizeBoxscore(data, sport, eventId) {
     statusDetail: statusType.shortDetail || statusType.description || '',
     startTime: competition.date || null,
     teams: { away, home },
-    statistics: statOrder.map((key) => statMap.get(key)),
+    statistics: statOrder.map((key) => statMap.get(key)!),
     players,
   };
 }
-
-module.exports = { normalizeStatus, normalizeScoreboard, normalizeBoxscore };

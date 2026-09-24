@@ -39,8 +39,9 @@ The app runs at:
 
 | Script | Description |
 |--------|-------------|
-| `npm run dev` | Serve the `api/` functions on port 3001 with `--watch` (`scripts/dev-api.js`) |
-| `npm test` | Run the Node built-in test suite in `test/` |
+| `npm run dev` | Serve the `api/` functions on port 3001, reloading on change (`scripts/dev-api.ts` via tsx) |
+| `npm test` | Run the Node built-in test suite in `test/` (via tsx) |
+| `npm run typecheck` | Type-check `api/`, `scripts/` and `test/` with `tsc` |
 
 ### Client (`/client`)
 

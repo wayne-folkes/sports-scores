@@ -1,16 +1,16 @@
-'use strict';
+import { test, before, after } from 'node:test';
+import assert from 'node:assert/strict';
+import type { AddressInfo } from 'node:net';
+import type { Server } from 'node:http';
+import { createServer } from '../scripts/dev-api';
 
-const { test, before, after } = require('node:test');
-const assert = require('node:assert/strict');
-const { createServer } = require('../scripts/dev-api');
-
-let server;
-let baseUrl;
+let server: Server;
+let baseUrl: string;
 
 before(async () => {
   server = createServer();
-  await new Promise((resolve) => server.listen(0, resolve));
-  baseUrl = `http://127.0.0.1:${server.address().port}`;
+  await new Promise<void>((resolve) => server.listen(0, resolve));
+  baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 });
 
 after(() => server.close());

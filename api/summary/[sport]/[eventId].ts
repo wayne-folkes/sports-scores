@@ -1,11 +1,10 @@
-'use strict';
+import { normalizeBoxscore } from '../../_lib/normalize';
+import { fetchWithTimeout } from '../../_lib/fetchWithTimeout';
+import { SUMMARY_BASE_URLS } from '../../_lib/config';
+import { handleSummaryRequest } from '../../_lib/summaryHandler';
+import type { ApiRequest, ApiResponse } from '../../_lib/http';
 
-const { normalizeBoxscore } = require('../../_lib/normalize');
-const { fetchWithTimeout } = require('../../_lib/fetchWithTimeout');
-const { SUMMARY_BASE_URLS } = require('../../_lib/config');
-const { handleSummaryRequest } = require('../../_lib/summaryHandler');
-
-module.exports = async function handler(req, res) {
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   const { sport, eventId } = req.query;
   const baseUrl = SUMMARY_BASE_URLS[sport];
 
@@ -37,11 +36,12 @@ module.exports = async function handler(req, res) {
       return res.status(503).json({ error: 'summary generation failed' });
     }
   } catch (err) {
-    const isTimeout = err.name === 'AbortError';
+    const error = err as Error;
+    const isTimeout = error.name === 'AbortError';
     return res.status(502).json({
       error: isTimeout
         ? `ESPN API timed out for ${sport} summary`
-        : `Failed to fetch ${sport} summary: ${err.message}`,
+        : `Failed to fetch ${sport} summary: ${error.message}`,
     });
   }
-};
+}

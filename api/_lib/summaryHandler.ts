@@ -1,9 +1,12 @@
-'use strict';
+import { getSummary, putSummary, tryLock, type SummaryRecord } from './summaryStore';
+import { generateSummary } from './summarize';
+import type { BoxscoreResponse, EspnJson, SummaryGameState, SummaryResponse } from './types';
 
-const { getSummary, putSummary, tryLock } = require('./summaryStore');
-const { generateSummary } = require('./summarize');
+export interface SummaryResult extends SummaryResponse {
+  cacheControl: string;
+}
 
-function deriveGameState(espnData) {
+export function deriveGameState(espnData: EspnJson): SummaryGameState {
   const competition = espnData?.header?.competitions?.[0];
   if (!competition) return 'pre';
 
@@ -29,21 +32,26 @@ function deriveGameState(espnData) {
   return 'pre';
 }
 
-function buildCacheKey(sport, eventId, gameState) {
+export function buildCacheKey(sport: string, eventId: string, gameState: SummaryGameState): string {
   return `summary:v1:${sport}:${eventId}:${gameState === 'post' ? 'final' : gameState}`;
 }
 
-function buildCacheControl(gameState) {
+export function buildCacheControl(gameState: SummaryGameState): string {
   return gameState === 'in' ? 's-maxage=180, stale-while-revalidate=60' : 's-maxage=86400';
 }
 
-function isLiveRecordStale(cached) {
+export function isLiveRecordStale(cached: Pick<SummaryRecord, 'gameState' | 'generatedAt'>): boolean {
   if (cached.gameState !== 'in') return false;
   const age = Date.now() - Date.parse(cached.generatedAt);
   return age > 180000; // 3 minutes
 }
 
-async function handleSummaryRequest(sport, eventId, normalizedData, espnData) {
+export async function handleSummaryRequest(
+  sport: string,
+  eventId: string,
+  normalizedData: BoxscoreResponse,
+  espnData: EspnJson
+): Promise<SummaryResult> {
   const gameState = deriveGameState(espnData);
   const cacheKey = buildCacheKey(sport, eventId, gameState);
 
@@ -97,5 +105,3 @@ async function handleSummaryRequest(sport, eventId, normalizedData, espnData) {
     cacheControl: buildCacheControl(gameState),
   };
 }
-
-module.exports = { deriveGameState, buildCacheKey, buildCacheControl, isLiveRecordStale, handleSummaryRequest };
