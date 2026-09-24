@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { Game } from '../../../../api/_lib/types';
 import { getFinalStatusLabel, formatScheduledTime } from '../../utils/gameStatus';
 import { generateHeadline } from '../../utils/generateHeadline';
 import './WireBulletin.css';
@@ -6,7 +7,7 @@ import './WireBulletin.css';
 // Tracks how many times `score` has changed. Used as a React `key` on the
 // score element so each change remounts it, replaying the CSS flash
 // animation — no timers or effect-driven state needed to turn it back off.
-function useChangeCount(score) {
+function useChangeCount(score: number | null): number {
   const [state, setState] = useState({ score, count: 0 });
 
   if (state.score !== score) {
@@ -16,7 +17,12 @@ function useChangeCount(score) {
   return state.count;
 }
 
-export default function WireBulletin({ game, onOpenBoxScore }) {
+interface WireBulletinProps {
+  game: Game;
+  onOpenBoxScore?: (game: Game) => void;
+}
+
+export default function WireBulletin({ game, onOpenBoxScore }: WireBulletinProps) {
   const {
     status,
     statusDetail,
@@ -52,7 +58,7 @@ export default function WireBulletin({ game, onOpenBoxScore }) {
   }
 
   const handleOpen = () => {
-    if (canViewBoxScore) onOpenBoxScore(game);
+    if (canViewBoxScore) onOpenBoxScore?.(game);
   };
 
   return (

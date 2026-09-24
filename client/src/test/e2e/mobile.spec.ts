@@ -99,6 +99,26 @@ test.describe('Desktop UX', () => {
     expect(cursor).toBe('grab');
   });
 
+  test('widgets drag by their header only', async ({ page, isMobile }) => {
+    if (isMobile) test.skip();
+    const item = page.locator('.react-grid-item').first();
+    const dragBy = async (selector: string) => {
+      const box = (await item.locator(selector).first().boundingBox())!;
+      await page.mouse.move(box.x + 20, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(box.x + 620, box.y + box.height / 2, { steps: 12 });
+      await page.mouse.up();
+    };
+    const startX = (await item.boundingBox())!.x;
+
+    await dragBy('.sport-widget__body');
+    await page.waitForTimeout(300);
+    expect((await item.boundingBox())!.x).toBe(startX);
+
+    await dragBy('.sport-widget__header');
+    await expect.poll(async () => (await item.boundingBox())!.x).not.toBe(startX);
+  });
+
   test('refresh button triggers score reload', async ({ page }) => {
     const refreshBtn = page.locator('.sport-widget__refresh').first();
     await refreshBtn.click();

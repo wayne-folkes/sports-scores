@@ -1,14 +1,24 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type {
+  BaseballSide,
+  BasketballPlayer,
+  FootballCategory,
+  FootballSide,
+  Game,
+} from '../../../../api/_lib/types';
 import { useBoxscore, useSummary } from '../../api/queries';
+
+// The API shapes `players` by sport; these name the shape for each branch.
+type BySide<T> = { away: T; home: T };
 import './BoxScoreModal.css';
 
-const FOOTBALL_PLAYER_TABLES = [
+const FOOTBALL_PLAYER_TABLES: { key: FootballCategory; title: string; columns: string[] }[] = [
   { key: 'passing', title: 'Passing', columns: ['C/ATT', 'YDS', 'TD', 'INT', 'QBR'] },
   { key: 'rushing', title: 'Rushing', columns: ['CAR', 'YDS', 'AVG', 'TD', 'LONG'] },
   { key: 'receiving', title: 'Receiving', columns: ['REC', 'YDS', 'TD', 'LONG', 'TGTS'] },
 ];
 
-function getStatusLabel(boxscore) {
+function getStatusLabel(boxscore: Pick<Game, 'status' | 'statusDetail'>): string {
   if (boxscore.status === 'scheduled') {
     return 'Matchup';
   }
@@ -20,7 +30,7 @@ function getStatusLabel(boxscore) {
   return boxscore.statusDetail || 'Final';
 }
 
-function TeamLogo({ src, alt }) {
+function TeamLogo({ src, alt }: { src: string | undefined; alt: string }) {
   const [failed, setFailed] = useState(false);
 
   if (src && !failed) {
@@ -43,7 +53,13 @@ function TeamLogo({ src, alt }) {
   );
 }
 
-export default function BoxScoreModal({ sport, game, onClose }) {
+interface BoxScoreModalProps {
+  sport: string;
+  game: Game;
+  onClose: () => void;
+}
+
+export default function BoxScoreModal({ sport, game, onClose }: BoxScoreModalProps) {
   const boxscoreQuery = useBoxscore(sport, game.id, game.status === 'live');
   const boxscore = boxscoreQuery.data ?? null;
   // Only the first load (or a retry after a failed first load) shows the
@@ -57,7 +73,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
   const summaryLoading = summaryQuery.isPending;
 
   useEffect(() => {
-    const handleKeydown = (event) => {
+    const handleKeydown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
       }
@@ -73,7 +89,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     const basketballStats = ['PTS', 'REB', 'AST', 'FG%', '3P%', 'FT%', 'TO', 'STL', 'BLK'];
     const baseballStats = ['R', 'H', 'HR', 'RBI', 'BB', 'K', 'SO', '2B', '3B', 'AVG'];
     const footballStats = ['firstDowns', 'totalYards', 'netPassingYards', 'rushingYards', 'thirdDownEff', 'fourthDownEff', 'turnovers', 'totalPenaltiesYards', 'possessionTime'];
-    const keyStats = {
+    const keyStats: Record<string, string[]> = {
       nfl: footballStats,
       nba: basketballStats,
       'mens-college-basketball': basketballStats,
@@ -88,16 +104,17 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     return filtered.length > 0 ? filtered : all.slice(0, 9);
   }, [boxscore, sport]);
 
-  const playersAway = useMemo(() => boxscore?.players?.away || [], [boxscore]);
-  const playersHome = useMemo(() => boxscore?.players?.home || [], [boxscore]);
   const isBasketballSport = sport === 'nba' || sport === 'mens-college-basketball' || sport === 'womens-college-basketball';
+  const basketballPlayers = isBasketballSport ? (boxscore?.players as BySide<BasketballPlayer[]> | undefined) : undefined;
+  const playersAway = useMemo(() => basketballPlayers?.away || [], [basketballPlayers]);
+  const playersHome = useMemo(() => basketballPlayers?.home || [], [basketballPlayers]);
   const hasPlayers = isBasketballSport && (playersAway.length > 0 || playersHome.length > 0);
 
   const isBaseballSport = sport === 'mlb' || sport === 'college-baseball' || sport === 'college-softball';
 
   const mlbPlayers = useMemo(() => {
     if (!isBaseballSport) return null;
-    const p = boxscore?.players;
+    const p = boxscore?.players as BySide<BaseballSide> | undefined;
     if (!p) return null;
     const awayHasData = (p.away?.batting?.length > 0) || (p.away?.pitching?.length > 0);
     const homeHasData = (p.home?.batting?.length > 0) || (p.home?.pitching?.length > 0);
@@ -107,12 +124,12 @@ export default function BoxScoreModal({ sport, game, onClose }) {
 
   const footballPlayers = useMemo(() => {
     if (sport !== 'nfl') return null;
-    const p = boxscore?.players;
-    const hasData = (side) => FOOTBALL_PLAYER_TABLES.some(({ key }) => p?.[side]?.[key]?.length > 0);
+    const p = boxscore?.players as BySide<FootballSide> | undefined;
+    const hasData = (side: 'away' | 'home') => FOOTBALL_PLAYER_TABLES.some(({ key }) => (p?.[side]?.[key]?.length ?? 0) > 0);
     return hasData('away') || hasData('home') ? p : null;
   }, [sport, boxscore]);
 
-  const bodyRef = useRef(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
 
   const away = boxscore?.teams?.away || {
     team: game.awayTeam,
@@ -123,7 +140,7 @@ export default function BoxScoreModal({ sport, game, onClose }) {
     score: game.homeScore,
   };
 
-  const scrollToTeam = (side) => {
+  const scrollToTeam = (side: 'away' | 'home') => {
     const target = bodyRef.current?.querySelector(`[data-team-section="${side}"]`);
     if (target) {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });

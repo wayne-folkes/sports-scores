@@ -1,5 +1,5 @@
 # CI for the sports-scores monorepo.
-# Runs api/ type-check + tests, client lint+build+unit tests,
+# Runs api/ type-check + tests, client lint+typecheck+build+unit tests,
 # and Playwright e2e tests (desktop + mobile Chrome).
 
 name: Node.js CI
@@ -62,6 +62,10 @@ jobs:
       - name: Lint
         working-directory: client
         run: npm run lint
+
+      - name: Type-check
+        working-directory: client
+        run: npm run typecheck
 
       - name: Unit tests
         working-directory: client

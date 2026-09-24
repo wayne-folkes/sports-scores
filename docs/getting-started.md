@@ -51,6 +51,7 @@ The app runs at:
 | `npm run build` | Create a production build in `dist/` |
 | `npm run preview` | Preview the production build locally |
 | `npm run lint` | Run ESLint |
+| `npm run typecheck` | Type-check the client (including the API response types it imports) |
 | `npm test` | Run the Vitest unit test suite |
 | `npm run test:watch` | Run Vitest in watch mode |
 | `npm run test:e2e` | Run the Playwright end-to-end suite |
@@ -62,3 +63,5 @@ The app runs at:
 - Widget layout and favorite-team selections persist in the browser with `localStorage`.
 - Score polling refreshes every 30 seconds and pauses while the tab is hidden.
 - Client tooling now targets the Vite 8 / ESLint 10 ecosystem, so use Node.js 22.12+ locally and in CI.
+- Everything is TypeScript. API response shapes live in `api/_lib/types.ts` and the client imports them, so after changing a shape, `npm run typecheck` (at the root and in `client/`) lists every place that needs updating.
+- TypeScript is pinned to 6.0: TypeScript 7 (the native compiler) drops the JavaScript API that Vercel's function builder and typescript-eslint use.

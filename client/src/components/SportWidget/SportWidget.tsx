@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
+import type { Game } from '../../../../api/_lib/types';
 import BoxScoreModal from '../BoxScoreModal';
 import ScoreCard from '../ScoreCard';
 import WireBulletin from '../WireBulletin';
@@ -13,7 +14,7 @@ import { normalizeHexColor, rgba, mixColors } from '../../utils/colors';
 import { useScores, useTeams } from '../../api/queries';
 import './SportWidget.css';
 
-const SPORT_META = {
+const SPORT_META: Record<string, { icon: string; label: string }> = {
   nba: { icon: '🏀', label: 'NBA' },
   mlb: { icon: '⚾', label: 'MLB' },
   nfl: { icon: '🏈', label: 'NFL' },
@@ -23,7 +24,7 @@ const SPORT_META = {
   'college-softball': { icon: '🥎', label: 'CSOFT' },
 };
 
-const DEFAULT_THEME = {
+const DEFAULT_THEME: Record<string, { primary: string; secondary: string }> = {
   nba: {
     primary: '#2563eb',
     secondary: '#ef4444',
@@ -61,15 +62,20 @@ function SkeletonCard() {
   return <div className="sport-widget__skeleton" aria-hidden="true" />;
 }
 
-export default function SportWidget({ sport, isReorderable = true }) {
+interface SportWidgetProps {
+  sport: string;
+  isReorderable?: boolean;
+}
+
+export default function SportWidget({ sport, isReorderable = true }: SportWidgetProps) {
   const meta = SPORT_META[sport] ?? SPORT_META.nba;
   const defaultTheme = DEFAULT_THEME[sport] ?? DEFAULT_THEME.nba;
   const theme = useTheme();
   const isWire = theme === 'wire';
 
-  const [favorites, setFavorites] = useLocalStorage(`favoriteTeams.${sport}`, []);
+  const [favorites, setFavorites] = useLocalStorage<string[]>(`favoriteTeams.${sport}`, []);
   const [showSelector, setShowSelector] = useState(false);
-  const [selectedGame, setSelectedGame] = useState(null);
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [view, setView] = useLocalStorage(`widgetView.${sport}`, 'scores');
   const hasStandings = STANDINGS_SPORTS.includes(sport);
   const showStandings = hasStandings && view === 'standings';
@@ -97,7 +103,7 @@ export default function SportWidget({ sport, isReorderable = true }) {
     [teamsData]
   );
 
-  const isFavoriteGame = (game) =>
+  const isFavoriteGame = (game: Game) =>
     favorites.includes(game.homeTeam?.id) || favorites.includes(game.awayTeam?.id);
 
   const favoriteGames = games.filter(isFavoriteGame);
@@ -121,9 +127,9 @@ export default function SportWidget({ sport, isReorderable = true }) {
     '--widget-accent-secondary': mixColors(dynamicPrimary, defaultTheme.secondary, 0.55),
     '--widget-accent-soft': rgba(dynamicPrimary, 0.18),
     '--widget-accent-ring': rgba(dynamicPrimary, 0.3),
-  };
+  } as CSSProperties;
 
-  const renderGame = (game) => (
+  const renderGame = (game: Game) => (
     isWire
       ? (
         <WireBulletin

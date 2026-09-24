@@ -8,7 +8,7 @@ import './Dashboard.css';
 
 const ALL_SPORTS = ['nba', 'mlb', 'nfl', 'mens-college-basketball', 'womens-college-basketball', 'college-baseball', 'college-softball'];
 
-const SPORT_LABELS = {
+const SPORT_LABELS: Record<string, string> = {
   nba: 'NBA',
   mlb: 'MLB',
   nfl: 'NFL',
@@ -18,7 +18,7 @@ const SPORT_LABELS = {
   'college-softball': 'College Softball',
 };
 
-function buildLayouts(sports) {
+function buildLayouts(sports: string[]) {
   const count = sports.length;
   if (count === 0) return { lg: [], md: [], sm: [], xs: [], xxs: [] };
 
@@ -27,7 +27,7 @@ function buildLayouts(sports) {
   const wLg = Math.floor(12 / colsPerRow);
   const wMd = Math.floor(10 / colsPerRow);
 
-  const makeLayout = (w, cols) =>
+  const makeLayout = (w: number, cols: number) =>
     sports.map((sport, i) => ({
       i: sport,
       x: (i % cols) * w,
@@ -54,7 +54,7 @@ function useIsMobile(breakpoint = 768) {
 
   useEffect(() => {
     const mq = window.matchMedia(query);
-    const handler = (e) => setIsMobile(e.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, [query]);
@@ -63,14 +63,14 @@ function useIsMobile(breakpoint = 768) {
 }
 
 export default function Dashboard() {
-  const [visibleSports, setVisibleSports] = useLocalStorage('visibleSports', ['nba', 'mlb']);
+  const [visibleSports, setVisibleSports] = useLocalStorage<string[]>('visibleSports', ['nba', 'mlb']);
   const [showSportPicker, setShowSportPicker] = useState(false);
   const { width, containerRef } = useContainerWidth();
   const isMobile = useIsMobile(768);
 
   const layouts = buildLayouts(visibleSports);
 
-  const toggleSport = (sport) => {
+  const toggleSport = (sport: string) => {
     setVisibleSports((prev) =>
       prev.includes(sport) ? prev.filter((s) => s !== sport) : [...prev, sport]
     );
@@ -144,9 +144,9 @@ export default function Dashboard() {
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
             cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
             rowHeight={60}
-            draggableHandle=".drag-handle"
-            isDraggable={!isMobile}
-            isResizable={!isMobile}
+            // v2 reads drag options from dragConfig; a bare draggableHandle prop
+            // is ignored. (Phones render the stacked layout above, not this grid.)
+            dragConfig={{ handle: '.drag-handle' }}
             margin={[18, 18]}
             width={width}
           >

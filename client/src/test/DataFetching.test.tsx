@@ -1,20 +1,24 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithQuery } from './renderWithQuery';
+import { mockFetch, fetchCallsTo } from './fetchMock';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import SportWidget from '../components/SportWidget/SportWidget';
 import BoxScoreModal from '../components/BoxScoreModal/BoxScoreModal';
+import type { Game } from '../../../api/_lib/types';
 
-const ok = (body) => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(body) });
-const callsTo = (path) => global.fetch.mock.calls.filter(([url]) => url.includes(path)).length;
+const ok = (body: unknown) => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(body) });
+const callsTo = fetchCallsTo;
 
-const game = {
+const game: Game = {
   id: '401810761',
   status: 'final',
   statusDetail: 'Final',
-  homeTeam: { id: '7', name: 'Denver Nuggets', abbreviation: 'DEN' },
-  awayTeam: { id: '13', name: 'Los Angeles Lakers', abbreviation: 'LAL' },
+  startTime: '2026-03-06T03:00Z',
+  homeTeam: { id: '7', name: 'Denver Nuggets', shortName: 'Nuggets', abbreviation: 'DEN', logo: '', record: '' },
+  awayTeam: { id: '13', name: 'Los Angeles Lakers', shortName: 'Lakers', abbreviation: 'LAL', logo: '', record: '' },
   homeScore: 120,
   awayScore: 113,
+  prediction: null,
 };
 
 const boxscore = {
@@ -32,7 +36,7 @@ describe('shared data fetching', () => {
   });
 
   it('widget and team selector share one teams request', async () => {
-    global.fetch = vi.fn((url) => {
+    mockFetch((url) => {
       if (url.includes('/api/scores')) return ok({ games: [] });
       if (url.includes('/api/teams')) return ok({ teams: [{ id: '18', name: 'New York Knicks', abbreviation: 'NY', color: '006bb6' }] });
       return Promise.reject(new Error(`Unexpected ${url}`));
@@ -48,7 +52,7 @@ describe('shared data fetching', () => {
   });
 
   it('box score renders without a summary section when summaries are unavailable', async () => {
-    global.fetch = vi.fn((url) => {
+    mockFetch((url) => {
       if (url.includes('/api/boxscore')) return ok(boxscore);
       if (url.includes('/api/summary')) return Promise.resolve({ ok: false, status: 503 });
       return Promise.reject(new Error(`Unexpected ${url}`));
@@ -63,7 +67,7 @@ describe('shared data fetching', () => {
   });
 
   it('box score shows the AI summary when one is available', async () => {
-    global.fetch = vi.fn((url) => {
+    mockFetch((url) => {
       if (url.includes('/api/boxscore')) return ok(boxscore);
       if (url.includes('/api/summary')) return ok({ summary: 'Denver held off LA late.', gameState: 'post', cached: true });
       return Promise.reject(new Error(`Unexpected ${url}`));

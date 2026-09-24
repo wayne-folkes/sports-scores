@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
+import type { Team } from '../../../../api/_lib/types';
 import { useTeams } from '../../api/queries';
 import './TeamSelector.css';
 
-const NO_TEAMS = [];
+const NO_TEAMS: Team[] = [];
 
-function TeamLogo({ logo, abbreviation, name }) {
+function TeamLogo({ logo, abbreviation, name }: { logo: string; abbreviation: string; name: string }) {
   const [imgFailed, setImgFailed] = useState(false);
 
   if (logo && !imgFailed) {
@@ -23,7 +24,14 @@ function TeamLogo({ logo, abbreviation, name }) {
   return <span className="team-selector__logo team-selector__logo--fallback">{abbreviation}</span>;
 }
 
-export default function TeamSelector({ sport, favorites, onFavoritesChange, onClose }) {
+interface TeamSelectorProps {
+  sport: string;
+  favorites: string[];
+  onFavoritesChange: (favorites: string[]) => void;
+  onClose: () => void;
+}
+
+export default function TeamSelector({ sport, favorites, onFavoritesChange, onClose }: TeamSelectorProps) {
   const teamsQuery = useTeams(sport);
   const teams = teamsQuery.data?.teams ?? NO_TEAMS;
   const loading = !teamsQuery.data && teamsQuery.isFetching;
@@ -31,7 +39,7 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const handleKey = (event) => {
+    const handleKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
 
@@ -39,7 +47,7 @@ export default function TeamSelector({ sport, favorites, onFavoritesChange, onCl
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
-  const toggleTeam = (id) => {
+  const toggleTeam = (id: string) => {
     const next = favorites.includes(id)
       ? favorites.filter((favoriteId) => favoriteId !== id)
       : [...favorites, id];

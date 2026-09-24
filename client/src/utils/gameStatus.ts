@@ -1,4 +1,4 @@
-export function formatScheduledTime(isoString) {
+export function formatScheduledTime(isoString: string | null | undefined): string {
   if (!isoString) return '';
   const date = new Date(isoString);
   let hours = date.getUTCHours();
@@ -9,7 +9,7 @@ export function formatScheduledTime(isoString) {
   return `${hours}:${mm} ${ampm} ET`;
 }
 
-export function getFinalStatusLabel(statusDetail) {
+export function getFinalStatusLabel(statusDetail: string | null | undefined): string {
   if (!statusDetail) return 'FINAL';
 
   const overtimeMatch = statusDetail.match(/(?:final\/)?(\d*ot)/i);

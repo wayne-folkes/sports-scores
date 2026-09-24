@@ -1,14 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import ScoreCard from '../components/ScoreCard/ScoreCard';
+import type { Game } from '../../../api/_lib/types';
 
-const scheduledGame = {
+const scheduledGame: Game = {
   id: '401810776',
   status: 'scheduled',
   statusDetail: '7:30 PM ET',
   startTime: '2026-03-08T00:30:00Z',
-  awayTeam: { id: '2', name: 'Boston Celtics', abbreviation: 'BOS', logo: '', record: '42-21' },
-  homeTeam: { id: '5', name: 'Cleveland Cavaliers', abbreviation: 'CLE', logo: '', record: '48-14' },
+  awayTeam: { id: '2', name: 'Boston Celtics', shortName: 'Celtics', abbreviation: 'BOS', logo: '', record: '42-21' },
+  homeTeam: { id: '5', name: 'Cleveland Cavaliers', shortName: 'Cavaliers', abbreviation: 'CLE', logo: '', record: '48-14' },
   awayScore: null,
   homeScore: null,
   prediction: {

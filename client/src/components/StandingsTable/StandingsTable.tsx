@@ -1,7 +1,12 @@
 import { useStandings } from '../../api/queries';
 import './StandingsTable.css';
 
-export default function StandingsTable({ sport, favorites = [] }) {
+interface StandingsTableProps {
+  sport: string;
+  favorites?: string[];
+}
+
+export default function StandingsTable({ sport, favorites = [] }: StandingsTableProps) {
   const { data: standings, error: queryError } = useStandings(sport);
   const error = queryError?.message;
 

@@ -1,18 +1,21 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithQuery } from './renderWithQuery';
+import { mockFetch, fetchCallsTo } from './fetchMock';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import ScoreCard from '../components/ScoreCard/ScoreCard';
 import SportWidget from '../components/SportWidget/SportWidget';
+import type { Game } from '../../../api/_lib/types';
 
-const liveNflGame = {
+const liveNflGame: Game = {
   id: '401772001',
   status: 'live',
   statusDetail: '3rd 8:42',
   startTime: '2026-09-27T17:00Z',
-  awayTeam: { id: '19', name: 'New York Giants', abbreviation: 'NYG', logo: '', record: '3-0' },
-  homeTeam: { id: '6', name: 'Dallas Cowboys', abbreviation: 'DAL', logo: '', record: '1-2' },
+  awayTeam: { id: '19', name: 'New York Giants', shortName: 'Giants', abbreviation: 'NYG', logo: '', record: '3-0' },
+  homeTeam: { id: '6', name: 'Dallas Cowboys', shortName: 'Cowboys', abbreviation: 'DAL', logo: '', record: '1-2' },
   awayScore: 14,
   homeScore: 10,
+  prediction: null,
   situation: {
     downDistanceText: '3rd & 7 at DAL 15',
     shortDownDistanceText: '3rd & 7',
@@ -50,7 +53,7 @@ describe('ScoreCard NFL situation', () => {
     // Marker appears in both the full-name and abbreviation spans of the away row only
     const markers = screen.getAllByLabelText('Has possession');
     expect(markers).toHaveLength(2);
-    markers.forEach((marker) => expect(marker.parentElement.textContent).toMatch(/Giants|NYG/));
+    markers.forEach((marker) => expect(marker.parentElement?.textContent).toMatch(/Giants|NYG/));
   });
 
   it('hides situation once the game is final', () => {
@@ -63,7 +66,7 @@ describe('ScoreCard NFL situation', () => {
 
 describe('SportWidget standings toggle', () => {
   beforeEach(() => {
-    global.fetch = vi.fn((url) => {
+    mockFetch((url) => {
       if (url.includes('/api/scores')) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ games: [liveNflGame] }) });
       }
@@ -96,7 +99,7 @@ describe('SportWidget standings toggle', () => {
     expect(screen.getByText('W3')).toBeInTheDocument();
     expect(screen.getByText('NYG').closest('tr')).toHaveClass('standings__row--favorite');
     expect(screen.getByText('DAL').closest('tr')).not.toHaveClass('standings__row--favorite');
-    expect(JSON.parse(localStorage.getItem('widgetView.nfl'))).toBe('standings');
+    expect(JSON.parse(localStorage.getItem('widgetView.nfl')!)).toBe('standings');
 
     fireEvent.click(screen.getByRole('button', { name: 'Scores' }));
     await waitFor(() => expect(screen.getByText('3rd & 7 at DAL 15')).toBeInTheDocument());
@@ -107,7 +110,7 @@ describe('SportWidget standings toggle', () => {
     renderWithQuery(<SportWidget sport="nfl" />);
 
     await waitFor(() => expect(screen.getByText('NFC East')).toBeInTheDocument());
-    const standingsCalls = () => global.fetch.mock.calls.filter(([url]) => url.includes('/api/standings')).length;
+    const standingsCalls = () => fetchCallsTo('/api/standings');
     expect(standingsCalls()).toBe(1);
 
     fireEvent.click(screen.getByRole('button', { name: 'Refresh NFL standings' }));

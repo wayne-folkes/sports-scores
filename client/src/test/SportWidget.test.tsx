@@ -1,5 +1,6 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithQuery } from './renderWithQuery';
+import { mockFetch } from './fetchMock';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import SportWidget from '../components/SportWidget/SportWidget';
 
@@ -33,7 +34,7 @@ const mockTeams = [
 
 describe('SportWidget', () => {
   beforeEach(() => {
-    global.fetch = vi.fn((url) => {
+    mockFetch((url) => {
       if (url.includes('/api/scores')) {
         return Promise.resolve({ ok: true, json: () => Promise.resolve({ games: mockGames }) });
       }
@@ -100,7 +101,7 @@ describe('SportWidget', () => {
   });
 
   it('shows error state when scores fetch fails', async () => {
-    global.fetch = vi.fn((url) => {
+    mockFetch((url) => {
       if (url.includes('/api/scores')) {
         return Promise.resolve({ ok: false, status: 502 });
       }

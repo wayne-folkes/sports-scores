@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
-export function useRelativeTime(date) {
-  const [now, setNow] = useState(null);
+export function useRelativeTime(date: Date | null): string {
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
     const id = setInterval(() => {
