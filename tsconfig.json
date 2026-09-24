@@ -1,0 +1,17 @@
+{
+  // Type-checks the API (api/), the local dev runner and the API tests.
+  // Vercel compiles api/*.ts itself; tsx runs scripts/ and test/ locally.
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["api", "scripts", "test"]
+}

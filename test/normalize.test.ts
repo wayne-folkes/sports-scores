@@ -1,8 +1,6 @@
-'use strict';
-
-const { test } = require('node:test');
-const assert = require('node:assert/strict');
-const { normalizeStatus, normalizeScoreboard, normalizeBoxscore } = require('../api/_lib/normalize');
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { normalizeStatus, normalizeScoreboard, normalizeBoxscore } from '../api/_lib/normalize';
 
 // ---------------------------------------------------------------------------
 // normalizeStatus tests

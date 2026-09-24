@@ -1,18 +1,26 @@
-'use strict';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { awsCredentialsProvider } from '@vercel/functions/oidc';
+import type { SummaryGameState } from './types';
 
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
-const { awsCredentialsProvider } = require('@vercel/functions/oidc');
+// What is cached per game state; the lock rows share the table but only carry
+// cacheKey + expiresAt.
+export interface SummaryRecord {
+  summary: string;
+  gameState: SummaryGameState;
+  model: string;
+  generatedAt: string;
+}
 
 const tableName = process.env.SUMMARY_TABLE || 'sports-scores-summaries';
 const region = process.env.SUMMARY_AWS_REGION || 'us-east-1';
 
-let docClient = null;
+let docClient: DynamoDBDocumentClient | null = null;
 
-async function getDocClient() {
+async function getDocClient(): Promise<DynamoDBDocumentClient> {
   if (docClient) return docClient;
 
-  let credentialsOption = undefined;
+  let credentialsOption: ReturnType<typeof awsCredentialsProvider> | undefined;
 
   // VERCEL_OIDC_TOKEN is only an env var locally/at build; at runtime the
   // provider fetches the token from the request context itself.
@@ -29,7 +37,7 @@ async function getDocClient() {
   return docClient;
 }
 
-async function getSummary(cacheKey) {
+export async function getSummary(cacheKey: string): Promise<SummaryRecord | null> {
   const client = await getDocClient();
   const command = new GetCommand({
     TableName: tableName,
@@ -38,14 +46,14 @@ async function getSummary(cacheKey) {
 
   try {
     const response = await client.send(command);
-    return response.Item || null;
+    return (response.Item as SummaryRecord | undefined) || null;
   } catch (error) {
     console.error('Error getting summary from DynamoDB:', error);
     return null;
   }
 }
 
-async function putSummary(cacheKey, record) {
+export async function putSummary(cacheKey: string, record: SummaryRecord): Promise<void> {
   const client = await getDocClient();
   const expiresAt = Math.floor(Date.now() / 1000) + 86400; // 1 day from now
 
@@ -65,7 +73,7 @@ async function putSummary(cacheKey, record) {
   }
 }
 
-async function tryLock(cacheKey) {
+export async function tryLock(cacheKey: string): Promise<boolean> {
   const client = await getDocClient();
   const lockKey = `${cacheKey}#lock`;
   const expiresAt = Math.floor(Date.now() / 1000) + 60; // 60 seconds from now
@@ -87,12 +95,10 @@ async function tryLock(cacheKey) {
     await client.send(command);
     return true;
   } catch (error) {
-    if (error.name === 'ConditionalCheckFailedException') {
+    if (error instanceof Error && error.name === 'ConditionalCheckFailedException') {
       return false;
     }
     console.error('Error acquiring lock:', error);
     return false;
   }
 }
-
-module.exports = { getSummary, putSummary, tryLock };

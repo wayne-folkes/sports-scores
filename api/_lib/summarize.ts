@@ -1,18 +1,17 @@
-'use strict';
-
-const { BedrockRuntimeClient, ConverseCommand } = require('@aws-sdk/client-bedrock-runtime');
-const { awsCredentialsProvider } = require('@vercel/functions/oidc');
+import { BedrockRuntimeClient, ConverseCommand, type BedrockRuntimeClientConfig } from '@aws-sdk/client-bedrock-runtime';
+import { awsCredentialsProvider } from '@vercel/functions/oidc';
+import type { BoxscoreResponse } from './types';
 
 const region = process.env.SUMMARY_AWS_REGION || 'us-east-1';
 const modelFinal = process.env.SUMMARY_MODEL_FINAL || 'zai.glm-5';
 const modelLive = process.env.SUMMARY_MODEL_LIVE || 'google.gemma-3-27b-it';
 
-let cachedClient = null;
+let cachedClient: BedrockRuntimeClient | null = null;
 
-function getClient() {
+function getClient(): BedrockRuntimeClient {
   if (cachedClient) return cachedClient;
 
-  const options = { region };
+  const options: BedrockRuntimeClientConfig = { region };
   // VERCEL_OIDC_TOKEN is only an env var locally/at build; at runtime the
   // provider fetches the token from the request context itself.
   if (process.env.AWS_ROLE_ARN) {
@@ -23,7 +22,7 @@ function getClient() {
   return cachedClient;
 }
 
-function selectModelAndPrompt(gameState) {
+export function selectModelAndPrompt(gameState: string): { model: string; systemPrompt: string } {
   if (gameState === 'final' || gameState === 'post') {
     return {
       model: modelFinal,
@@ -45,7 +44,7 @@ function selectModelAndPrompt(gameState) {
   };
 }
 
-async function generateSummary(normalizedBoxscore, gameState) {
+export async function generateSummary(normalizedBoxscore: BoxscoreResponse, gameState: string): Promise<{ summary: string; model: string }> {
   const client = getClient();
   const { model, systemPrompt } = selectModelAndPrompt(gameState);
 
@@ -59,11 +58,9 @@ async function generateSummary(normalizedBoxscore, gameState) {
   );
 
   const summary = (response.output?.message?.content || [])
-    .filter((block) => block.text)
     .map((block) => block.text)
+    .filter((text): text is string => Boolean(text))
     .join('');
 
   return { summary, model };
 }
-
-module.exports = { generateSummary, selectModelAndPrompt };

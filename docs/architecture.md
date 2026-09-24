@@ -7,7 +7,7 @@
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 19, Vite, react-grid-layout, TanStack Query |
-| Backend | Node.js 22.12+ serverless functions in `api/` (served locally by `scripts/dev-api.js`) |
+| Backend | Node.js 22.12+ serverless functions in `api/` in TypeScript (served locally by `scripts/dev-api.ts` via tsx) |
 | Data | ESPN public scoreboard, teams, standings, and summary endpoints |
 | AI summaries | Amazon Bedrock, cached in DynamoDB; AWS reached from Vercel via OIDC |
 | Infrastructure | Terraform (AWS), Vercel (hosting) |
@@ -18,26 +18,28 @@
 sports-scores/
 ├── api/                     # Vercel serverless functions (production)
 │   ├── _lib/
-│   │   ├── config.js        # ESPN base URL and summary endpoints
-│   │   ├── fetchWithTimeout.js
-│   │   ├── normalize.js     # Scoreboard/boxscore normalization
-│   │   ├── football.js      # NFL situation and player-stat normalization
-│   │   ├── teams.js         # Team normalization
-│   │   ├── standings.js     # Standings normalization
-│   │   ├── summarize.js     # Bedrock prompt + model selection
-│   │   ├── summaryHandler.js # Summary cache/lock/generate flow
-│   │   └── summaryStore.js  # DynamoDB cache access
-│   ├── health.js            # GET /api/health
-│   ├── scores/[sport].js    # GET /api/scores/:sport
-│   ├── teams/[sport].js     # GET /api/teams/:sport
-│   ├── standings/[sport].js # GET /api/standings/:sport
+│   │   ├── types.ts         # Response types shared with the client
+│   │   ├── http.ts          # Request/response helper types
+│   │   ├── config.ts        # ESPN base URL and summary endpoints
+│   │   ├── fetchWithTimeout.ts
+│   │   ├── normalize.ts     # Scoreboard/boxscore normalization
+│   │   ├── football.ts      # NFL situation and player-stat normalization
+│   │   ├── teams.ts         # Team normalization
+│   │   ├── standings.ts     # Standings normalization
+│   │   ├── summarize.ts     # Bedrock prompt + model selection
+│   │   ├── summaryHandler.ts # Summary cache/lock/generate flow
+│   │   └── summaryStore.ts  # DynamoDB cache access
+│   ├── health.ts            # GET /api/health
+│   ├── scores/[sport].ts    # GET /api/scores/:sport
+│   ├── teams/[sport].ts     # GET /api/teams/:sport
+│   ├── standings/[sport].ts # GET /api/standings/:sport
 │   ├── boxscore/[sport]/
-│   │   └── [eventId].js     # GET /api/boxscore/:sport/:eventId
+│   │   └── [eventId].ts     # GET /api/boxscore/:sport/:eventId
 │   └── summary/[sport]/
-│       └── [eventId].js     # GET /api/summary/:sport/:eventId
+│       └── [eventId].ts     # GET /api/summary/:sport/:eventId
 ├── scripts/
-│   └── dev-api.js           # Serves api/ on port 3001 for local dev
-├── test/                    # Node test suite for api/ (npm test at root)
+│   └── dev-api.ts           # Serves api/ on port 3001 for local dev
+├── test/                    # Node test suite for api/ (npm test at root, via tsx)
 ├── client/                  # React SPA on port 3000 (npm workspace)
 │   └── src/
 │       ├── api/queries.js      # TanStack Query hooks: one cache, polling, dedupe
@@ -65,7 +67,7 @@ sports-scores/
 
 ## Data Flow
 
-1. The React client requests normalized sports data from the `api/` functions (Vercel in production, `scripts/dev-api.js` locally) through the TanStack Query hooks in `client/src/api/queries.js`. Components asking for the same data share one request and one cached response; scores poll every 30 s (live box scores too), polling pauses while the tab is hidden, and data refetches when the tab becomes visible.
+1. The React client requests normalized sports data from the `api/` functions (Vercel in production, `scripts/dev-api.ts` locally) through the TanStack Query hooks in `client/src/api/queries.js`. Components asking for the same data share one request and one cached response; scores poll every 30 s (live box scores too), polling pauses while the tab is hidden, and data refetches when the tab becomes visible.
 2. The API fetches raw ESPN data and converts it into shapes tailored for the UI; Vercel's CDN caches responses per the `Cache-Control` headers.
 3. Widgets render only the user-selected teams for each sport.
 4. Opening a box score triggers a second API request to ESPN's summary endpoint for that event.

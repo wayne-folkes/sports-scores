@@ -1,12 +1,12 @@
-'use strict';
+import type { EspnJson, Team, TeamsResponse } from './types';
 
-function normalizeTeams(data, sport) {
-  const items = (data.sports || [])
-    .flatMap((s) => s.leagues || [])
-    .flatMap((l) => l.teams || [])
-    .map((entry) => entry.team || entry);
+export function normalizeTeams(data: EspnJson, sport: string): TeamsResponse {
+  const items: EspnJson[] = (data.sports || [])
+    .flatMap((s: EspnJson) => s.leagues || [])
+    .flatMap((l: EspnJson) => l.teams || [])
+    .map((entry: EspnJson) => entry.team || entry);
 
-  const teams = items.map((team) => {
+  const teams: Team[] = items.map((team) => {
     const logo = (team.logos || [])[0]?.href || team.logo || '';
     const color = (team.color || '').replace(/^#/, '');
     return {
@@ -22,5 +22,3 @@ function normalizeTeams(data, sport) {
 
   return { sport, teams };
 }
-
-module.exports = { normalizeTeams };

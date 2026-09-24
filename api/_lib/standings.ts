@@ -1,31 +1,37 @@
-'use strict';
+import { ESPN_API_BASE } from './config';
+import type { EspnJson, StandingsGroup, StandingsResponse, StandingsTeam } from './types';
 
-const { ESPN_API_BASE } = require('./config');
-
-const STANDINGS_URLS = {
+export const STANDINGS_URLS: Record<string, string> = {
   nfl: `${ESPN_API_BASE}/apis/v2/sports/football/nfl/standings`,
   nba: `${ESPN_API_BASE}/apis/v2/sports/basketball/nba/standings`,
   mlb: `${ESPN_API_BASE}/apis/v2/sports/baseball/mlb/standings`,
 };
 
 // Column label -> ESPN stat `name`, in display order.
-const STANDINGS_COLUMNS = {
+export const STANDINGS_COLUMNS: Record<string, [label: string, statName: string][]> = {
   nfl: [['W', 'wins'], ['L', 'losses'], ['T', 'ties'], ['PCT', 'winPercent'], ['PF', 'pointsFor'], ['PA', 'pointsAgainst'], ['STRK', 'streak']],
   nba: [['W', 'wins'], ['L', 'losses'], ['PCT', 'winPercent'], ['GB', 'gamesBehind'], ['STRK', 'streak']],
   mlb: [['W', 'wins'], ['L', 'losses'], ['PCT', 'winPercent'], ['GB', 'gamesBehind'], ['STRK', 'streak']],
 };
 
-function statValue(stat) {
+function statValue(stat: EspnJson): number | null {
   if (!stat) return null;
   if (stat.value !== undefined && stat.value !== null && !Number.isNaN(Number(stat.value))) return Number(stat.value);
   return null;
 }
 
-function normalizeEntry(entry, columns) {
-  const team = entry.team || {};
-  const statsByName = new Map((entry.stats || []).map((stat) => [stat.name || stat.type, stat]));
+interface RankedEntry {
+  team: StandingsTeam;
+  seed: number | null;
+  winPercent: number | null;
+  stats: Record<string, string>;
+}
 
-  const stats = {};
+function normalizeEntry(entry: EspnJson, columns: [string, string][]): RankedEntry {
+  const team = entry.team || {};
+  const statsByName = new Map<string, EspnJson>((entry.stats || []).map((stat: EspnJson) => [stat.name || stat.type, stat]));
+
+  const stats: Record<string, string> = {};
   for (const [label, name] of columns) {
     const stat = statsByName.get(name);
     stats[label] = stat?.displayValue ?? (stat?.value != null ? String(stat.value) : '');
@@ -47,8 +53,8 @@ function normalizeEntry(entry, columns) {
 // Depending on the league ESPN nests groups as conference -> division, or
 // returns conferences/leagues with entries directly. Any node carrying
 // `standings.entries` becomes one group.
-function collectGroups(node, columns, groups, parentName = '') {
-  const entries = node.standings?.entries || [];
+function collectGroups(node: EspnJson, columns: [string, string][], groups: StandingsGroup[], parentName = ''): void {
+  const entries: EspnJson[] = node.standings?.entries || [];
   if (entries.length > 0) {
     const normalized = entries.map((entry) => normalizeEntry(entry, columns));
     normalized.sort((a, b) => {
@@ -70,16 +76,16 @@ function collectGroups(node, columns, groups, parentName = '') {
   }
 }
 
-function normalizeStandings(data, sport) {
+export function normalizeStandings(data: EspnJson, sport: string): StandingsResponse {
   const columns = STANDINGS_COLUMNS[sport] || [];
-  const groups = [];
+  const groups: StandingsGroup[] = [];
   // Skip the league-level root as a parent name; groups are named by
   // conference (and division, where ESPN nests them).
   for (const child of data?.children || []) {
     collectGroups(child, columns, groups);
   }
 
-  const firstStandings = (data?.children || []).find((child) => child.standings)?.standings || {};
+  const firstStandings = (data?.children || []).find((child: EspnJson) => child.standings)?.standings || {};
 
   return {
     sport,
@@ -88,5 +94,3 @@ function normalizeStandings(data, sport) {
     groups,
   };
 }
-
-module.exports = { STANDINGS_URLS, STANDINGS_COLUMNS, normalizeStandings };

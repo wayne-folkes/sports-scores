@@ -21,10 +21,10 @@ Without `AWS_ROLE_ARN` the AWS SDK falls back to its default credential chain (e
 | Layer | Local dev | Vercel |
 |-------|-----------|--------|
 | Frontend | Vite dev server on port 3000 | Static site built from `client/dist` |
-| API | `api/` functions via `scripts/dev-api.js` on port 3001 | Serverless functions in `api/` |
+| API | `api/` functions via `scripts/dev-api.ts` on port 3001 | Serverless functions in `api/` |
 | Caching | None (headers are set but not honored locally) | `Cache-Control` headers — Vercel Edge CDN |
 
-The `api/` directory at the repo root contains the Vercel serverless functions — the only backend. Locally, `scripts/dev-api.js` serves the same handlers with Vercel-style file routing. The React client's fetch calls already use relative `/api/...` paths, so no client code changes are needed between local and production.
+The `api/` directory at the repo root contains the Vercel serverless functions — the only backend, written in TypeScript (Vercel compiles `.ts` functions natively). Locally, `scripts/dev-api.ts` serves the same handlers with Vercel-style file routing. The React client's fetch calls already use relative `/api/...` paths, so no client code changes are needed between local and production.
 
 ## Deploy
 
@@ -79,18 +79,18 @@ Vercel's Edge CDN caches responses using `Cache-Control` headers set by each fun
 ```
 api/                        ← Vercel serverless functions
   _lib/
-    normalize.js            ← shared normalization helpers
-    teams.js                ← team normalization
-  health.js                 → GET /api/health
-  scores/[sport].js         → GET /api/scores/:sport
-  teams/[sport].js          → GET /api/teams/:sport
-  standings/[sport].js      → GET /api/standings/:sport
+    normalize.ts            ← shared normalization helpers
+    teams.ts                ← team normalization
+  health.ts                 → GET /api/health
+  scores/[sport].ts         → GET /api/scores/:sport
+  teams/[sport].ts          → GET /api/teams/:sport
+  standings/[sport].ts      → GET /api/standings/:sport
   boxscore/[sport]/
-    [eventId].js            → GET /api/boxscore/:sport/:eventId
+    [eventId].ts            → GET /api/boxscore/:sport/:eventId
   summary/[sport]/
-    [eventId].js            → GET /api/summary/:sport/:eventId
+    [eventId].ts            → GET /api/summary/:sport/:eventId
 vercel.json                 ← build + output config
 client/                     ← React / Vite SPA
-scripts/dev-api.js          ← local runner for api/ (dev only)
+scripts/dev-api.ts          ← local runner for api/ (dev only)
 test/                       ← Node test suite for api/
 ```

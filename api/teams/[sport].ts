@@ -1,10 +1,9 @@
-'use strict';
+import { normalizeTeams } from '../_lib/teams';
+import { fetchWithTimeout } from '../_lib/fetchWithTimeout';
+import { ESPN_API_BASE } from '../_lib/config';
+import type { ApiRequest, ApiResponse } from '../_lib/http';
 
-const { normalizeTeams } = require('../_lib/teams');
-const { fetchWithTimeout } = require('../_lib/fetchWithTimeout');
-const { ESPN_API_BASE } = require('../_lib/config');
-
-const ESPN_URLS = {
+const ESPN_URLS: Record<string, string> = {
   nfl: `${ESPN_API_BASE}/apis/site/v2/sports/football/nfl/teams`,
   nba: `${ESPN_API_BASE}/apis/site/v2/sports/basketball/nba/teams`,
   mlb: `${ESPN_API_BASE}/apis/site/v2/sports/baseball/mlb/teams`,
@@ -14,7 +13,7 @@ const ESPN_URLS = {
   'college-softball': `${ESPN_API_BASE}/apis/site/v2/sports/baseball/college-softball/teams?limit=500`,
 };
 
-module.exports = async function handler(req, res) {
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   const { sport } = req.query;
 
   if (!ESPN_URLS[sport]) {
@@ -30,7 +29,8 @@ module.exports = async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=300');
     return res.status(200).json(normalizeTeams(data, sport));
   } catch (err) {
-    const isTimeout = err.name === 'AbortError';
-    return res.status(502).json({ error: isTimeout ? `ESPN API timed out for ${sport} teams` : `Failed to fetch ${sport} teams: ${err.message}` });
+    const error = err as Error;
+    const isTimeout = error.name === 'AbortError';
+    return res.status(502).json({ error: isTimeout ? `ESPN API timed out for ${sport} teams` : `Failed to fetch ${sport} teams: ${error.message}` });
   }
-};
+}
