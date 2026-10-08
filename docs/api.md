@@ -155,7 +155,7 @@ A short, AI-written write-up of the game, generated with Amazon Bedrock from the
 {
   "summary": "The Giants lead the Cowboys 14-10 late in the third quarter...",
   "gameState": "in",
-  "model": "google.gemma-3-27b-it",
+  "model": "meta.llama4-scout-17b-instruct-v1:0",
   "generatedAt": "2026-09-27T19:12:04.000Z",
   "cached": true
 }

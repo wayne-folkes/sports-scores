@@ -4,7 +4,7 @@ import type { BoxscoreResponse } from './types';
 
 const region = process.env.SUMMARY_AWS_REGION || 'us-east-1';
 const modelFinal = process.env.SUMMARY_MODEL_FINAL || 'zai.glm-5';
-const modelLive = process.env.SUMMARY_MODEL_LIVE || 'google.gemma-3-27b-it';
+const modelLive = process.env.SUMMARY_MODEL_LIVE || 'meta.llama4-scout-17b-instruct-v1:0';
 
 let cachedClient: BedrockRuntimeClient | null = null;
 
