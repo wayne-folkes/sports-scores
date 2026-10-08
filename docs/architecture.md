@@ -38,7 +38,8 @@ sports-scores/
 │   └── summary/[sport]/
 │       └── [eventId].ts     # GET /api/summary/:sport/:eventId
 ├── scripts/
-│   └── dev-api.ts           # Serves api/ on port 3001 for local dev
+│   ├── dev-api.ts           # Serves api/ on port 3001 for local dev
+│   └── smoke.ts             # Post-deploy smoke test against a deployed URL
 ├── test/                    # Node test suite for api/ (pnpm test at root, via tsx)
 ├── client/                  # React SPA on port 3000 (pnpm workspace)
 │   └── src/
