@@ -1,0 +1,52 @@
+# Post-deploy smoke test. Runs scripts/smoke.ts against a deployment once
+# Vercel reports a production deploy as successful (Vercel's GitHub
+# integration emits deployment_status events), or against any URL on demand.
+#
+# If the deployment is behind Vercel Deployment Protection, add the project's
+# "Protection Bypass for Automation" secret as the SMOKE_BYPASS_TOKEN repo secret.
+
+name: Smoke test
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Deployment URL to test (e.g. https://sports-scores-silk.vercel.app)
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Smoke test
+    runs-on: ubuntu-latest
+    # Only production deploys that finished successfully; previews and
+    # in-progress/failed states are ignored. startsWith is case-insensitive.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       startsWith(github.event.deployment.environment, 'production'))
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Installs the pnpm version pinned in package.json's packageManager.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run smoke test
+        env:
+          # Passed via env, never interpolated into the shell command.
+          SMOKE_BASE_URL: ${{ inputs.base_url || github.event.deployment_status.target_url }}
+          SMOKE_BYPASS_TOKEN: ${{ secrets.SMOKE_BYPASS_TOKEN }}
+        run: pnpm run smoke

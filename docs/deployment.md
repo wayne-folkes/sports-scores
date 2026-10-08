@@ -74,6 +74,24 @@ Vercel's Edge CDN caches responses using `Cache-Control` headers set by each fun
 | `/api/summary/:sport/:eventId` | 3 min live, 1 day otherwise | 1 min live |
 | `/api/health` | no cache | — |
 
+## Post-deploy smoke test
+
+`scripts/smoke.ts` checks a deployed instance end to end: the frontend shell, `/api/health`, scores for NBA/MLB/NFL, teams, standings, the 404 path, and the AI summary path (Bedrock + DynamoDB). The summary check picks a game from the scoreboards, preferring a live or upcoming one so it exercises the live model rather than the recap model, and reports which model answered and whether the result was cached. Each check retries up to 3 times to ride out cold starts. Scoreboards may legitimately be empty in the offseason, so those checks only require a valid shape, and the summary check is skipped (not failed) when there are no games at all.
+
+```bash
+pnpm run smoke -- https://sports-scores-silk.vercel.app   # or set SMOKE_BASE_URL
+```
+
+It exits non-zero if any check fails.
+
+**In CI**, `.github/workflows/smoke-test.yml` runs it automatically when Vercel's GitHub integration reports a successful **production** deployment, against that deployment's URL. It can also be run by hand from the Actions tab (**Smoke test → Run workflow**) with any URL.
+
+| Setting | Where | Purpose |
+|---------|-------|---------|
+| `SMOKE_BYPASS_TOKEN` | GitHub repo secret | Vercel's "Protection Bypass for Automation" secret. Needed only if Deployment Protection covers the deployment URL being tested. Without it a protected deployment shows up as HTTP 401 failures. |
+
+The smoke test logic itself is covered by `test/smoke.test.ts`, which runs it against an in-process mock server.
+
 ## Project structure
 
 ```
@@ -92,5 +110,6 @@ api/                        ← Vercel serverless functions
 vercel.json                 ← build + output config
 client/                     ← React / Vite SPA
 scripts/dev-api.ts          ← local runner for api/ (dev only)
+scripts/smoke.ts            ← post-deploy smoke test (pnpm run smoke)
 test/                       ← Node test suite for api/
 ```

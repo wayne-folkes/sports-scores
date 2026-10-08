@@ -42,6 +42,7 @@ The app runs at:
 | `pnpm dev` | Serve the `api/` functions on port 3001, reloading on change (`scripts/dev-api.ts` via tsx) |
 | `pnpm test` | Run the Node built-in test suite in `test/` (via tsx) |
 | `pnpm run typecheck` | Type-check `api/`, `scripts/` and `test/` with `tsc` |
+| `pnpm run smoke -- <url>` | Smoke-test a deployed instance (see [Deployment](./deployment.md#post-deploy-smoke-test)) |
 
 ### Client (`/client`)
 
